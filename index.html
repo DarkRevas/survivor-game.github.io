@@ -560,7 +560,7 @@ const CONFIG = {
     GAME_DURATION: 1800, // 30 minutes in seconds
     SPAWN_BASE_INTERVAL: 1.0,
     SPAWN_MIN_INTERVAL: 0.15,
-    WAVE_DURATION: 60, // 1 minute per wave
+    WAVE_DURATION: 30, // 30 seconds per wave
 };
 
 // ==================== WEAPON DEFINITIONS ====================
@@ -1680,10 +1680,10 @@ class Game {
         // Determine enemy type based on wave
         const types = this.getAvailableEnemyTypes();
         const weights = this.getEnemyWeights();
-        
+
         let type = this.weightedRandom(types, weights);
-        const waveMultiplier = 1 + 0.15 * (this.wave - 1);
-        
+        const waveMultiplier = Math.pow(2, this.wave - 1); // Double HP each wave
+
         // Find spawn position outside camera view
         const angle = Math.random() * Math.PI * 2;
         const distance = Math.max(CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT) / 2 + 100;
