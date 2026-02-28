@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Health Pack Sprite for Shadow Survivor -->
+  <!-- Designed to be visible against dark backgrounds -->
+  
+  <!-- Glow effect (for dark theme visibility) -->
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <radialGradient id="shine" cx="30%" cy="30%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- White background circle -->
+  <circle cx="16" cy="16" r="14" fill="#ffffff" filter="url(#glow)"/>
+  
+  <!-- Red medical cross -->
+  <!-- Horizontal bar -->
+  <rect x="6" y="13" width="20" height="6" rx="1.5" fill="#ef4444"/>
+  <!-- Vertical bar -->
+  <rect x="13" y="6" width="6" height="20" rx="1.5" fill="#ef4444"/>
+  
+  <!-- Inner shine highlight -->
+  <circle cx="11" cy="11" r="4" fill="url(#shine)"/>
+  
+  <!-- Subtle outline for extra visibility -->
+  <circle cx="16" cy="16" r="14" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.5"/>
+</svg>

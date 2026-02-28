@@ -478,6 +478,326 @@
                 transform: translateY(-40px) scale(1.2);
             }
         }
+
+        /* Pickup Effects */
+        @keyframes healthPickupPulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.3);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes xpPickupPulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes healFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+        }
+
+        .pickup-effect {
+            position: absolute;
+            pointer-events: none;
+            font-weight: bold;
+            font-size: 18px;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .pickup-effect.health {
+            color: #4ade80;
+            animation: healFloat 0.8s ease-out forwards;
+        }
+
+        .pickup-effect.xp {
+            color: #667eea;
+            animation: healFloat 0.6s ease-out forwards;
+        }
+
+        /* ==================== MOBILE TOUCH CONTROLS ==================== */
+        
+        /* Prevent default touch behaviors on canvas */
+        #gameCanvas {
+            touch-action: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Virtual Joystick */
+        #virtualJoystick {
+            position: absolute;
+            bottom: 80px;
+            left: 80px;
+            width: 120px;
+            height: 120px;
+            pointer-events: none; /* Allow touch events to pass through when not active */
+            z-index: 50;
+            display: none;
+        }
+
+        #virtualJoystick.active {
+            display: block;
+        }
+
+        .joystick-base {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .joystick-stick {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(102, 126, 234, 0.8);
+            border: 3px solid rgba(102, 126, 234, 1);
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
+            transition: transform 0.05s ease-out;
+        }
+
+        .joystick-stick.active {
+            background: rgba(102, 126, 234, 1);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.7);
+        }
+
+        /* Pause Button */
+        #pauseButton {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 95;
+            pointer-events: auto;
+            transition: all 0.2s ease;
+        }
+
+        #pauseButton:active {
+            transform: scale(0.9);
+            background: rgba(102, 126, 234, 0.8);
+        }
+
+        #pauseButton svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        /* Mobile UI visibility */
+        .mobile-ui #virtualJoystick {
+            display: block;
+        }
+
+        .mobile-ui #pauseButton {
+            display: flex;
+        }
+
+        /* Touch-friendly button sizes */
+        @media (max-width: 768px) {
+            .start-btn {
+                padding: 20px 60px !important;
+                font-size: 22px !important;
+                min-height: 56px;
+            }
+
+            .restart-btn {
+                padding: 18px 45px !important;
+                font-size: 20px !important;
+                min-height: 56px;
+            }
+
+            .upgrade-cards {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .upgrade-card {
+                width: 280px;
+                min-height: 180px;
+                padding: 15px;
+            }
+
+            .upgrade-icon {
+                font-size: 40px;
+            }
+
+            .upgrade-name {
+                font-size: 15px;
+            }
+
+            .upgrade-description {
+                font-size: 12px;
+            }
+
+            .level-up-title {
+                font-size: 36px;
+            }
+
+            .game-over-title,
+            .victory-title {
+                font-size: 42px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .stat-item {
+                padding: 12px 20px;
+            }
+
+            .stat-item-value {
+                font-size: 20px;
+            }
+
+            /* Larger HUD elements on mobile */
+            .level-display {
+                font-size: 16px;
+                padding: 6px 12px;
+            }
+
+            .timer {
+                font-size: 18px;
+                padding: 6px 12px;
+            }
+
+            .health-container,
+            .xp-container {
+                width: 200px;
+            }
+
+            .health-bar,
+            .xp-bar {
+                height: 24px;
+            }
+
+            /* Adjust joystick position for smaller screens */
+            #virtualJoystick {
+                bottom: 60px;
+                left: 60px;
+            }
+
+            .joystick-base,
+            .joystick-stick {
+                width: 100px;
+                height: 100px;
+            }
+
+            .joystick-stick {
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .upgrade-card {
+                width: 260px;
+                min-height: 160px;
+            }
+
+            #virtualJoystick {
+                bottom: 40px;
+                left: 40px;
+            }
+
+            .joystick-base {
+                width: 100px;
+                height: 100px;
+            }
+
+            .joystick-stick {
+                width: 40px;
+                height: 40px;
+            }
+
+            .game-title {
+                font-size: 42px;
+            }
+
+            .game-subtitle {
+                font-size: 16px;
+            }
+
+            .controls-info {
+                padding: 15px 25px;
+                font-size: 14px;
+            }
+        }
+
+        /* Landscape orientation adjustments */
+        @media (max-height: 500px) and (orientation: landscape) {
+            #virtualJoystick {
+                bottom: 20px;
+                left: 40px;
+            }
+
+            .joystick-base {
+                width: 90px;
+                height: 90px;
+            }
+
+            .joystick-stick {
+                width: 40px;
+                height: 40px;
+            }
+
+            .upgrade-cards {
+                flex-wrap: wrap;
+                max-width: 90vw;
+            }
+
+            .upgrade-card {
+                width: 200px;
+                min-height: 140px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -534,7 +854,8 @@
         <div class="controls-info">
             <h3>Controls</h3>
             <p><strong>WASD</strong> or <strong>Arrow Keys</strong> - Move</p>
-            <p><strong>ESC</strong> - Pause</p>
+            <p><strong>Touch & Drag</strong> (bottom-left) - Move (Mobile)</p>
+            <p><strong>ESC</strong> or <strong>Pause Button</strong> - Pause</p>
             <p>Weapons auto-attack - Just survive!</p>
         </div>
         <button class="start-btn" onclick="game.start()">START GAME</button>
@@ -543,6 +864,21 @@
     <div id="pauseScreen">
         <div class="pause-title">PAUSED</div>
     </div>
+
+    <!-- Mobile Touch Controls -->
+    <div id="virtualJoystick">
+        <div class="joystick-base"></div>
+        <div class="joystick-stick" id="joystickStick"></div>
+    </div>
+
+    <button id="pauseButton" aria-label="Pause Game">
+        <svg viewBox="0 0 24 24" id="pauseIcon">
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+        <svg viewBox="0 0 24 24" id="playIcon" style="display: none;">
+            <path d="M8 5v14l11-7z"/>
+        </svg>
+    </button>
 
     <script>
 // ==================== GAME CONFIGURATION ====================
@@ -561,7 +897,61 @@ const CONFIG = {
     SPAWN_BASE_INTERVAL: 1.0,
     SPAWN_MIN_INTERVAL: 0.15,
     WAVE_DURATION: 30, // 30 seconds per wave
+    
+    // Special Event Configuration
+    BLOOD_MOON_CHANCE: 0.20,           // 20% chance every 5 waves
+    BLOOD_MOON_INTERVAL: 5,            // Every 5 waves
+    BLOOD_MOON_DURATION: 30,           // 30 seconds
+    BLOOD_MOON_SPEED_MULTIPLIER: 1.5,  // +50% speed
+    BLOOD_MOON_DAMAGE_MULTIPLIER: 1.25,// +25% damage
+    BLOOD_MOON_SPAWN_MULTIPLIER: 0.5,  // Spawn rate doubles (interval halved)
+    
+    ENEMY_SIEGE_CHANCE: 0.30,          // 30% chance every 3 waves
+    ENEMY_SIEGE_INTERVAL: 3,           // Every 3 waves
+    ENEMY_SIEGE_COUNT: 10,             // 8-12 enemies spawn at once
+    
+    TREASURE_WAVE_CHANCE: 0.25,        // 25% chance every 4 waves
+    TREASURE_WAVE_INTERVAL: 4,         // Every 4 waves
+    TREASURE_WAVE_XP_BONUS: 0.50,      // +50% XP from gems
+    
+    HEALTH_PACK_DROP_CHANCE: 0.02,     // 2% base drop chance
+    HEALTH_PACK_HEAL_AMOUNT: 20,       // Restore 20 HP
 };
+
+// ==================== DECORATION COLOR PALETTES (cached for performance) ====================
+const TREE_COLORS = [
+    { foliage: '#0d0d1a', trunk: '#1a1a1a', shadow: '#06060a' },
+    { foliage: '#1a2a2a', trunk: '#1a2020', shadow: '#0a1a1a' },
+    { foliage: '#0f1f1f', trunk: '#151515', shadow: '#050f0f' },
+    { foliage: '#1a3a3a', trunk: '#1a2525', shadow: '#0a1f1f' }
+];
+
+const ROCK_COLORS = [
+    { base: '#2a2a3a', highlight: '#3a3a4a', crack: '#1a1a2a' },
+    { base: '#3a3a4a', highlight: '#4a4a5a', crack: '#2a2a3a' },
+    { base: '#2a3a3a', highlight: '#3a4a4a', crack: '#1a2a2a' },
+    { base: '#3a2a4a', highlight: '#4a3a5a', crack: '#2a1a3a' }
+];
+
+const GRASS_COLORS = [
+    { blade: '#1a3a1a', center: '#0f2a0f' },
+    { blade: '#1a4a2a', center: '#0f3a1f' },
+    { blade: '#2a5a3a', center: '#1a4a2a' },
+    { blade: '#0f2a0f', center: '#0a1a0a' }
+];
+
+const RUINS_COLORS = [
+    { base: '#3a3a4a', stroke: '#2a2a3a', missing: '#1a1a2e' },
+    { base: '#4a4a5a', stroke: '#3a3a4a', missing: '#2a2a3e' },
+    { base: '#3a4a5a', stroke: '#2a3a4a', missing: '#1a2a3e' },
+    { base: '#4a3a5a', stroke: '#3a2a4a', missing: '#2a1a3e' }
+];
+
+const TOMBSTONE_COLORS = [
+    { base: '#3a3a4a', stroke: '#2a2a3a', engraving: '#2a2a3a' },
+    { base: '#4a4a5a', stroke: '#3a3a4a', engraving: '#3a3a4a' },
+    { base: '#3a4a4a', stroke: '#2a3a3a', engraving: '#2a3a3a' }
+];
 
 // ==================== WEAPON DEFINITIONS ====================
 const WEAPONS = {
@@ -693,6 +1083,91 @@ const WEAPONS = {
             { level: 7, poolDuration: 1 },
             { level: 8, damage: 5 },
         ]
+    },
+    iceShard: {
+        id: 'iceShard',
+        name: 'Ice Shard',
+        icon: '🧊',
+        description: 'Piercing projectiles that slow enemies',
+        baseDamage: 10,
+        baseCooldown: 0.6,
+        baseRange: 350,
+        projectileSpeed: 500,
+        projectileCount: 1,
+        pierce: 2,
+        maxLevel: 8,
+        upgrades: [
+            { level: 2, damage: 4 },
+            { level: 3, pierce: 1 },
+            { level: 4, range: 50 },
+            { level: 5, damage: 4 },
+            { level: 6, projectileCount: 1 },
+            { level: 7, pierce: 1 },
+            { level: 8, damage: 4 },
+        ]
+    },
+    sacredCross: {
+        id: 'sacredCross',
+        name: 'Sacred Cross',
+        icon: '✝️',
+        description: 'Rotating cross orbits around you',
+        baseDamage: 6,
+        baseCooldown: 0.3,
+        baseRange: 100,
+        projectileCount: 1,
+        maxLevel: 8,
+        upgrades: [
+            { level: 2, damage: 3 },
+            { level: 3, range: 25 },
+            { level: 4, projectileCount: 1 },
+            { level: 5, damage: 3 },
+            { level: 6, range: 25 },
+            { level: 7, projectileCount: 1 },
+            { level: 8, damage: 4 },
+        ]
+    },
+    poisonDagger: {
+        id: 'poisonDagger',
+        name: 'Poison Dagger',
+        icon: '🏹',
+        description: 'Applies poison dealing % max HP damage',
+        baseDamage: 8,
+        baseCooldown: 0.5,
+        baseRange: 280,
+        projectileSpeed: 550,
+        projectileCount: 1,
+        maxLevel: 8,
+        upgrades: [
+            { level: 2, damage: 3 },
+            { level: 3, projectileCount: 1 },
+            { level: 4, range: 50 },
+            { level: 5, damage: 3 },
+            { level: 6, projectileCount: 1 },
+            { level: 7, range: 50 },
+            { level: 8, damage: 4 },
+        ]
+    },
+    spinBlade: {
+        id: 'spinBlade',
+        name: 'Spin Blade',
+        icon: '🌀',
+        description: 'Boomerang blade hits twice',
+        baseDamage: 18,
+        baseCooldown: 1.0,
+        baseRange: 300,
+        projectileSpeed: 400,
+        projectileCount: 1,
+        pierce: 0,
+        maxLevel: 8,
+        upgrades: [
+            { level: 2, damage: 6 },
+            { level: 3, range: 50 },
+            { level: 4, projectileCount: 1 },
+            { level: 5, damage: 6 },
+            { level: 6, range: 50 },
+            { level: 7, projectileCount: 1 },
+            { level: 8, damage: 8 },
+        ]
     }
 };
 
@@ -769,6 +1244,34 @@ const PASSIVES = {
         maxLevel: 3,
         values: [1, 1, 1],
         stat: 'projectileCount'
+    },
+    regeneration: {
+        id: 'regeneration',
+        name: 'Regeneration Candle',
+        icon: '🕯️',
+        description: 'Regenerates HP over time',
+        maxLevel: 5,
+        values: [1, 1, 1, 1, 1],
+        stat: 'regeneration'
+    },
+    luck: {
+        id: 'luck',
+        name: 'Luck Clover',
+        icon: '🍀',
+        description: 'Increases crit chance and XP gain',
+        maxLevel: 5,
+        values: [0.03, 0.03, 0.03, 0.03, 0.03],
+        xpBonus: [0.05, 0.05, 0.05, 0.05, 0.05],
+        stat: 'luck'
+    },
+    thorns: {
+        id: 'thorns',
+        name: 'Thorn Armor',
+        icon: '🛡️',
+        description: 'Reflects damage when hit',
+        maxLevel: 5,
+        values: [5, 2, 2, 2, 2],
+        stat: 'thornDamage'
     }
 };
 
@@ -820,6 +1323,83 @@ const ENEMIES = {
         attackSpeed: 2.0,
         attackRange: 300,
         isRanged: true
+    },
+    shadowStalker: {
+        id: 'shadowStalker',
+        name: 'Shadow Stalker',
+        color: '#2d2d2d',
+        baseHp: 25,
+        baseDamage: 10,
+        baseSpeed: 110,
+        radius: 13,
+        xpValue: 12,
+        attackSpeed: 0.9,
+        waveRequirement: 4
+    },
+    demonImp: {
+        id: 'demonImp',
+        name: 'Demon Imp',
+        color: '#c44536',
+        baseHp: 8,
+        baseDamage: 6,
+        baseSpeed: 160,
+        radius: 10,
+        xpValue: 10,
+        attackSpeed: 0.7,
+        waveRequirement: 3
+    },
+    cursedKnight: {
+        id: 'cursedKnight',
+        name: 'Cursed Knight',
+        color: '#5a6b7c',
+        baseHp: 120,
+        baseDamage: 18,
+        baseSpeed: 35,
+        radius: 20,
+        xpValue: 35,
+        attackSpeed: 1.8,
+        knockbackResist: 0.7,
+        waveRequirement: 6
+    },
+    plagueBats: {
+        id: 'plagueBats',
+        name: 'Plague Bats',
+        color: '#6b8c42',
+        baseHp: 12,
+        baseDamage: 4,
+        baseSpeed: 130,
+        radius: 8,
+        xpValue: 8,
+        attackSpeed: 0.6,
+        waveRequirement: 5
+    },
+    necromancer: {
+        id: 'necromancer',
+        name: 'Necromancer',
+        color: '#4a2d5c',
+        baseHp: 45,
+        baseDamage: 8,
+        baseSpeed: 55,
+        radius: 14,
+        xpValue: 30,
+        attackSpeed: 2.5,
+        attackRange: 350,
+        isRanged: true,
+        waveRequirement: 7
+    },
+    voidReaper: {
+        id: 'voidReaper',
+        name: 'Void Reaper',
+        color: '#3d1f4a',
+        baseHp: 400,
+        baseDamage: 25,
+        baseSpeed: 70,
+        radius: 24,
+        xpValue: 150,
+        attackSpeed: 1.2,
+        knockbackResist: 0.8,
+        waveRequirement: 10,
+        isMiniBoss: true
     }
 };
 
@@ -912,9 +1492,10 @@ class SpatialHash {
 class InputHandler {
     constructor() {
         this.keys = {};
+        this.joystickMovement = { dx: 0, dy: 0 };
         this.setupListeners();
     }
-    
+
     setupListeners() {
         window.addEventListener('keydown', (e) => {
             this.keys[e.code] = true;
@@ -926,23 +1507,264 @@ class InputHandler {
             this.keys[e.code] = false;
         });
     }
-    
+
+    setJoystickMovement(dx, dy) {
+        this.joystickMovement = { dx, dy };
+    }
+
     getMovement() {
         let dx = 0, dy = 0;
-        
+
+        // Keyboard input
         if (this.keys['KeyW'] || this.keys['ArrowUp']) dy -= 1;
         if (this.keys['KeyS'] || this.keys['ArrowDown']) dy += 1;
         if (this.keys['KeyA'] || this.keys['ArrowLeft']) dx -= 1;
         if (this.keys['KeyD'] || this.keys['ArrowRight']) dx += 1;
-        
-        // Normalize diagonal movement
+
+        // Normalize keyboard diagonal movement
         if (dx !== 0 || dy !== 0) {
             const length = Math.sqrt(dx * dx + dy * dy);
             dx /= length;
             dy /= length;
         }
-        
+
+        // Joystick input takes priority if active
+        if (this.joystickMovement.dx !== 0 || this.joystickMovement.dy !== 0) {
+            dx = this.joystickMovement.dx;
+            dy = this.joystickMovement.dy;
+        }
+
         return { dx, dy };
+    }
+
+    resetJoystick() {
+        this.joystickMovement = { dx: 0, dy: 0 };
+    }
+}
+
+// ==================== VIRTUAL JOYSTICK ====================
+class VirtualJoystick {
+    constructor(containerElement) {
+        this.container = containerElement;
+        this.stickElement = document.getElementById('joystickStick');
+        this.baseElement = this.container.querySelector('.joystick-base');
+        
+        this.active = false;
+        this.touchId = null;
+        this.baseX = 0;
+        this.baseY = 0;
+        this.stickX = 0;
+        this.stickY = 0;
+        this.maxDistance = 35; // Maximum stick movement from center (pixels)
+        
+        this.movement = { dx: 0, dy: 0 };
+        
+        this.setupTouchListeners();
+        this.setupResizeListener();
+        this.updatePosition();
+    }
+
+    setupTouchListeners() {
+        // Touch events on the container area
+        this.container.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: false });
+        this.container.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
+        this.container.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: false });
+        this.container.addEventListener('touchcancel', (e) => this.handleTouchEnd(e), { passive: false });
+
+        // Also listen on canvas for joystick activation anywhere on screen
+        // This allows player to touch anywhere in bottom-left area to activate joystick
+        document.addEventListener('touchstart', (e) => this.handleGlobalTouchStart(e), { passive: false });
+        document.addEventListener('touchmove', (e) => this.handleGlobalTouchMove(e), { passive: false });
+        document.addEventListener('touchend', (e) => this.handleGlobalTouchEnd(e), { passive: false });
+    }
+
+    setupResizeListener() {
+        window.addEventListener('resize', () => this.updatePosition());
+    }
+
+    updatePosition() {
+        // Update joystick position based on screen size
+        const isMobile = this.isMobileDevice();
+        if (isMobile) {
+            if (window.innerWidth <= 480) {
+                this.container.style.bottom = '40px';
+                this.container.style.left = '40px';
+            } else if (window.innerWidth <= 768) {
+                this.container.style.bottom = '60px';
+                this.container.style.left = '60px';
+            } else {
+                this.container.style.bottom = '80px';
+                this.container.style.left = '80px';
+            }
+        }
+    }
+
+    isMobileDevice() {
+        return 'ontouchstart' in window || 
+               navigator.maxTouchPoints > 0 ||
+               window.innerWidth <= 768;
+    }
+
+    isInJoystickArea(x, y) {
+        // Check if touch is in the bottom-left quadrant of the screen
+        const thresholdX = window.innerWidth * 0.4;
+        const thresholdY = window.innerHeight * 0.6;
+        return x < thresholdX && y > thresholdY;
+    }
+
+    handleGlobalTouchStart(e) {
+        if (this.active) return;
+
+        const touch = e.changedTouches[0];
+        if (this.isInJoystickArea(touch.clientX, touch.clientY)) {
+            this.startTouch(touch.clientX, touch.clientY, touch.identifier);
+            e.preventDefault();
+        }
+    }
+
+    handleGlobalTouchMove(e) {
+        if (!this.active) return;
+
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === this.touchId) {
+                this.moveTouch(e.changedTouches[i].clientX, e.changedTouches[i].clientY);
+                e.preventDefault();
+                break;
+            }
+        }
+    }
+
+    handleGlobalTouchEnd(e) {
+        if (!this.active) return;
+
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === this.touchId) {
+                this.endTouch();
+                e.preventDefault();
+                break;
+            }
+        }
+    }
+
+    handleTouchStart(e) {
+        if (this.active) return;
+
+        const touch = e.changedTouches[0];
+        this.startTouch(touch.clientX, touch.clientY, touch.identifier);
+        e.preventDefault();
+    }
+
+    handleTouchMove(e) {
+        if (!this.active) return;
+        
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === this.touchId) {
+                this.moveTouch(e.changedTouches[i].clientX, e.changedTouches[i].clientY);
+                e.preventDefault();
+                break;
+            }
+        }
+    }
+
+    handleTouchEnd(e) {
+        if (!this.active) return;
+        
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === this.touchId) {
+                this.endTouch();
+                e.preventDefault();
+                break;
+            }
+        }
+    }
+
+    startTouch(clientX, clientY, touchId) {
+        this.active = true;
+        this.touchId = touchId;
+
+        // Get the base center position
+        const rect = this.baseElement.getBoundingClientRect();
+        this.baseX = rect.left + rect.width / 2;
+        this.baseY = rect.top + rect.height / 2;
+
+        // Initialize stick at touch position (clamped to max distance)
+        this.moveStick(clientX, clientY);
+
+        // Visual feedback
+        this.container.classList.add('active');
+        if (this.stickElement) {
+            this.stickElement.classList.add('active');
+        }
+    }
+
+    moveTouch(clientX, clientY) {
+        if (!this.active) return;
+        this.moveStick(clientX, clientY);
+    }
+
+    moveStick(clientX, clientY) {
+        // Calculate displacement from base center
+        let deltaX = clientX - this.baseX;
+        let deltaY = clientY - this.baseY;
+        
+        // Calculate distance and clamp to max
+        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        
+        if (distance > this.maxDistance) {
+            const scale = this.maxDistance / distance;
+            deltaX *= scale;
+            deltaY *= scale;
+        }
+        
+        this.stickX = deltaX;
+        this.stickY = deltaY;
+        
+        // Update stick visual position
+        if (this.stickElement) {
+            this.stickElement.style.transform = `translate(calc(-50% + ${this.stickX}px), calc(-50% + ${this.stickY}px))`;
+        }
+        
+        // Calculate normalized movement values (-1 to 1)
+        const normalizedDistance = distance / this.maxDistance;
+        const angle = Math.atan2(deltaY, deltaX);
+        
+        this.movement.dx = Math.cos(angle) * normalizedDistance;
+        this.movement.dy = Math.sin(angle) * normalizedDistance;
+        
+        // Update InputHandler
+        if (game && game.input) {
+            game.input.setJoystickMovement(this.movement.dx, this.movement.dy);
+        }
+    }
+
+    endTouch() {
+        this.active = false;
+        this.touchId = null;
+        this.stickX = 0;
+        this.stickY = 0;
+        this.movement = { dx: 0, dy: 0 };
+        
+        // Reset stick visual position
+        if (this.stickElement) {
+            this.stickElement.style.transform = 'translate(-50%, -50%)';
+            this.stickElement.classList.remove('active');
+        }
+        this.container.classList.remove('active');
+        
+        // Reset InputHandler
+        if (game && game.input) {
+            game.input.resetJoystick();
+        }
+    }
+
+    getMovement() {
+        return { ...this.movement };
+    }
+
+    setActive(active) {
+        if (!active) {
+            this.endTouch();
+        }
     }
 }
 
@@ -950,9 +1772,13 @@ class InputHandler {
 class ParticleSystem {
     constructor() {
         this.particles = [];
+        this.MAX_PARTICLES = 200; // Performance limit
     }
-    
+
     emit(x, y, config) {
+        // Don't emit if at max capacity
+        if (this.particles.length >= this.MAX_PARTICLES) return;
+        
         const particle = {
             x, y,
             vx: config.vx || (Math.random() - 0.5) * 100,
@@ -1076,20 +1902,34 @@ class DamageNumberSystem {
         for (const n of this.numbers) {
             const screenX = n.x - cameraX;
             const screenY = n.y - cameraY;
-            
+
             if (screenX < -50 || screenX > CONFIG.CANVAS_WIDTH + 50 ||
                 screenY < -50 || screenY > CONFIG.CANVAS_HEIGHT + 50) continue;
-            
+
             const alpha = n.life;
             const scale = n.isCrit ? 1.5 : 1;
-            
+
             ctx.globalAlpha = alpha;
             ctx.font = `bold ${16 * scale}px Arial`;
-            ctx.fillStyle = n.isCrit ? '#ffcc00' : '#ffffff';
-            ctx.strokeStyle = '#000000';
-            ctx.lineWidth = 3;
-            ctx.strokeText(n.damage, screenX, screenY);
-            ctx.fillText(n.damage, screenX, screenY);
+
+            // Check if this is a heal effect (string with + prefix)
+            const isHeal = typeof n.damage === 'string' && n.damage.startsWith('+');
+
+            if (isHeal) {
+                // Green heal text
+                ctx.fillStyle = '#4ade80';
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 3;
+                ctx.strokeText(n.damage, screenX, screenY);
+                ctx.fillText(n.damage, screenX, screenY);
+            } else {
+                // Regular damage numbers
+                ctx.fillStyle = n.isCrit ? '#ffcc00' : '#ffffff';
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 3;
+                ctx.strokeText(n.damage, screenX, screenY);
+                ctx.fillText(n.damage, screenX, screenY);
+            }
         }
         ctx.globalAlpha = 1;
     }
@@ -1240,11 +2080,18 @@ class Enemy {
         this.y += this.pushY * dt;
         this.pushX *= 0.9;
         this.pushY *= 0.9;
-        
+
         const dx = player.x - this.x;
         const dy = player.y - this.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        
+        const distSqr = dx * dx + dy * dy;
+        const dist = Math.sqrt(distSqr);
+
+        // Early exit for enemies very far from player (>1500 units)
+        // Skip movement and attack logic to save CPU
+        if (distSqr > 2250000) { // 1500^2
+            return dist;
+        }
+
         if (this.isRanged) {
             // Ranged enemy: maintain distance
             const desiredDist = this.attackRange * 0.7;
@@ -1417,6 +2264,94 @@ class XpGem {
     }
 }
 
+// ==================== HEALTH PACK CLASS ====================
+class HealthPack {
+    constructor(x, y, healAmount = 25) {
+        this.x = x;
+        this.y = y;
+        this.healAmount = healAmount;
+        this.radius = 12; // Fixed size for visibility (~24px diameter)
+        this.magnetized = false;
+        this.bobOffset = Math.random() * Math.PI * 2;
+        this.bobSpeed = 3;
+    }
+
+    update(dt, player) {
+        // Bobbing animation
+        this.bobOffset += this.bobSpeed * dt;
+
+        const dx = player.x - this.x;
+        const dy = player.y - this.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        const magnetRange = 100 * (1 + (player.passives.goldMagnet || 0));
+
+        if (dist < magnetRange) {
+            this.magnetized = true;
+        }
+
+        if (this.magnetized) {
+            const speed = 450;
+            this.x += (dx / dist) * speed * dt;
+            this.y += (dy / dist) * speed * dt;
+
+            // Recalculate distance after movement
+            const collectDx = player.x - this.x;
+            const collectDy = player.y - this.y;
+            const collectDist = Math.sqrt(collectDx * collectDx + collectDy * collectDy);
+
+            if (collectDist < player.radius + this.radius) {
+                return true;
+            }
+            return false;
+        }
+
+        if (dist < player.radius + this.radius) {
+            return true;
+        }
+        return false;
+    }
+
+    render(ctx, cameraX, cameraY) {
+        const screenX = this.x - cameraX;
+        const screenY = this.y - cameraY;
+        const bobY = Math.sin(this.bobOffset) * 2;
+
+        // White background circle (makes it stand out) - removed expensive shadowBlur
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(screenX, screenY + bobY, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Red medical cross
+        ctx.fillStyle = '#ef4444';
+        const crossWidth = this.radius * 0.6;
+        const crossThickness = this.radius * 0.25;
+
+        // Horizontal bar of cross
+        ctx.fillRect(
+            screenX - crossWidth,
+            screenY + bobY - crossThickness / 2,
+            crossWidth * 2,
+            crossThickness
+        );
+
+        // Vertical bar of cross
+        ctx.fillRect(
+            screenX - crossThickness / 2,
+            screenY + bobY - crossWidth,
+            crossThickness,
+            crossWidth * 2
+        );
+
+        // Subtle inner highlight for depth
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.beginPath();
+        ctx.arc(screenX - 3, screenY + bobY - 3, this.radius * 0.3, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
 class GroundEffect {
     constructor(x, y, radius, duration, damage, tickRate, color) {
         this.x = x;
@@ -1446,32 +2381,98 @@ class Game {
         this.canvas = document.getElementById('gameCanvas');
         this.ctx = this.canvas.getContext('2d');
         this.resize();
-        
+
         this.input = new InputHandler();
         this.particles = new ParticleSystem();
         this.damageNumbers = new DamageNumberSystem();
         this.spatialHash = new SpatialHash(100);
-        
+
         this.player = null;
         this.enemies = [];
         this.projectiles = [];
         this.xpGems = [];
+        this.healthPacks = [];
         this.groundEffects = [];
-        
+
         this.camera = { x: 0, y: 0 };
         this.gameTime = 0;
         this.wave = 1;
         this.waveTimer = 0;
         this.spawnTimer = 0;
         this.kills = 0;
-        
+
         this.state = 'start'; // start, playing, paused, levelup, gameover, victory
         this.levelUpPending = false;
         this.pendingLevel = 0;
-        
+
+        // Special Event State
+        this.activeEvents = {
+            bloodMoon: false,
+            treasureWave: false
+        };
+        this.bloodMoonTimer = 0;
+        this.eventNotifications = [];
+
         this.saveData = this.loadSave();
-        
+
+        // Mobile touch controls
+        this.joystick = null;
+        this.isMobile = this.detectMobile();
+        this.pauseButton = document.getElementById('pauseButton');
+        this.pauseIcon = document.getElementById('pauseIcon');
+        this.playIcon = document.getElementById('playIcon');
+
+        this.setupMobileControls();
+
         window.addEventListener('resize', () => this.resize());
+    }
+
+    detectMobile() {
+        return 'ontouchstart' in window || 
+               navigator.maxTouchPoints > 0 ||
+               window.innerWidth <= 768;
+    }
+
+    setupMobileControls() {
+        // Initialize virtual joystick for mobile devices
+        if (this.isMobile) {
+            const joystickContainer = document.getElementById('virtualJoystick');
+            this.joystick = new VirtualJoystick(joystickContainer);
+            
+            // Add mobile-ui class to body for CSS
+            document.body.classList.add('mobile-ui');
+        }
+
+        // Setup pause button
+        if (this.pauseButton) {
+            this.pauseButton.addEventListener('click', () => this.togglePause());
+            this.pauseButton.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.togglePause();
+            }, { passive: false });
+        }
+
+        // Prevent default touch behaviors on the entire document
+        document.addEventListener('touchmove', (e) => {
+            // Allow touch movement only if it's on the joystick
+            if (this.joystick && this.joystick.active) {
+                return;
+            }
+            // Prevent scrolling when touching the game area
+            if (e.target === this.canvas || e.target.closest('#gameCanvas')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Prevent double-tap zoom
+        document.addEventListener('dblclick', (e) => {
+            e.preventDefault();
+        }, { passive: false });
+
+        // Prevent context menu on long press
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
     }
     
     resize() {
@@ -1514,6 +2515,13 @@ class Game {
         this.initGame();
         this.state = 'playing';
         this.lastTime = performance.now();
+        
+        // Reset joystick state
+        if (this.joystick) {
+            this.joystick.setActive(false);
+        }
+        this.input.resetJoystick();
+        
         requestAnimationFrame(() => this.gameLoop());
     }
     
@@ -1526,6 +2534,7 @@ class Game {
         this.enemies = [];
         this.projectiles = [];
         this.xpGems = [];
+        this.healthPacks = [];
         this.groundEffects = [];
         this.decorations = [];
         this.gameTime = 0;
@@ -1535,6 +2544,14 @@ class Game {
         this.kills = 0;
         this.levelUpPending = false;
         this.waveNotifications = [];
+        
+        // Reset event state
+        this.activeEvents = {
+            bloodMoon: false,
+            treasureWave: false
+        };
+        this.bloodMoonTimer = 0;
+        this.eventNotifications = [];
 
         // Generate map decorations
         this.generateDecorations();
@@ -1568,25 +2585,40 @@ class Game {
             tickRate: data.tickRate || 0,
         };
     }
-    
+
     togglePause() {
         if (this.state === 'playing') {
             this.state = 'paused';
             document.getElementById('pauseScreen').style.display = 'flex';
+            this.updatePauseButtonIcon(true);
         } else if (this.state === 'paused') {
             this.state = 'playing';
             document.getElementById('pauseScreen').style.display = 'none';
+            this.updatePauseButtonIcon(false);
             this.lastTime = performance.now();
             requestAnimationFrame(() => this.gameLoop());
         }
     }
-    
+
+    updatePauseButtonIcon(isPaused) {
+        if (this.pauseIcon && this.playIcon) {
+            if (isPaused) {
+                this.pauseIcon.style.display = 'none';
+                this.playIcon.style.display = 'block';
+            } else {
+                this.pauseIcon.style.display = 'block';
+                this.playIcon.style.display = 'none';
+            }
+        }
+    }
+
     restart() {
         document.getElementById('gameOverScreen').style.display = 'none';
         document.getElementById('levelUpScreen').style.display = 'none';
         document.getElementById('startScreen').style.display = 'flex';
         this.state = 'start';
         this.saveData = this.loadSave();
+        this.updatePauseButtonIcon(false);
     }
     
     gameLoop() {
@@ -1609,20 +2641,30 @@ class Game {
     update(dt) {
         this.gameTime += dt;
         this.waveTimer += dt;
-        
+
+        // Update Blood Moon event timer
+        if (this.activeEvents.bloodMoon) {
+            this.bloodMoonTimer -= dt;
+            if (this.bloodMoonTimer <= 0) {
+                this.activeEvents.bloodMoon = false;
+                this.showEventNotification('BLOOD MOON ENDED', '#ef4444');
+            }
+        }
+
         // Wave progression
         if (this.waveTimer >= CONFIG.WAVE_DURATION) {
             this.wave++;
             this.waveTimer = 0;
             this.showWaveNotification();
+            this.checkAndTriggerEvents();
         }
-        
+
         // Check victory
         if (this.gameTime >= CONFIG.GAME_DURATION) {
             this.victory();
             return;
         }
-        
+
         // Update player
         this.player.update(dt, this.input);
         
@@ -1652,7 +2694,10 @@ class Game {
         
         // Update XP gems
         this.updateXpGems(dt);
-        
+
+        // Update health packs
+        this.updateHealthPacks(dt);
+
         // Update particles
         this.particles.update(dt);
         
@@ -1664,11 +2709,16 @@ class Game {
     }
     
     updateSpawning(dt) {
-        const spawnInterval = Math.max(
+        let spawnInterval = Math.max(
             CONFIG.SPAWN_MIN_INTERVAL,
             CONFIG.SPAWN_BASE_INTERVAL * Math.pow(0.95, this.wave - 1)
         );
         
+        // Blood Moon doubles spawn rate (halves interval)
+        if (this.activeEvents.bloodMoon) {
+            spawnInterval *= CONFIG.BLOOD_MOON_SPAWN_MULTIPLIER;
+        }
+
         this.spawnTimer += dt;
         if (this.spawnTimer >= spawnInterval) {
             this.spawnTimer = 0;
@@ -1676,54 +2726,115 @@ class Game {
         }
     }
     
-    spawnEnemy() {
+    spawnEnemy(siegeMode = false) {
         // Determine enemy type based on wave
         const types = this.getAvailableEnemyTypes();
         const weights = this.getEnemyWeights();
 
         let type = this.weightedRandom(types, weights);
-        const waveMultiplier = Math.pow(2, this.wave - 1); // Double HP each wave
+        const waveMultiplier = Math.pow(2.5, this.wave - 1); // 2.5x HP scaling per wave (increased difficulty)
 
-        // Find spawn position outside camera view
-        const angle = Math.random() * Math.PI * 2;
-        const distance = Math.max(CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT) / 2 + 100;
-        const x = this.player.x + Math.cos(angle) * distance;
-        const y = this.player.y + Math.sin(angle) * distance;
+        let x, y;
         
+        if (siegeMode) {
+            // Siege mode: spawn in a circle around player
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 300 + Math.random() * 100; // 300-400 units from player
+            x = this.player.x + Math.cos(angle) * distance;
+            y = this.player.y + Math.sin(angle) * distance;
+        } else {
+            // Normal spawn: outside camera view
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.max(CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT) / 2 + 100;
+            x = this.player.x + Math.cos(angle) * distance;
+            y = this.player.y + Math.sin(angle) * distance;
+        }
+
         // Clamp to map
         const clampedX = Math.max(50, Math.min(CONFIG.MAP_BOUNDS.width - 50, x));
         const clampedY = Math.max(50, Math.min(CONFIG.MAP_BOUNDS.height - 50, y));
-        
+
         const enemy = new Enemy(type, clampedX, clampedY, waveMultiplier);
+        
+        // Apply Blood Moon buffs if active
+        if (this.activeEvents.bloodMoon) {
+            enemy.speed *= CONFIG.BLOOD_MOON_SPEED_MULTIPLIER;
+            enemy.damage *= CONFIG.BLOOD_MOON_DAMAGE_MULTIPLIER;
+        }
+        
         this.enemies.push(enemy);
+    }
+    
+    /**
+     * Spawn multiple enemies in a circle around the player (Siege event)
+     */
+    spawnSiegeEnemies() {
+        const count = 8 + Math.floor(Math.random() * 5); // 8-12 enemies
+        const types = this.getAvailableEnemyTypes();
+        const weights = this.getEnemyWeights();
+        
+        for (let i = 0; i < count; i++) {
+            const type = this.weightedRandom(types, weights);
+            const waveMultiplier = Math.pow(2.5, this.wave - 1);
+            
+            const angle = (Math.PI * 2 / count) * i + Math.random() * 0.3;
+            const distance = 350 + Math.random() * 50;
+            const x = this.player.x + Math.cos(angle) * distance;
+            const y = this.player.y + Math.sin(angle) * distance;
+            
+            const clampedX = Math.max(50, Math.min(CONFIG.MAP_BOUNDS.width - 50, x));
+            const clampedY = Math.max(50, Math.min(CONFIG.MAP_BOUNDS.height - 50, y));
+            
+            const enemy = new Enemy(type, clampedX, clampedY, waveMultiplier);
+            
+            // Apply Blood Moon buffs if active
+            if (this.activeEvents.bloodMoon) {
+                enemy.speed *= CONFIG.BLOOD_MOON_SPEED_MULTIPLIER;
+                enemy.damage *= CONFIG.BLOOD_MOON_DAMAGE_MULTIPLIER;
+            }
+            
+            this.enemies.push(enemy);
+        }
     }
     
     getAvailableEnemyTypes() {
         const types = ['zombie'];
         if (this.wave >= 2) types.push('ghoul');
+        if (this.wave >= 3) types.push('demonImp');
         if (this.wave >= 4) types.push('skeleton');
+        if (this.wave >= 4) types.push('shadowStalker');
         if (this.wave >= 5) types.push('witch');
+        if (this.wave >= 5) types.push('plagueBats');
+        if (this.wave >= 6) types.push('cursedKnight');
+        if (this.wave >= 7) types.push('necromancer');
+        if (this.wave >= 10) types.push('voidReaper');
         return types;
     }
-    
+
     getEnemyWeights() {
-        const weights = [60]; // zombie
-        if (this.wave >= 2) weights.push(30); // ghoul
-        if (this.wave >= 4) weights.push(20); // skeleton
-        if (this.wave >= 5) weights.push(15); // witch
-        
-        // Adjust weights based on wave
+        const weights = [50]; // zombie
+        if (this.wave >= 2) weights.push(25); // ghoul
+        if (this.wave >= 3) weights.push(20); // demonImp
+        if (this.wave >= 4) weights.push(15); // skeleton
+        if (this.wave >= 4) weights.push(15); // shadowStalker
+        if (this.wave >= 5) weights.push(12); // witch
+        if (this.wave >= 5) weights.push(15); // plagueBats
+        if (this.wave >= 6) weights.push(10); // cursedKnight
+        if (this.wave >= 7) weights.push(8); // necromancer
+        if (this.wave >= 10) weights.push(2); // voidReaper (rare)
+
+        // Adjust weights based on wave - reduce early enemies as game progresses
         if (this.wave >= 10) {
-            weights[0] = Math.max(20, weights[0] - this.wave);
+            weights[0] = Math.max(15, weights[0] - this.wave * 0.5);
         }
-        
+
         return weights.slice(0, this.getAvailableEnemyTypes().length);
     }
     
     weightedRandom(items, weights) {
         let total = 0;
         for (const w of weights) total += w;
-        
+
         let random = Math.random() * total;
         for (let i = 0; i < items.length; i++) {
             random -= weights[i];
@@ -1732,6 +2843,122 @@ class Game {
         return items[0];
     }
     
+    /**
+     * Check and trigger special events at wave transitions
+     */
+    checkAndTriggerEvents() {
+        // Blood Moon: Every 5 waves, 20% chance
+        if (this.wave % CONFIG.BLOOD_MOON_INTERVAL === 0 && Math.random() < CONFIG.BLOOD_MOON_CHANCE) {
+            this.triggerBloodMoon();
+        }
+        
+        // Enemy Siege: Every 3 waves, 30% chance
+        if (this.wave % CONFIG.ENEMY_SIEGE_INTERVAL === 0 && Math.random() < CONFIG.ENEMY_SIEGE_CHANCE) {
+            this.triggerEnemySiege();
+        }
+        
+        // Treasure Wave: Every 4 waves, 25% chance
+        if (this.wave % CONFIG.TREASURE_WAVE_INTERVAL === 0 && Math.random() < CONFIG.TREASURE_WAVE_CHANCE) {
+            this.triggerTreasureWave();
+        }
+    }
+    
+    /**
+     * Trigger Blood Moon event - red tint, faster spawns, buffed enemies
+     */
+    triggerBloodMoon() {
+        this.activeEvents.bloodMoon = true;
+        this.bloodMoonTimer = CONFIG.BLOOD_MOON_DURATION;
+        this.showEventNotification('⚠️ BLOOD MOON ⚠️', '#ef4444');
+        
+        // Visual effect - blood particles
+        for (let i = 0; i < 50; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = Math.random() * 500;
+            this.particles.emit(
+                this.player.x + Math.cos(angle) * dist,
+                this.player.y + Math.sin(angle) * dist,
+                { 
+                    color: '#7f1d1d', 
+                    size: 5 + Math.random() * 5, 
+                    life: 1.5,
+                    type: 'circle',
+                    vy: -30
+                }
+            );
+        }
+    }
+    
+    /**
+     * Trigger Enemy Siege event - enemies spawn in circle and charge player
+     */
+    triggerEnemySiege() {
+        this.showEventNotification('💀 ENEMY SIEGE 💀', '#f97316');
+        this.spawnSiegeEnemies();
+        
+        // Visual effect - warning particles
+        for (let i = 0; i < 30; i++) {
+            const angle = (Math.PI * 2 / 30) * i;
+            const dist = 350;
+            this.particles.emit(
+                this.player.x + Math.cos(angle) * dist,
+                this.player.y + Math.sin(angle) * dist,
+                { 
+                    color: '#f97316', 
+                    size: 8, 
+                    life: 1.0,
+                    type: 'square'
+                }
+            );
+        }
+    }
+    
+    /**
+     * Trigger Treasure Wave event - extra XP from enemies
+     */
+    triggerTreasureWave() {
+        this.activeEvents.treasureWave = true;
+        this.showEventNotification('💎 TREASURE WAVE 💎', '#fbbf24');
+        
+        // Visual effect - gold particles
+        for (let i = 0; i < 40; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = Math.random() * 400;
+            this.particles.emit(
+                this.player.x + Math.cos(angle) * dist,
+                this.player.y + Math.sin(angle) * dist,
+                { 
+                    color: '#fbbf24', 
+                    size: 4 + Math.random() * 4, 
+                    life: 1.0,
+                    type: 'circle',
+                    vy: -50
+                }
+            );
+        }
+    }
+    
+    /**
+     * End Treasure Wave event
+     */
+    endTreasureWave() {
+        this.activeEvents.treasureWave = false;
+    }
+    
+    /**
+     * Show event notification on screen
+     */
+    showEventNotification(text, color) {
+        this.eventNotifications.push({
+            text: text,
+            color: color,
+            alpha: 1,
+            scale: 1.3,
+            life: 4, // seconds to display
+            yOffset: 0
+        });
+    }
+
     updateWeapons(dt) {
         for (const weapon of this.player.weapons) {
             if (weapon.currentCooldown > 0) continue;
@@ -2230,7 +3457,50 @@ class Game {
             }
         }
     }
-    
+
+    updateHealthPacks(dt) {
+        for (let i = this.healthPacks.length - 1; i >= 0; i--) {
+            const pack = this.healthPacks[i];
+            const collected = pack.update(dt, this.player);
+
+            if (collected) {
+                // Heal the player
+                const healAmount = pack.healAmount;
+                const oldHp = this.player.hp;
+                this.player.heal(healAmount);
+                const actualHeal = this.player.hp - oldHp;
+
+                // Show heal effect
+                if (actualHeal > 0) {
+                    this.showPickupEffect(pack.x, pack.y, `+${Math.round(actualHeal)}`, 'health');
+                    this.particles.emit(pack.x, pack.y, {
+                        vx: (Math.random() - 0.5) * 100,
+                        vy: (Math.random() - 0.5) * 100,
+                        life: 0.4,
+                        size: 4,
+                        color: '#4ade80',
+                        type: 'circle'
+                    });
+                }
+
+                this.healthPacks.splice(i, 1);
+            }
+        }
+    }
+
+    showPickupEffect(x, y, text, type) {
+        // Create a floating text effect using the damage number system
+        this.damageNumbers.numbers.push({
+            x, y,
+            damage: text,
+            life: 0.8,
+            isCrit: false,
+            vy: -40,
+            isHeal: true,
+            healType: type
+        });
+    }
+
     killEnemy(enemy) {
         const index = this.enemies.indexOf(enemy);
         if (index !== -1) {
@@ -2240,9 +3510,21 @@ class Game {
         this.kills++;
         this.saveData.stats.totalKills++;
 
+        // Calculate XP value with Treasure Wave bonus
+        let xpValue = enemy.xpValue;
+        if (this.activeEvents.treasureWave) {
+            xpValue = Math.floor(xpValue * (1 + CONFIG.TREASURE_WAVE_XP_BONUS));
+        }
+        
         // Drop XP
-        const gem = new XpGem(enemy.x, enemy.y, enemy.xpValue);
+        const gem = new XpGem(enemy.x, enemy.y, xpValue);
         this.xpGems.push(gem);
+
+        // Chance to drop health pack (2% base chance)
+        if (Math.random() < CONFIG.HEALTH_PACK_DROP_CHANCE) {
+            const pack = new HealthPack(enemy.x, enemy.y, CONFIG.HEALTH_PACK_HEAL_AMOUNT);
+            this.healthPacks.push(pack);
+        }
 
         // Blood particles
         this.particles.emitBlood(enemy.x, enemy.y);
@@ -2474,24 +3756,38 @@ class Game {
                 }
             }
         }
-        
+
         document.getElementById('levelUpScreen').style.display = 'none';
         this.state = 'playing';
         this.lastTime = performance.now();
+        
+        // Reset joystick and input
+        if (this.joystick) {
+            this.joystick.setActive(false);
+        }
+        this.input.resetJoystick();
+        
         this.updateWeaponBar();
         requestAnimationFrame(() => this.gameLoop());
     }
-    
+
     gameOver() {
         this.state = 'gameover';
         this.saveData.stats.totalPlayTime += Math.floor(this.gameTime);
         this.saveData.stats.highestWave = Math.max(this.saveData.stats.highestWave, this.wave);
         this.saveGame();
-        
+
+        // Reset joystick and input
+        if (this.joystick) {
+            this.joystick.setActive(false);
+        }
+        this.input.resetJoystick();
+        this.updatePauseButtonIcon(false);
+
         const screen = document.getElementById('gameOverScreen');
         const title = document.getElementById('gameOverTitle');
         const stats = document.getElementById('endStats');
-        
+
         title.textContent = 'GAME OVER';
         title.className = 'game-over-title';
         stats.innerHTML = `
@@ -2512,21 +3808,28 @@ class Game {
                 <div class="stat-item-value">${this.wave}</div>
             </div>
         `;
-        
+
         screen.style.display = 'block';
     }
-    
+
     victory() {
         this.state = 'victory';
         this.saveData.stats.totalPlayTime += Math.floor(this.gameTime);
         this.saveData.stats.runsCompleted++;
         this.saveData.stats.highestWave = Math.max(this.saveData.stats.highestWave, this.wave);
         this.saveGame();
-        
+
+        // Reset joystick and input
+        if (this.joystick) {
+            this.joystick.setActive(false);
+        }
+        this.input.resetJoystick();
+        this.updatePauseButtonIcon(false);
+
         const screen = document.getElementById('gameOverScreen');
         const title = document.getElementById('gameOverTitle');
         const stats = document.getElementById('endStats');
-        
+
         title.textContent = 'VICTORY!';
         title.className = 'victory-title';
         stats.innerHTML = `
@@ -2595,21 +3898,13 @@ class Game {
             bar.appendChild(slot);
         }
     }
-    
+
     updateWeaponCooldowns() {
-        for (let i = 0; i < this.player.weapons.length; i++) {
-            const weapon = this.player.weapons[i];
-            const overlay = document.getElementById(`cd-${i}`);
-            if (overlay) {
-                const maxCooldown = weapon.baseCooldown / 
-                    (1 + this.player.attackSpeedMultiplier) / 
-                    (1 - Math.min(0.5, this.player.cooldownReduction));
-                const percent = (weapon.currentCooldown / maxCooldown) * 100;
-                overlay.style.height = `${percent}%`;
-            }
-        }
+        // Disabled: Visual cooldown overlay removed to prevent distracting flashing
+        // Cooldown system still works, just no visual overlay
+        return;
     }
-    
+
     render() {
         const ctx = this.ctx;
 
@@ -2633,6 +3928,9 @@ class Game {
         // Draw XP gems
         this.renderXpGems();
 
+        // Draw health packs
+        this.renderHealthPacks();
+
         // Draw enemies
         this.renderEnemies();
 
@@ -2652,6 +3950,12 @@ class Game {
 
         // Draw wave notifications
         this.renderWaveNotifications();
+        
+        // Draw event notifications
+        this.renderEventNotifications();
+        
+        // Draw Blood Moon overlay
+        this.renderBloodMoonOverlay();
 
         // Update weapon cooldowns UI
         this.updateWeaponCooldowns();
@@ -2810,8 +4114,21 @@ class Game {
     
     renderEnemies() {
         const ctx = this.ctx;
+        const camLeft = this.camera.x - 50;
+        const camRight = this.camera.x + this.canvas.width + 50;
+        const camTop = this.camera.y - 50;
+        const camBottom = this.camera.y + this.canvas.height + 50;
 
-        for (const enemy of this.enemies) {
+        const len = this.enemies.length;
+        for (let i = 0; i < len; i++) {
+            const enemy = this.enemies[i];
+            
+            // Frustum culling - skip enemies outside camera view
+            if (enemy.x + enemy.radius < camLeft || enemy.x - enemy.radius > camRight ||
+                enemy.y + enemy.radius < camTop || enemy.y - enemy.radius > camBottom) {
+                continue;
+            }
+            
             switch (enemy.type) {
                 case 'zombie':
                     this.renderZombie(enemy);
@@ -2824,6 +4141,24 @@ class Game {
                     break;
                 case 'witch':
                     this.renderWitch(enemy);
+                    break;
+                case 'shadowStalker':
+                    this.renderShadowStalker(enemy);
+                    break;
+                case 'demonImp':
+                    this.renderDemonImp(enemy);
+                    break;
+                case 'cursedKnight':
+                    this.renderCursedKnight(enemy);
+                    break;
+                case 'plagueBats':
+                    this.renderPlagueBats(enemy);
+                    break;
+                case 'necromancer':
+                    this.renderNecromancer(enemy);
+                    break;
+                case 'voidReaper':
+                    this.renderVoidReaper(enemy);
                     break;
             }
 
@@ -2919,9 +4254,7 @@ class Game {
         ctx.lineTo(x + radius * 0.5, y + radius * 0.3);
         ctx.fill();
 
-        // Glowing yellow eyes
-        ctx.shadowColor = '#ffcc00';
-        ctx.shadowBlur = 8;
+        // Glowing yellow eyes (removed expensive shadowBlur for performance)
         ctx.fillStyle = '#ffdd44';
         ctx.beginPath();
         ctx.arc(x - radius * 0.25, y - radius * 0.2, radius * 0.18, 0, Math.PI * 2);
@@ -2929,7 +4262,6 @@ class Game {
         ctx.fill();
 
         // Black slit pupils
-        ctx.shadowBlur = 0;
         ctx.fillStyle = '#000000';
         ctx.beginPath();
         ctx.ellipse(x - radius * 0.25, y - radius * 0.2, radius * 0.06, radius * 0.15, 0, 0, Math.PI * 2);
@@ -2975,15 +4307,12 @@ class Game {
         ctx.ellipse(x + radius * 0.3, y - radius * 0.15, radius * 0.22, radius * 0.25, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        // Glowing pupils in sockets
+        // Glowing pupils in sockets (removed expensive shadowBlur for performance)
         ctx.fillStyle = '#ff6600';
-        ctx.shadowColor = '#ff6600';
-        ctx.shadowBlur = 4;
         ctx.beginPath();
         ctx.arc(x - radius * 0.25, y - radius * 0.15, radius * 0.08, 0, Math.PI * 2);
         ctx.arc(x + radius * 0.25, y - radius * 0.15, radius * 0.08, 0, Math.PI * 2);
         ctx.fill();
-        ctx.shadowBlur = 0;
 
         // Nose cavity
         ctx.fillStyle = '#1a1a1a';
@@ -3035,9 +4364,7 @@ class Game {
         ctx.fillStyle = '#7c3aed';
         ctx.fillRect(x - radius * 0.7, y - radius * 0.4, radius * 1.4, radius * 0.15);
 
-        // Glowing yellow eyes
-        ctx.shadowColor = '#ffff00';
-        ctx.shadowBlur = 6;
+        // Glowing yellow eyes (removed expensive shadowBlur for performance)
         ctx.fillStyle = '#ffff66';
         ctx.beginPath();
         ctx.arc(x - radius * 0.25, y - radius * 0.1, radius * 0.15, 0, Math.PI * 2);
@@ -3045,7 +4372,6 @@ class Game {
         ctx.fill();
 
         // Black pupils
-        ctx.shadowBlur = 0;
         ctx.fillStyle = '#000000';
         ctx.beginPath();
         ctx.arc(x - radius * 0.25, y - radius * 0.1, radius * 0.06, 0, Math.PI * 2);
@@ -3057,7 +4383,283 @@ class Game {
         ctx.lineWidth = 2;
         ctx.stroke();
     }
-    
+
+    renderShadowStalker(enemy) {
+        const ctx = this.ctx;
+        const { x, y, radius } = enemy;
+
+        // Dark gray/black body with semi-transparent effect
+        ctx.fillStyle = 'rgba(45, 45, 45, 0.9)';
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Glowing red eyes (removed expensive shadowBlur for performance)
+        ctx.fillStyle = '#ff3333';
+        ctx.beginPath();
+        ctx.arc(x - radius * 0.3, y - radius * 0.1, radius * 0.2, 0, Math.PI * 2);
+        ctx.arc(x + radius * 0.3, y - radius * 0.1, radius * 0.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Black pupils
+        ctx.fillStyle = '#000000';
+        ctx.beginPath();
+        ctx.arc(x - radius * 0.3, y - radius * 0.1, radius * 0.08, 0, Math.PI * 2);
+        ctx.arc(x + radius * 0.3, y - radius * 0.1, radius * 0.08, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Dark outline
+        ctx.strokeStyle = '#1a1a1a';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    renderDemonImp(enemy) {
+        const ctx = this.ctx;
+        const { x, y, radius } = enemy;
+
+        // Red-orange body
+        const bodyGradient = ctx.createRadialGradient(
+            x - radius * 0.2, y - radius * 0.2, 0,
+            x, y, radius
+        );
+        bodyGradient.addColorStop(0, '#ff6b4a');
+        bodyGradient.addColorStop(1, '#c44536');
+
+        ctx.fillStyle = bodyGradient;
+        ctx.beginPath();
+        // Elongated imp shape
+        ctx.ellipse(x, y, radius * 0.85, radius * 1.1, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Small horns
+        ctx.fillStyle = '#8b2a1a';
+        ctx.beginPath();
+        ctx.moveTo(x - radius * 0.4, y - radius * 0.8);
+        ctx.lineTo(x - radius * 0.3, y - radius * 1.1);
+        ctx.lineTo(x - radius * 0.2, y - radius * 0.8);
+        ctx.moveTo(x + radius * 0.4, y - radius * 0.8);
+        ctx.lineTo(x + radius * 0.3, y - radius * 1.1);
+        ctx.lineTo(x + radius * 0.2, y - radius * 0.8);
+        ctx.fill();
+
+        // Yellow eyes (removed expensive shadowBlur for performance)
+        ctx.fillStyle = '#ffdd44';
+        ctx.beginPath();
+        ctx.arc(x - radius * 0.25, y - radius * 0.15, radius * 0.15, 0, Math.PI * 2);
+        ctx.arc(x + radius * 0.25, y - radius * 0.15, radius * 0.15, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Black pupils
+        ctx.fillStyle = '#000000';
+        ctx.beginPath();
+        ctx.arc(x - radius * 0.25, y - radius * 0.15, radius * 0.06, 0, Math.PI * 2);
+        ctx.arc(x + radius * 0.25, y - radius * 0.15, radius * 0.06, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Dark outline
+        ctx.strokeStyle = '#6b1a1a';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    renderCursedKnight(enemy) {
+        const ctx = this.ctx;
+        const { x, y, radius } = enemy;
+
+        // Steel blue-gray armor
+        const armorGradient = ctx.createRadialGradient(
+            x - radius * 0.3, y - radius * 0.3, 0,
+            x, y, radius
+        );
+        armorGradient.addColorStop(0, '#7a8b9c');
+        armorGradient.addColorStop(0.5, '#5a6b7c');
+        armorGradient.addColorStop(1, '#3a4b5c');
+
+        ctx.fillStyle = armorGradient;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Armor plates
+        ctx.strokeStyle = '#2a3b4c';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(x, y, radius * 0.7, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Vertical plate lines
+        ctx.beginPath();
+        ctx.moveTo(x, y - radius * 0.7);
+        ctx.lineTo(x, y + radius * 0.7);
+        ctx.moveTo(x - radius * 0.5, y - radius * 0.3);
+        ctx.lineTo(x + radius * 0.5, y - radius * 0.3);
+        ctx.stroke();
+
+        // Glowing orange eyes (from helmet slits) - removed expensive shadowBlur for performance
+        ctx.fillStyle = '#ff8833';
+        ctx.fillRect(x - radius * 0.35, y - radius * 0.2, radius * 0.25, radius * 0.1);
+        ctx.fillRect(x + radius * 0.1, y - radius * 0.2, radius * 0.25, radius * 0.1);
+
+        // Dark outline
+        ctx.strokeStyle = '#1a2b3c';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+    }
+
+    renderPlagueBats(enemy) {
+        const ctx = this.ctx;
+        const { x, y, radius } = enemy;
+
+        // Sickly green swarm of bats
+        ctx.fillStyle = '#6b8c42';
+        
+        // Draw 3 small bat shapes
+        const batPositions = [
+            { dx: -0.4, dy: -0.3, size: 0.7 },
+            { dx: 0.3, dy: -0.2, size: 0.8 },
+            { dx: 0, dy: 0.2, size: 0.6 }
+        ];
+
+        for (const pos of batPositions) {
+            const bx = x + pos.dx * radius;
+            const by = y + pos.dy * radius;
+            const bSize = radius * pos.size * 0.5;
+
+            // Bat body
+            ctx.beginPath();
+            ctx.arc(bx, by, bSize, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Bat wings
+            ctx.beginPath();
+            ctx.moveTo(bx - bSize, by);
+            ctx.quadraticCurveTo(bx - bSize * 2, by - bSize, bx - bSize * 2.5, by);
+            ctx.quadraticCurveTo(bx - bSize * 2, by + bSize, bx - bSize, by);
+            ctx.moveTo(bx + bSize, by);
+            ctx.quadraticCurveTo(bx + bSize * 2, by - bSize, bx + bSize * 2.5, by);
+            ctx.quadraticCurveTo(bx + bSize * 2, by + bSize, bx + bSize, by);
+            ctx.fill();
+        }
+
+        // Glowing green eyes for each bat (removed expensive shadowBlur for performance)
+        ctx.fillStyle = '#88aa44';
+        for (const pos of batPositions) {
+            const bx = x + pos.dx * radius;
+            const by = y + pos.dy * radius;
+            ctx.beginPath();
+            ctx.arc(bx - pos.size * radius * 0.1, by - pos.size * radius * 0.1, radius * 0.08, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    renderNecromancer(enemy) {
+        const ctx = this.ctx;
+        const { x, y, radius } = enemy;
+
+        // Dark purple hooded robe
+        const robeGradient = ctx.createRadialGradient(
+            x, y + radius * 0.3, 0,
+            x, y, radius * 1.1
+        );
+        robeGradient.addColorStop(0, '#6a4d7c');
+        robeGradient.addColorStop(1, '#2a1d3c');
+
+        ctx.fillStyle = robeGradient;
+        ctx.beginPath();
+        // Robe shape
+        ctx.moveTo(x - radius * 0.7, y + radius * 0.8);
+        ctx.lineTo(x - radius * 0.6, y - radius * 0.4);
+        ctx.arc(x, y - radius * 0.6, radius * 0.5, Math.PI, 0);
+        ctx.lineTo(x + radius * 0.6, y + radius * 0.8);
+        ctx.closePath();
+        ctx.fill();
+
+        // Hood shadow
+        ctx.fillStyle = '#1a0f2c';
+        ctx.beginPath();
+        ctx.arc(x, y - radius * 0.5, radius * 0.45, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Glowing staff (removed expensive shadowBlur for performance)
+        ctx.fillStyle = '#cc66ff';
+        ctx.fillRect(x + radius * 0.4, y - radius * 0.8, radius * 0.15, radius * 1.8);
+
+        // Glowing eyes from hood
+        ctx.fillStyle = '#ff44ff';
+        ctx.beginPath();
+        ctx.arc(x - radius * 0.15, y - radius * 0.5, radius * 0.08, 0, Math.PI * 2);
+        ctx.arc(x + radius * 0.15, y - radius * 0.5, radius * 0.08, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Dark outline
+        ctx.strokeStyle = '#2a1f3c';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    renderVoidReaper(enemy) {
+        const ctx = this.ctx;
+        const { x, y, radius } = enemy;
+
+        // Deep purple-black body with particle trail effect
+        const bodyGradient = ctx.createRadialGradient(
+            x, y, 0,
+            x, y, radius
+        );
+        bodyGradient.addColorStop(0, '#5a2f6a');
+        bodyGradient.addColorStop(0.7, '#3d1f4a');
+        bodyGradient.addColorStop(1, '#1a0f2a');
+
+        ctx.fillStyle = bodyGradient;
+        ctx.beginPath();
+        // Imposing figure shape - larger at top
+        ctx.moveTo(x - radius * 0.7, y + radius * 0.9);
+        ctx.lineTo(x - radius * 0.6, y - radius * 0.5);
+        ctx.arc(x, y - radius * 0.7, radius * 0.65, Math.PI, 0);
+        ctx.lineTo(x + radius * 0.7, y + radius * 0.9);
+        ctx.closePath();
+        ctx.fill();
+
+        // Dark hood
+        ctx.fillStyle = '#0f051a';
+        ctx.beginPath();
+        ctx.arc(x, y - radius * 0.65, radius * 0.55, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Glowing scythe (removed expensive shadowBlur for performance)
+        ctx.strokeStyle = '#cc66ff';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(x + radius * 0.5, y);
+        ctx.lineTo(x + radius * 1.2, y - radius * 0.8);
+        ctx.quadraticCurveTo(x + radius * 1.5, y - radius * 1.0, x + radius * 1.3, y - radius * 0.6);
+        ctx.stroke();
+
+        // Menacing glowing eyes (removed expensive shadowBlur for performance)
+        ctx.fillStyle = '#ff44ff';
+        ctx.beginPath();
+        ctx.ellipse(x - radius * 0.2, y - radius * 0.6, radius * 0.12, radius * 0.08, -0.2, 0, Math.PI * 2);
+        ctx.ellipse(x + radius * 0.2, y - radius * 0.6, radius * 0.12, radius * 0.08, 0.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Particle trail effect
+        ctx.shadowBlur = 0;
+        for (let i = 0; i < 5; i++) {
+            const trailX = x + (Math.random() - 0.5) * radius * 1.5;
+            const trailY = y + radius * 0.8 + Math.random() * radius * 0.5;
+            ctx.fillStyle = `rgba(170, 68, 255, ${0.2 + Math.random() * 0.3})`;
+            ctx.beginPath();
+            ctx.arc(trailX, trailY, radius * 0.15, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Dark outline
+        ctx.strokeStyle = '#1a0f2a';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+    }
+
     showWaveNotification() {
         this.waveNotifications.push({
             wave: this.wave,
@@ -3071,65 +4673,144 @@ class Game {
         const ctx = this.ctx;
         const centerX = this.canvas.width / 2;
         const centerY = this.canvas.height / 3;
-        
+
         for (let i = this.waveNotifications.length - 1; i >= 0; i--) {
             const notif = this.waveNotifications[i];
             notif.life -= 1 / 60; // Assume 60fps
             notif.alpha = Math.min(1, notif.life);
             notif.scale = 1 + (1.5 - 1) * (1 - notif.life);
-            
+
             if (notif.life <= 0) {
                 this.waveNotifications.splice(i, 1);
                 continue;
             }
-            
+
             ctx.save();
             ctx.translate(centerX, centerY);
             ctx.scale(notif.scale, notif.scale);
-            
+
             // Background
             ctx.fillStyle = `rgba(0, 0, 0, ${notif.alpha * 0.7})`;
             ctx.fillRect(-150, -40, 300, 80);
-            
+
             // Border
             ctx.strokeStyle = `rgba(102, 126, 234, ${notif.alpha})`;
             ctx.lineWidth = 3;
             ctx.strokeRect(-150, -40, 300, 80);
-            
+
             // Text
             ctx.fillStyle = `rgba(255, 255, 255, ${notif.alpha})`;
             ctx.font = 'bold 36px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(`WAVE ${notif.wave}`, 0, 0);
-            
+
             ctx.restore();
         }
     }
     
-    renderProjectiles() {
+    /**
+     * Render special event notifications on screen
+     */
+    renderEventNotifications() {
+        const ctx = this.ctx;
+        const centerX = this.canvas.width / 2;
+        let yOffset = 150; // Start below wave notifications
+
+        for (let i = this.eventNotifications.length - 1; i >= 0; i--) {
+            const notif = this.eventNotifications[i];
+            notif.life -= 1 / 60; // Assume 60fps
+            notif.alpha = Math.min(1, notif.life);
+            notif.scale = 1 + (1.3 - 1) * (1 - notif.life);
+
+            if (notif.life <= 0) {
+                this.eventNotifications.splice(i, 1);
+                continue;
+            }
+
+            ctx.save();
+            ctx.translate(centerX, yOffset);
+            ctx.scale(notif.scale, notif.scale);
+
+            // Background with event color tint
+            ctx.fillStyle = `rgba(0, 0, 0, ${notif.alpha * 0.8})`;
+            ctx.fillRect(-180, -35, 360, 70);
+
+            // Colored border matching event type
+            ctx.strokeStyle = notif.color;
+            ctx.lineWidth = 4;
+            ctx.strokeRect(-180, -35, 360, 70);
+            
+            // Inner glow (removed expensive shadowBlur for performance)
+
+            // Text with event color
+            ctx.fillStyle = notif.color;
+            ctx.font = 'bold 32px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(notif.text, 0, 0);
+
+            ctx.restore();
+            
+            yOffset += 80; // Stack notifications vertically
+        }
+    }
+    
+    /**
+     * Render Blood Moon red overlay on screen
+     */
+    renderBloodMoonOverlay() {
+        if (!this.activeEvents.bloodMoon) return;
+        
         const ctx = this.ctx;
         
-        for (const proj of this.projectiles) {
+        // Pulsing red overlay
+        const pulseIntensity = 0.15 + Math.sin(this.gameTime * 3) * 0.05; // Pulsing effect
+        
+        ctx.fillStyle = `rgba(139, 0, 0, ${pulseIntensity})`;
+        ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Vignette effect (darker edges)
+        const gradient = ctx.createRadialGradient(
+            this.canvas.width / 2, this.canvas.height / 2, this.canvas.height / 3,
+            this.canvas.width / 2, this.canvas.height / 2, this.canvas.height
+        );
+        gradient.addColorStop(0, 'rgba(139, 0, 0, 0)');
+        gradient.addColorStop(1, `rgba(139, 0, 0, ${pulseIntensity * 0.5})`);
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    renderProjectiles() {
+        const ctx = this.ctx;
+        const camLeft = this.camera.x - 50;
+        const camRight = this.camera.x + this.canvas.width + 50;
+        const camTop = this.camera.y - 50;
+        const camBottom = this.camera.y + this.canvas.height + 50;
+
+        const len = this.projectiles.length;
+        for (let i = 0; i < len; i++) {
+            const proj = this.projectiles[i];
             if (!proj.active) continue;
-            
-            // Draw glow
-            ctx.shadowColor = proj.color;
-            ctx.shadowBlur = 10;
-            
-            // Draw projectile
+
+            // Frustum culling - skip projectiles outside camera view
+            if (proj.x + proj.radius < camLeft || proj.x - proj.radius > camRight ||
+                proj.y + proj.radius < camTop || proj.y - proj.radius > camBottom) {
+                continue;
+            }
+
+            // Draw projectile (removed expensive shadowBlur for performance)
             ctx.fillStyle = proj.color;
             ctx.beginPath();
             ctx.arc(proj.x, proj.y, proj.radius, 0, Math.PI * 2);
             ctx.fill();
-            
+
             // Draw inner white core
             ctx.fillStyle = '#fff';
             ctx.beginPath();
             ctx.arc(proj.x, proj.y, proj.radius * 0.5, 0, Math.PI * 2);
             ctx.fill();
-            
-            ctx.shadowBlur = 0;
         }
     }
     
@@ -3168,36 +4849,63 @@ class Game {
             }
         }
     }
-    
+
     renderXpGems() {
         const ctx = this.ctx;
+        const camLeft = this.camera.x - 50;
+        const camRight = this.camera.x + this.canvas.width + 50;
+        const camTop = this.camera.y - 50;
+        const camBottom = this.camera.y + this.canvas.height + 50;
 
-        for (const gem of this.xpGems) {
-            // Glow effect
-            ctx.shadowColor = gem.color;
-            ctx.shadowBlur = 15;
-
-            // Draw diamond shape
+        const len = this.xpGems.length;
+        for (let i = 0; i < len; i++) {
+            const gem = this.xpGems[i];
+            
+            // Frustum culling - skip gems outside camera view
+            if (gem.x + gem.radius < camLeft || gem.x - gem.radius > camRight ||
+                gem.y + gem.radius < camTop || gem.y - gem.radius > camBottom) {
+                continue;
+            }
+            
+            // Draw circular gem (updated from diamond shape)
             ctx.fillStyle = gem.color;
             ctx.beginPath();
-            ctx.moveTo(gem.x, gem.y - gem.radius);
-            ctx.lineTo(gem.x + gem.radius, gem.y);
-            ctx.lineTo(gem.x, gem.y + gem.radius);
-            ctx.lineTo(gem.x - gem.radius, gem.y);
-            ctx.closePath();
+            ctx.arc(gem.x, gem.y, gem.radius, 0, Math.PI * 2);
             ctx.fill();
 
-            // Inner highlight
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            // Inner highlight for glossy effect
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
             ctx.beginPath();
-            ctx.moveTo(gem.x, gem.y - gem.radius * 0.5);
-            ctx.lineTo(gem.x + gem.radius * 0.3, gem.y);
-            ctx.lineTo(gem.x, gem.y + gem.radius * 0.3);
-            ctx.lineTo(gem.x - gem.radius * 0.3, gem.y);
-            ctx.closePath();
+            ctx.arc(gem.x - gem.radius * 0.25, gem.y - gem.radius * 0.25, gem.radius * 0.35, 0, Math.PI * 2);
             ctx.fill();
 
-            ctx.shadowBlur = 0;
+            // Subtle inner ring for depth
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(gem.x, gem.y, gem.radius * 0.6, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+    }
+
+    renderHealthPacks() {
+        const ctx = this.ctx;
+        const camLeft = this.camera.x - 50;
+        const camRight = this.camera.x + this.canvas.width + 50;
+        const camTop = this.camera.y - 50;
+        const camBottom = this.camera.y + this.canvas.height + 50;
+
+        const len = this.healthPacks.length;
+        for (let i = 0; i < len; i++) {
+            const pack = this.healthPacks[i];
+            
+            // Frustum culling - skip health packs outside camera view
+            if (pack.x + pack.radius < camLeft || pack.x - pack.radius > camRight ||
+                pack.y + pack.radius < camTop || pack.y - pack.radius > camBottom) {
+                continue;
+            }
+            
+            pack.render(ctx, this.camera.x, this.camera.y);
         }
     }
 
@@ -3213,7 +4921,8 @@ class Game {
                 x: Math.random() * mapWidth,
                 y: Math.random() * mapHeight,
                 size: 25 + Math.random() * 20,
-                variation: Math.floor(Math.random() * 3)
+                variation: Math.floor(Math.random() * 3),
+                colorIndex: Math.floor(Math.random() * 4)
             });
         }
 
@@ -3224,7 +4933,8 @@ class Game {
                 x: Math.random() * mapWidth,
                 y: Math.random() * mapHeight,
                 size: 15 + Math.random() * 15,
-                variation: Math.floor(Math.random() * 3)
+                variation: Math.floor(Math.random() * 3),
+                colorIndex: Math.floor(Math.random() * 4)
             });
         }
 
@@ -3235,7 +4945,8 @@ class Game {
                 x: Math.random() * mapWidth,
                 y: Math.random() * mapHeight,
                 size: 10 + Math.random() * 10,
-                variation: Math.floor(Math.random() * 4)
+                variation: Math.floor(Math.random() * 4),
+                colorIndex: Math.floor(Math.random() * 4)
             });
         }
 
@@ -3246,7 +4957,8 @@ class Game {
                 x: Math.random() * mapWidth,
                 y: Math.random() * mapHeight,
                 size: 30 + Math.random() * 25,
-                variation: Math.floor(Math.random() * 4)
+                variation: Math.floor(Math.random() * 4),
+                colorIndex: Math.floor(Math.random() * 4)
             });
         }
 
@@ -3257,7 +4969,8 @@ class Game {
                 x: Math.random() * mapWidth,
                 y: Math.random() * mapHeight,
                 size: 12 + Math.random() * 8,
-                variation: Math.floor(Math.random() * 3)
+                variation: Math.floor(Math.random() * 3),
+                colorIndex: Math.floor(Math.random() * 3)
             });
         }
     }
@@ -3299,14 +5012,17 @@ class Game {
 
     renderTree(dec) {
         const ctx = this.ctx;
-        const { x, y, size, variation } = dec;
+        const { x, y, size, variation, colorIndex } = dec;
+
+        // Pick color based on stored colorIndex (no random per-frame)
+        const colors = TREE_COLORS[colorIndex % TREE_COLORS.length];
 
         // Tree trunk
-        ctx.fillStyle = '#1a1a1a';
+        ctx.fillStyle = colors.trunk;
         ctx.fillRect(x - size * 0.15, y + size * 0.3, size * 0.3, size * 0.7);
 
         // Tree foliage (dark silhouette)
-        ctx.fillStyle = '#0d0d1a';
+        ctx.fillStyle = colors.foliage;
         ctx.beginPath();
 
         if (variation === 0) {
@@ -3331,7 +5047,7 @@ class Game {
         ctx.fill();
 
         // Darker shadow on foliage
-        ctx.fillStyle = '#06060a';
+        ctx.fillStyle = colors.shadow;
         ctx.beginPath();
         ctx.arc(x + size * 0.2, y + size * 0.2, size * 0.4, 0, Math.PI * 2);
         ctx.fill();
@@ -3339,9 +5055,12 @@ class Game {
 
     renderRock(dec) {
         const ctx = this.ctx;
-        const { x, y, size, variation } = dec;
+        const { x, y, size, variation, colorIndex } = dec;
 
-        ctx.fillStyle = '#2a2a3a';
+        // Pick color based on stored colorIndex (no random per-frame)
+        const colors = ROCK_COLORS[colorIndex % ROCK_COLORS.length];
+
+        ctx.fillStyle = colors.base;
 
         if (variation === 0) {
             // Round rock
@@ -3369,13 +5088,13 @@ class Game {
         }
 
         // Rock highlights
-        ctx.fillStyle = '#3a3a4a';
+        ctx.fillStyle = colors.highlight;
         ctx.beginPath();
         ctx.arc(x - size * 0.2, y - size * 0.2, size * 0.25, 0, Math.PI * 2);
         ctx.fill();
 
         // Dark cracks
-        ctx.strokeStyle = '#1a1a2a';
+        ctx.strokeStyle = colors.crack;
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(x - size * 0.3, y);
@@ -3387,9 +5106,12 @@ class Game {
 
     renderGrass(dec) {
         const ctx = this.ctx;
-        const { x, y, size, variation } = dec;
+        const { x, y, size, variation, colorIndex } = dec;
 
-        ctx.fillStyle = '#1a3a1a';
+        // Pick color based on stored colorIndex (no random per-frame)
+        const colors = GRASS_COLORS[colorIndex % GRASS_COLORS.length];
+
+        ctx.fillStyle = colors.blade;
 
         // Draw grass blades
         const bladeCount = 5 + variation;
@@ -3417,7 +5139,7 @@ class Game {
         }
 
         // Darker center
-        ctx.fillStyle = '#0f2a0f';
+        ctx.fillStyle = colors.center;
         ctx.beginPath();
         ctx.ellipse(x, y + size * 0.2, size * 0.6, size * 0.3, 0, 0, Math.PI * 2);
         ctx.fill();
@@ -3425,10 +5147,13 @@ class Game {
 
     renderRuins(dec) {
         const ctx = this.ctx;
-        const { x, y, size, variation } = dec;
+        const { x, y, size, variation, colorIndex } = dec;
 
-        ctx.fillStyle = '#3a3a4a';
-        ctx.strokeStyle = '#2a2a3a';
+        // Pick color based on stored colorIndex (no random per-frame)
+        const colors = RUINS_COLORS[colorIndex % RUINS_COLORS.length];
+
+        ctx.fillStyle = colors.base;
+        ctx.strokeStyle = colors.stroke;
         ctx.lineWidth = 2;
 
         if (variation === 0) {
@@ -3445,7 +5170,7 @@ class Game {
             ctx.stroke();
 
             // Missing chunk
-            ctx.fillStyle = '#1a1a2e';
+            ctx.fillStyle = colors.missing;
             ctx.beginPath();
             ctx.arc(x + size * 0.5, y + size * 0.4, size * 0.3, 0, Math.PI * 2);
             ctx.fill();
@@ -3490,10 +5215,13 @@ class Game {
 
     renderTombstone(dec) {
         const ctx = this.ctx;
-        const { x, y, size, variation } = dec;
+        const { x, y, size, variation, colorIndex } = dec;
 
-        ctx.fillStyle = '#3a3a4a';
-        ctx.strokeStyle = '#2a2a3a';
+        // Pick color based on stored colorIndex (no random per-frame)
+        const colors = TOMBSTONE_COLORS[colorIndex % TOMBSTONE_COLORS.length];
+
+        ctx.fillStyle = colors.base;
+        ctx.strokeStyle = colors.stroke;
         ctx.lineWidth = 2;
 
         if (variation === 0) {
@@ -3508,7 +5236,7 @@ class Game {
             ctx.stroke();
 
             // Cross engraving
-            ctx.strokeStyle = '#2a2a3a';
+            ctx.strokeStyle = colors.engraving;
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(x, y - size * 0.2);
@@ -3522,7 +5250,7 @@ class Game {
             ctx.strokeRect(x - size * 0.35, y - size * 0.4, size * 0.7, size * 0.9);
 
             // Skull engraving (simple)
-            ctx.fillStyle = '#2a2a3a';
+            ctx.fillStyle = colors.engraving;
             ctx.beginPath();
             ctx.arc(x, y - size * 0.1, size * 0.15, 0, Math.PI * 2);
             ctx.fill();
