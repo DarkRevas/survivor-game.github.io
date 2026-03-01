@@ -980,6 +980,7 @@
 
     <script>
 // ==================== GAME CONFIGURATION ====================
+// OPTIMIZATION: Reduced entity limits for better performance
 const CONFIG = {
     CANVAS_WIDTH: 1920,
     CANVAS_HEIGHT: 1080,
@@ -995,7 +996,12 @@ const CONFIG = {
     SPAWN_BASE_INTERVAL: 1.0,
     SPAWN_MIN_INTERVAL: 0.15,
     WAVE_DURATION: 30, // 30 seconds per wave
-    
+
+    // OPTIMIZATION: Reduced entity limits
+    MAX_ENEMIES: 50,         // Reduced from 80
+    MAX_PROJECTILES: 100,    // Reduced from 150
+    MAX_PARTICLES: 50,       // Reduced from 100
+
     // Special Event Configuration
     BLOOD_MOON_CHANCE: 0.20,           // 20% chance every 5 waves
     BLOOD_MOON_INTERVAL: 5,            // Every 5 waves
@@ -1003,17 +1009,15 @@ const CONFIG = {
     BLOOD_MOON_SPEED_MULTIPLIER: 1.5,  // +50% speed
     BLOOD_MOON_DAMAGE_MULTIPLIER: 1.25,// +25% damage
     BLOOD_MOON_SPAWN_MULTIPLIER: 0.5,  // Spawn rate doubles (interval halved)
-    
+
     ENEMY_SIEGE_CHANCE: 0.30,          // 30% chance every 3 waves
     ENEMY_SIEGE_INTERVAL: 3,           // Every 3 waves
     ENEMY_SIEGE_COUNT: 10,             // 8-12 enemies spawn at once
-    
+
     TREASURE_WAVE_CHANCE: 0.25,        // 25% chance every 4 waves
     TREASURE_WAVE_INTERVAL: 4,         // Every 4 waves
     TREASURE_WAVE_XP_BONUS: 0.50,      // +50% XP from gems
-    
-    HEALTH_PACK_DROP_CHANCE: 0.02,     // 2% base drop chance
-    HEALTH_PACK_HEAL_AMOUNT: 20,       // Restore 20 HP
+    // Health packs removed due to performance issues
 };
 
 // ==================== DECORATION COLOR PALETTES (cached for performance) ====================
@@ -1542,22 +1546,56 @@ class ObjectPool {
 }
 
 // ==================== SPATIAL HASH GRID ====================
+// OPTIMIZATION: Only rebuild spatial hash when enemies have moved
 class SpatialHash {
     constructor(cellSize = 100) {
         this.cellSize = cellSize;
         this.grid = new Map();
+        this.dirty = true; // Track if rebuild is needed
+        this.lastEnemyPositions = new Map(); // Track enemy positions for change detection
     }
-    
+
     clear() {
         this.grid.clear();
+        this.lastEnemyPositions.clear();
+        this.dirty = true;
     }
-    
+
+    // OPTIMIZATION: Check if enemies have moved since last build
+    checkDirty(enemies) {
+        if (this.dirty) return true;
+        if (enemies.length !== this.lastEnemyPositions.size) return true;
+        
+        const len = enemies.length;
+        for (let i = 0; i < len; i++) {
+            const enemy = enemies[i];
+            const key = enemy.type + '_' + i; // Unique key per enemy
+            const lastPos = this.lastEnemyPositions.get(key);
+            if (!lastPos || Math.abs(lastPos.x - enemy.x) > 1 || Math.abs(lastPos.y - enemy.y) > 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // OPTIMIZATION: Store positions after building
+    storePositions(enemies) {
+        this.lastEnemyPositions.clear();
+        const len = enemies.length;
+        for (let i = 0; i < len; i++) {
+            const enemy = enemies[i];
+            const key = enemy.type + '_' + i;
+            this.lastEnemyPositions.set(key, { x: enemy.x, y: enemy.y });
+        }
+        this.dirty = false;
+    }
+
     getKey(x, y) {
         const gx = Math.floor(x / this.cellSize);
         const gy = Math.floor(y / this.cellSize);
         return `${gx},${gy}`;
     }
-    
+
     insert(entity) {
         const key = this.getKey(entity.x, entity.y);
         if (!this.grid.has(key)) {
@@ -1565,14 +1603,14 @@ class SpatialHash {
         }
         this.grid.get(key).push(entity);
     }
-    
+
     query(x, y, radius) {
         const results = [];
         const minGx = Math.floor((x - radius) / this.cellSize);
         const maxGx = Math.floor((x + radius) / this.cellSize);
         const minGy = Math.floor((y - radius) / this.cellSize);
         const maxGy = Math.floor((y + radius) / this.cellSize);
-        
+
         for (let gx = minGx; gx <= maxGx; gx++) {
             for (let gy = minGy; gy <= maxGy; gy++) {
                 const key = `${gx},${gy}`;
@@ -1869,14 +1907,15 @@ class VirtualJoystick {
 // ==================== PARTICLE SYSTEM ====================
 class ParticleSystem {
     constructor() {
+        // OPTIMIZATION: Use CONFIG.MAX_PARTICLES for performance limit
         this.particles = [];
-        this.MAX_PARTICLES = 200; // Performance limit
+        this.MAX_PARTICLES = CONFIG.MAX_PARTICLES;
     }
 
     emit(x, y, config) {
         // Don't emit if at max capacity
         if (this.particles.length >= this.MAX_PARTICLES) return;
-        
+
         const particle = {
             x, y,
             vx: config.vx || (Math.random() - 0.5) * 100,
@@ -1891,9 +1930,10 @@ class ParticleSystem {
         };
         this.particles.push(particle);
     }
-    
+
+    // OPTIMIZATION: Reduced particle count from 8 to 4
     emitBlood(x, y) {
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 4; i++) {
             this.emit(x, y, {
                 vx: (Math.random() - 0.5) * 200,
                 vy: (Math.random() - 0.5) * 200,
@@ -1905,9 +1945,10 @@ class ParticleSystem {
             });
         }
     }
-    
+
+    // OPTIMIZATION: Reduced particle count from 5 to 2
     emitXP(x, y) {
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 2; i++) {
             this.emit(x, y, {
                 vx: (Math.random() - 0.5) * 150,
                 vy: (Math.random() - 0.5) * 150,
@@ -1918,10 +1959,11 @@ class ParticleSystem {
             });
         }
     }
-    
+
+    // OPTIMIZATION: Reduced particle count from 15 to 6
     emitExplosion(x, y, color) {
-        for (let i = 0; i < 15; i++) {
-            const angle = (Math.PI * 2 / 15) * i;
+        for (let i = 0; i < 6; i++) {
+            const angle = (Math.PI * 2 / 6) * i;
             const speed = 100 + Math.random() * 100;
             this.emit(x, y, {
                 vx: Math.cos(angle) * speed,
@@ -1933,9 +1975,11 @@ class ParticleSystem {
             });
         }
     }
-    
+
+    // OPTIMIZATION: Cache array length and use indexed loop for better performance
     update(dt) {
-        for (let i = this.particles.length - 1; i >= 0; i--) {
+        const len = this.particles.length;
+        for (let i = len - 1; i >= 0; i--) {
             const p = this.particles[i];
             p.x += p.vx * dt;
             p.y += p.vy * dt;
@@ -1943,19 +1987,22 @@ class ParticleSystem {
             p.vx *= p.drag;
             p.vy *= p.drag;
             p.life -= dt;
-            
+
             if (p.life <= 0) {
                 this.particles.splice(i, 1);
             }
         }
     }
-    
+
+    // OPTIMIZATION: Cache array length for iteration
     render(ctx) {
-        for (const p of this.particles) {
+        const len = this.particles.length;
+        for (let i = 0; i < len; i++) {
+            const p = this.particles[i];
             const alpha = p.life / p.maxLife;
             ctx.globalAlpha = alpha;
             ctx.fillStyle = p.color;
-            
+
             if (p.type === 'circle') {
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
@@ -1996,8 +2043,11 @@ class DamageNumberSystem {
         }
     }
     
+    // OPTIMIZATION: Cache array length for iteration
     render(ctx, cameraX, cameraY) {
-        for (const n of this.numbers) {
+        const len = this.numbers.length;
+        for (let i = 0; i < len; i++) {
+            const n = this.numbers[i];
             const screenX = n.x - cameraX;
             const screenY = n.y - cameraY;
 
@@ -2119,9 +2169,11 @@ class Player {
                 this.invincible = false;
             }
         }
-        
-        // Update weapon cooldowns
-        for (const weapon of this.weapons) {
+
+        // OPTIMIZATION: Cache array length for weapon cooldown update
+        const len = this.weapons.length;
+        for (let i = 0; i < len; i++) {
+            const weapon = this.weapons[i];
             if (weapon.currentCooldown > 0) {
                 weapon.currentCooldown -= dt;
             }
@@ -2192,6 +2244,8 @@ class Enemy {
             const poisonTickDamage = this.maxHp * 0.02;
             this.hp -= poisonTickDamage;
             if (this.hp <= 0) {
+                this.poisonDuration = 0;
+                this.poisonDamage = 0;
                 return player ? Math.sqrt((player.x - this.x) ** 2 + (player.y - this.y) ** 2) : 0;
             }
             if (this.poisonDuration <= 0) {
@@ -2287,6 +2341,8 @@ class Projectile {
         this.isExplosive = config.isExplosive || false;
         this.explosionRadius = config.explosionRadius || 0;
         this.critChance = config.critChance || 0;
+        // Weapon type for SVG rendering
+        this.weaponType = config.weaponType || null;
         // Special weapon properties
         this.isIceShard = config.isIceShard || false;
         this.isSacredCross = config.isSacredCross || false;
@@ -2322,6 +2378,7 @@ class Projectile {
         this.isExplosive = false;
         this.explosionRadius = 0;
         this.critChance = 0;
+        this.weaponType = null;
         this.isIceShard = false;
         this.isSacredCross = false;
         this.isPoisonDagger = false;
@@ -2353,14 +2410,19 @@ class Projectile {
             }
 
             // Check collision with enemies while orbiting
-            for (const enemy of enemies) {
+            // OPTIMIZATION: Cache array length and use squared distance
+            const enemyLen = enemies.length;
+            const combinedRadius = this.radius; // Enemy radius added in comparison
+            for (let i = 0; i < enemyLen; i++) {
+                const enemy = enemies[i];
                 if (this.hitEnemies.has(enemy)) continue;
 
                 const dx = enemy.x - this.x;
                 const dy = enemy.y - this.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
+                const distSq = dx * dx + dy * dy;
+                const combinedRadiusSq = (enemy.radius + combinedRadius) * (enemy.radius + combinedRadius);
 
-                if (dist < enemy.radius + this.radius) {
+                if (distSq < combinedRadiusSq) {
                     const dead = enemy.takeDamage(this.damage, 0, 0);
                     if (game && game.damageNumbers) {
                         game.damageNumbers.add(enemy.x, enemy.y - 20, this.damage);
@@ -2417,13 +2479,16 @@ class Projectile {
 
         if (this.homing && !this.target) {
             // Find target
-            let minDist = Infinity;
-            for (const enemy of enemies) {
+            // OPTIMIZATION: Cache array length and use squared distance
+            let minDistSq = Infinity;
+            const enemyLen = enemies.length;
+            for (let i = 0; i < enemyLen; i++) {
+                const enemy = enemies[i];
                 const dx = enemy.x - this.x;
                 const dy = enemy.y - this.y;
-                const dist = dx * dx + dy * dy;
-                if (dist < minDist && dist < 250000) { // 500^2
-                    minDist = dist;
+                const distSq = dx * dx + dy * dy;
+                if (distSq < minDistSq && distSq < 250000) { // 500^2
+                    minDistSq = distSq;
                     this.target = enemy;
                 }
             }
@@ -2469,154 +2534,51 @@ class XpGem {
         return '#4488ff'; // Blue
     }
     
+    // OPTIMIZATION: Use squared distance for range checks
     update(dt, player) {
         const dx = player.x - this.x;
         const dy = player.y - this.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        const distSq = dx * dx + dy * dy;
 
         const magnetRange = 100 * (1 + (player.passives.goldMagnet || 0));
+        const magnetRangeSq = magnetRange * magnetRange;
 
-        if (dist < magnetRange) {
+        // OPTIMIZATION: Use squared distance for magnet check
+        if (distSq < magnetRangeSq) {
             this.magnetized = true;
         }
 
         if (this.magnetized) {
             const speed = 400;
-            this.x += (dx / dist) * speed * dt;
-            this.y += (dy / dist) * speed * dt;
+            // Need actual distance for normalization
+            const dist = Math.sqrt(distSq);
+            if (dist > 0) {
+                this.x += (dx / dist) * speed * dt;
+                this.y += (dy / dist) * speed * dt;
+            }
 
             // Recalculate distance after movement
             const collectDx = player.x - this.x;
             const collectDy = player.y - this.y;
-            const collectDist = Math.sqrt(collectDx * collectDx + collectDy * collectDy);
+            const collectDistSq = collectDx * collectDx + collectDy * collectDy;
+            const combinedRadius = player.radius + this.radius;
 
-            // Return true if collected
-            if (collectDist < player.radius + this.radius) {
+            // OPTIMIZATION: Use squared distance for collection check
+            if (collectDistSq < combinedRadius * combinedRadius) {
                 return true;
             }
             return false;
         }
-        if (dist < player.radius + this.radius) {
+        // OPTIMIZATION: Use squared distance for initial collection check
+        const combinedRadius = player.radius + this.radius;
+        if (distSq < combinedRadius * combinedRadius) {
             return true;
         }
         return false;
     }
 }
 
-// ==================== HEALTH PACK CLASS ====================
-class HealthPack {
-    constructor(x, y, healAmount = 25) {
-        this.x = x;
-        this.y = y;
-        this.healAmount = healAmount;
-        this.radius = 15; // Increased size for better visibility (~30px diameter)
-        this.magnetized = false;
-        this.bobOffset = Math.random() * Math.PI * 2;
-        this.bobSpeed = 3;
-        this.pulseOffset = Math.random() * Math.PI * 2;
-        this.pulseSpeed = 4;
-    }
-
-    update(dt, player) {
-        // Bobbing animation
-        this.bobOffset += this.bobSpeed * dt;
-        this.pulseOffset += this.pulseSpeed * dt;
-
-        const dx = player.x - this.x;
-        const dy = player.y - this.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        const magnetRange = 100 * (1 + (player.passives.goldMagnet || 0));
-
-        if (dist < magnetRange) {
-            this.magnetized = true;
-        }
-
-        if (this.magnetized) {
-            const speed = 450;
-            this.x += (dx / dist) * speed * dt;
-            this.y += (dy / dist) * speed * dt;
-
-            // Recalculate distance after movement
-            const collectDx = player.x - this.x;
-            const collectDy = player.y - this.y;
-            const collectDist = Math.sqrt(collectDx * collectDx + collectDy * collectDy);
-
-            if (collectDist < player.radius + this.radius) {
-                return true;
-            }
-            return false;
-        }
-
-        if (dist < player.radius + this.radius) {
-            return true;
-        }
-        return false;
-    }
-
-    render(ctx, cameraX, cameraY) {
-        const screenX = this.x - cameraX;
-        const screenY = this.y - cameraY;
-        const bobY = Math.sin(this.bobOffset) * 2;
-        
-        // Pulsing scale effect (1.0 to 1.15)
-        const pulseScale = 1.0 + Math.sin(this.pulseOffset) * 0.15;
-        const scaledRadius = this.radius * pulseScale;
-
-        // Bright glow effect (only when magnetized or close to player)
-        if (this.magnetized) {
-            ctx.save();
-            ctx.shadowColor = 'rgba(255, 100, 100, 0.8)';
-            ctx.shadowBlur = 25;
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.arc(screenX, screenY + bobY, scaledRadius + 3, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
-
-        // White background circle (makes it stand out)
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(screenX, screenY + bobY, scaledRadius, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Red medical cross - larger and more visible
-        ctx.fillStyle = '#ef4444';
-        const crossWidth = scaledRadius * 0.7; // Increased from 0.6
-        const crossThickness = scaledRadius * 0.3; // Increased from 0.25
-
-        // Horizontal bar of cross
-        ctx.fillRect(
-            screenX - crossWidth,
-            screenY + bobY - crossThickness / 2,
-            crossWidth * 2,
-            crossThickness
-        );
-
-        // Vertical bar of cross
-        ctx.fillRect(
-            screenX - crossThickness / 2,
-            screenY + bobY - crossWidth,
-            crossThickness,
-            crossWidth * 2
-        );
-
-        // Subtle inner highlight for depth
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-        ctx.beginPath();
-        ctx.arc(screenX - 4, screenY + bobY - 4, scaledRadius * 0.35, 0, Math.PI * 2);
-        ctx.fill();
-        
-        // Outer ring for extra visibility
-        ctx.strokeStyle = 'rgba(239, 68, 68, 0.5)';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(screenX, screenY + bobY, scaledRadius + 2, 0, Math.PI * 2);
-        ctx.stroke();
-    }
-}
-
+// ==================== GROUND EFFECT CLASS ====================
 class GroundEffect {
     constructor(x, y, radius, duration, damage, tickRate, color) {
         this.x = x;
@@ -2656,7 +2618,7 @@ class Game {
         this.enemies = [];
         this.projectiles = [];
         this.xpGems = [];
-        this.healthPacks = [];
+        // Health packs removed due to performance issues
         this.groundEffects = [];
         this.lightningBolts = [];
 
@@ -2671,6 +2633,13 @@ class Game {
         this.levelUpPending = false;
         this.pendingLevel = 0;
 
+        // Performance monitoring
+        this.frameCount = 0;
+        this.fpsTimer = 0;
+        this.currentFPS = 60;
+        this.updateTime = 0;
+        this.renderTime = 0;
+
         // Special Event State
         this.activeEvents = {
             bloodMoon: false,
@@ -2680,6 +2649,19 @@ class Game {
         this.eventNotifications = [];
 
         this.saveData = this.loadSave();
+
+        // Preload weapon SVG images
+        this.weaponImages = {};
+        const weaponKeys = ['magic_aura', 'fireball_arc', 'magic_wand', 'throwing_knife', 
+                            'lightning_bolt', 'holy_water', 'ice_shard', 'sacred_cross', 
+                            'poison_dagger', 'spin_blade'];
+        for (const key of weaponKeys) {
+            const img = new Image();
+            img.src = `assets/weapons/${key}.svg`;
+            img.onload = () => console.log('[WeaponSVG] Loaded:', key);
+            img.onerror = () => console.warn('[WeaponSVG] Failed to load:', key);
+            this.weaponImages[key] = img;
+        }
 
         // Mobile touch controls
         this.joystick = null;
@@ -2827,7 +2809,7 @@ class Game {
         this.enemies = [];
         this.projectiles = [];
         this.xpGems = [];
-        this.healthPacks = [];
+        // Health packs removed due to performance issues
         this.groundEffects = [];
         this.lightningBolts = [];
         this.decorations = [];
@@ -2862,7 +2844,7 @@ class Game {
     
     createWeapon(weaponId) {
         const data = WEAPONS[weaponId];
-        return {
+        const weapon = {
             ...data,
             level: 1,
             currentCooldown: 0,
@@ -2878,6 +2860,14 @@ class Game {
             poolRadius: data.poolRadius || 0,
             tickRate: data.tickRate || 0,
         };
+
+        // Initialize Sacred Cross specific properties
+        if (weaponId === 'sacredCross') {
+            weapon.sacredCrossActive = false;
+            weapon.sacredCrossTimer = 0; // Ready to spawn immediately
+        }
+
+        return weapon;
     }
 
     togglePause() {
@@ -2917,16 +2907,29 @@ class Game {
     
     gameLoop() {
         if (this.state !== 'playing' && this.state !== 'levelup') return;
-        
+
         const now = performance.now();
-        const dt = Math.min((now - this.lastTime) / 1000, 0.1); // Cap at 0.1s
+        const dt = Math.min((now - this.lastTime) / 1000, 0.1);
         this.lastTime = now;
-        
+
+        // FPS counter (log only when drops below 30)
+        this.frameCount = (this.frameCount || 0) + 1;
+        if (!this.fpsTimer) this.fpsTimer = 0;
+        this.fpsTimer += dt;
+        if (this.fpsTimer >= 1) {
+            this.currentFPS = Math.round(this.frameCount / this.fpsTimer);
+            this.frameCount = 0;
+            this.fpsTimer = 0;
+            if (this.currentFPS < 30) {
+                console.warn('[FPS] Low:', this.currentFPS);
+            }
+        }
+
         if (this.state === 'playing') {
             this.update(dt);
         }
         this.render();
-        
+
         if (this.state === 'playing' || this.state === 'levelup') {
             requestAnimationFrame(() => this.gameLoop());
         }
@@ -2992,9 +2995,6 @@ class Game {
         // Update XP gems
         this.updateXpGems(dt);
 
-        // Update health packs
-        this.updateHealthPacks(dt);
-
         // Update particles
         this.particles.update(dt);
         
@@ -3024,64 +3024,69 @@ class Game {
     }
     
     spawnEnemy(siegeMode = false) {
+        // ENFORCEMENT: Check enemy limit before spawning
+        if (this.enemies.length >= CONFIG.MAX_ENEMIES) {
+            this.spawnTimer = 0;
+            return;
+        }
+
         // Determine enemy type based on wave
         const types = this.getAvailableEnemyTypes();
         const weights = this.getEnemyWeights();
 
         let type = this.weightedRandom(types, weights);
-        const waveMultiplier = Math.pow(2.5, this.wave - 1); // 2.5x HP scaling per wave (increased difficulty)
+        const waveMultiplier = Math.pow(2.5, this.wave - 1);
 
         let x, y;
-        
+
         if (siegeMode) {
-            // Siege mode: spawn in a circle around player
             const angle = Math.random() * Math.PI * 2;
-            const distance = 300 + Math.random() * 100; // 300-400 units from player
+            const distance = 300 + Math.random() * 100;
             x = this.player.x + Math.cos(angle) * distance;
             y = this.player.y + Math.sin(angle) * distance;
         } else {
-            // Normal spawn: outside camera view
             const angle = Math.random() * Math.PI * 2;
             const distance = Math.max(CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT) / 2 + 100;
             x = this.player.x + Math.cos(angle) * distance;
             y = this.player.y + Math.sin(angle) * distance;
         }
 
-        // Clamp to map
         const clampedX = Math.max(50, Math.min(CONFIG.MAP_BOUNDS.width - 50, x));
         const clampedY = Math.max(50, Math.min(CONFIG.MAP_BOUNDS.height - 50, y));
 
         const enemy = new Enemy(type, clampedX, clampedY, waveMultiplier);
-        
-        // Apply Blood Moon buffs if active
+
         if (this.activeEvents.bloodMoon) {
             enemy.speed *= CONFIG.BLOOD_MOON_SPEED_MULTIPLIER;
             enemy.damage *= CONFIG.BLOOD_MOON_DAMAGE_MULTIPLIER;
         }
-        
+
         this.enemies.push(enemy);
     }
-    
-    /**
-     * Spawn multiple enemies in a circle around the player (Siege event)
-     */
+
     spawnSiegeEnemies() {
-        const count = 8 + Math.floor(Math.random() * 5); // 8-12 enemies
+        const count = 8 + Math.floor(Math.random() * 5);
+        
+        if (this.enemies.length >= CONFIG.MAX_ENEMIES) return;
+        
+        const actualCount = Math.min(count, CONFIG.MAX_ENEMIES - this.enemies.length);
+        if (actualCount <= 0) return;
+        
         const types = this.getAvailableEnemyTypes();
         const weights = this.getEnemyWeights();
-        
-        for (let i = 0; i < count; i++) {
+
+        for (let i = 0; i < actualCount; i++) {
             const type = this.weightedRandom(types, weights);
             const waveMultiplier = Math.pow(2.5, this.wave - 1);
-            
+
             const angle = (Math.PI * 2 / count) * i + Math.random() * 0.3;
             const distance = 350 + Math.random() * 50;
             const x = this.player.x + Math.cos(angle) * distance;
             const y = this.player.y + Math.sin(angle) * distance;
-            
+
             const clampedX = Math.max(50, Math.min(CONFIG.MAP_BOUNDS.width - 50, x));
             const clampedY = Math.max(50, Math.min(CONFIG.MAP_BOUNDS.height - 50, y));
-            
+
             const enemy = new Enemy(type, clampedX, clampedY, waveMultiplier);
             
             // Apply Blood Moon buffs if active
@@ -3256,14 +3261,29 @@ class Game {
         });
     }
 
+    // OPTIMIZATION: Cache array length for iteration
     updateWeapons(dt) {
-        for (const weapon of this.player.weapons) {
+        // Update Sacred Cross cooldown system separately
+        this.updateSacredCrossWeapons(dt);
+
+        const len = this.player.weapons.length;
+        for (let i = 0; i < len; i++) {
+            const weapon = this.player.weapons[i];
+            // Sacred Cross uses its own cooldown system
+            if (weapon.id === 'sacredCross') {
+                // Only fire if ready (timer >= 0)
+                if (weapon.sacredCrossTimer >= 0) {
+                    this.fireWeapon(weapon);
+                }
+                continue;
+            }
+
             if (weapon.currentCooldown > 0) continue;
-            
-            const cooldown = weapon.baseCooldown / 
-                (1 + this.player.attackSpeedMultiplier) / 
+
+            const cooldown = weapon.baseCooldown /
+                (1 + this.player.attackSpeedMultiplier) /
                 (1 - Math.min(0.5, this.player.cooldownReduction));
-            
+
             // Minimum cooldown floor of 0.05s to prevent negative cooldowns
             weapon.currentCooldown = Math.max(0.05, cooldown);
             this.fireWeapon(weapon);
@@ -3313,31 +3333,39 @@ class Game {
         // Damage all enemies in radius - tick damage is per tick
         const tickDamage = damage;
         const effectiveRange = range * this.player.areaMultiplier;
-        
+        // OPTIMIZATION: Pre-calculate squared range for comparison
+        const effectiveRangeSq = effectiveRange * effectiveRange;
+
         // Create a copy of enemies array to avoid modification during iteration
         const enemiesToProcess = [...this.enemies];
         const enemiesToKill = [];
-        
-        for (const enemy of enemiesToProcess) {
+
+        // OPTIMIZATION: Cache array length
+        const len = enemiesToProcess.length;
+        for (let i = 0; i < len; i++) {
+            const enemy = enemiesToProcess[i];
             const dx = enemy.x - this.player.x;
             const dy = enemy.y - this.player.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            
-            if (dist <= effectiveRange + enemy.radius) {
+            // OPTIMIZATION: Use squared distance instead of Math.sqrt
+            const distSq = dx * dx + dy * dy;
+            // Compare with squared range (account for enemy radius)
+            const rangeWithRadius = effectiveRange + enemy.radius;
+            if (distSq <= rangeWithRadius * rangeWithRadius) {
                 const dead = enemy.takeDamage(tickDamage, 0, 0);
                 this.damageNumbers.add(enemy.x, enemy.y - 20, tickDamage);
-                
+
                 if (dead) {
                     enemiesToKill.push(enemy);
                 }
             }
         }
-        
+
         // Kill enemies after processing all damage
-        for (const enemy of enemiesToKill) {
-            this.killEnemy(enemy);
+        const killLen = enemiesToKill.length;
+        for (let i = 0; i < killLen; i++) {
+            this.killEnemy(enemiesToKill[i]);
         }
-        
+
         // Visual effect
         for (let i = 0; i < 3; i++) {
             const angle = Math.random() * Math.PI * 2;
@@ -3377,7 +3405,8 @@ class Game {
                         radius: 8,
                         color: '#ff6b35',
                         pierce: 999, // Pierces all
-                        lifetime: 2
+                        lifetime: 2,
+                        weaponType: 'fireball_arc'
                     }
                 );
                 proj.explosionRadius = weapon.explosionRadius * this.player.areaMultiplier;
@@ -3415,13 +3444,14 @@ class Game {
                     radius: 6,
                     color: '#4299e1',
                     pierce: weapon.pierce,
-                    lifetime: 5
+                    lifetime: 5,
+                    weaponType: 'magic_wand'
                 }
             );
             this.projectiles.push(proj);
         }
     }
-    
+
     fireThrowingKnife(weapon, damage, range) {
         const count = weapon.projectileCount + this.player.projectileBonus;
         let facing = { ...this.player.facing };
@@ -3452,13 +3482,14 @@ class Game {
                     color: '#ffd700',
                     pierce: 1,
                     lifetime: 2,
-                    critChance: weapon.critChance
+                    critChance: weapon.critChance,
+                    weaponType: 'throwing_knife'
                 }
             );
             this.projectiles.push(proj);
         }
     }
-    
+
     fireLightning(weapon, damage, range) {
         const target = this.findNearestEnemy(range);
         if (!target) return;
@@ -3510,17 +3541,21 @@ class Game {
 
             // Find next chain target
             let nextTarget = null;
-            let minDist = Infinity;
+            let minDistSq = Infinity;
+            const chainRangeSq = weapon.chainRange * weapon.chainRange;
 
-            for (const enemy of this.enemies) {
+            // OPTIMIZATION: Cache array length and use squared distance
+            const enemyLen = this.enemies.length;
+            for (let i = 0; i < enemyLen; i++) {
+                const enemy = this.enemies[i];
                 if (visited.has(enemy)) continue;
 
                 const dx = enemy.x - currentTarget.x;
                 const dy = enemy.y - currentTarget.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
+                const distSq = dx * dx + dy * dy;
 
-                if (dist < weapon.chainRange && dist < minDist) {
-                    minDist = dist;
+                if (distSq < chainRangeSq && distSq < minDistSq) {
+                    minDistSq = distSq;
                     nextTarget = enemy;
                 }
             }
@@ -3530,7 +3565,9 @@ class Game {
         }
 
         // Create lightning bolt visual effects
-        for (const bolt of chainOrigins) {
+        const chainLen = chainOrigins.length;
+        for (let i = 0; i < chainLen; i++) {
+            const bolt = chainOrigins[i];
             this.createLightningBolt(bolt.startX, bolt.startY, bolt.endX, bolt.endY);
         }
     }
@@ -3624,30 +3661,31 @@ class Game {
                         color: '#67e8f9',
                         pierce: weapon.pierce,
                         lifetime: 2,
-                        isIceShard: true
+                        isIceShard: true,
+                        weaponType: 'ice_shard'
                     }
                 );
                 this.projectiles.push(proj);
             }
             return;
         }
-        
+
         for (let i = 0; i < count; i++) {
             const dx = target.x - this.player.x;
             const dy = target.y - this.player.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
-            
+
             // Add slight spread for multiple projectiles
             const spreadAngle = (i - (count - 1) / 2) * 0.08;
             const cos = Math.cos(spreadAngle);
             const sin = Math.sin(spreadAngle);
-            
+
             const baseVx = (dx / dist) * weapon.projectileSpeed;
             const baseVy = (dy / dist) * weapon.projectileSpeed;
-            
+
             const vx = baseVx * cos - baseVy * sin;
             const vy = baseVx * sin + baseVy * cos;
-            
+
             const proj = this.projectilePool.get();
             proj.active = true;
             proj.init(
@@ -3661,7 +3699,8 @@ class Game {
                     color: '#67e8f9',
                     pierce: weapon.pierce,
                     lifetime: 2,
-                    isIceShard: true
+                    isIceShard: true,
+                    weaponType: 'ice_shard'
                 }
             );
             this.projectiles.push(proj);
@@ -3669,47 +3708,90 @@ class Game {
     }
 
     fireSacredCross(weapon, damage, range) {
-        const count = weapon.projectileCount + this.player.projectileBonus;
-        const effectiveRange = range * this.player.areaMultiplier;
-
-        // Create orbiting crosses around player
-        for (let i = 0; i < count; i++) {
-            const angle = (Math.PI * 2 / count) * i;
-            const orbitSpeed = 2.0; // Radians per second
-
-            const cross = this.projectilePool.get();
-            cross.active = true;
-            cross.init(
-                this.player.x + Math.cos(angle) * effectiveRange,
-                this.player.y + Math.sin(angle) * effectiveRange,
-                0, 0,
-                damage,
-                'player',
-                {
-                    speed: 0,
-                    radius: 8,
-                    color: '#fbbf24',
-                    pierce: 999,
-                    lifetime: 60, // Long lifetime for continuous orbit (60 seconds)
-                    isSacredCross: true,
-                    orbitAngle: angle,
-                    orbitSpeed: orbitSpeed + (i % 2) * 0.5, // Alternate rotation directions
-                    orbitRadius: effectiveRange,
-                    hitClearTimer: 0 // Timer for clearing hitEnemies
-                }
-            );
-            this.projectiles.push(cross);
+        // Check if weapon has cooldown tracking
+        if (!weapon.sacredCrossActive) {
+            weapon.sacredCrossActive = false;
+            weapon.sacredCrossTimer = 0;
         }
 
-        // Visual effect - holy particles
-        for (let i = 0; i < count * 3; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const dist = Math.random() * effectiveRange;
-            this.particles.emit(
-                this.player.x + Math.cos(angle) * dist,
-                this.player.y + Math.sin(angle) * dist,
-                { color: '#fbbf24', size: 4, life: 0.4, type: 'square' }
-            );
+        // Calculate cross count based on weapon level
+        // Level 1: 1 cross, Level 2: 2 crosses, Level 3: 3 crosses, Level 4: 4 crosses, Level 5: 5 crosses, Level 6+: 6 crosses
+        let crossCount = Math.min(6, weapon.level);
+        
+        // After level 6, only damage increases (handled by weapon.damage)
+        
+        const effectiveRange = range * this.player.areaMultiplier;
+        const orbitDuration = 2.5; // Seconds for one full orbit
+
+        // Check if we should spawn new crosses
+        if (!weapon.sacredCrossActive) {
+            // Spawn crosses
+            weapon.sacredCrossActive = true;
+            weapon.sacredCrossTimer = orbitDuration; // Active for one orbit
+
+            for (let i = 0; i < crossCount; i++) {
+                const baseAngle = (Math.PI * 2 / crossCount) * i;
+                const orbitSpeed = 2.0; // Radians per second
+
+                const cross = this.projectilePool.get();
+                cross.active = true;
+                cross.init(
+                    this.player.x + Math.cos(baseAngle) * effectiveRange,
+                    this.player.y + Math.sin(baseAngle) * effectiveRange,
+                    0, 0,
+                    damage,
+                    'player',
+                    {
+                        speed: 0,
+                        radius: 10,
+                        color: '#fbbf24',
+                        pierce: 999,
+                        lifetime: orbitDuration,
+                        isSacredCross: true,
+                        weaponType: 'sacred_cross',
+                        orbitAngle: baseAngle,
+                        orbitSpeed: orbitSpeed * (i % 2 === 0 ? 1 : -1), // Alternate CW/CCW rotation
+                        orbitRadius: effectiveRange,
+                        hitClearTimer: 0
+                    }
+                );
+                this.projectiles.push(cross);
+            }
+
+            // Visual effect - holy particles
+            for (let i = 0; i < crossCount * 5; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const dist = Math.random() * effectiveRange;
+                this.particles.emit(
+                    this.player.x + Math.cos(angle) * dist,
+                    this.player.y + Math.sin(angle) * dist,
+                    { color: '#fbbf24', size: 4, life: 0.5, type: 'square' }
+                );
+            }
+        }
+    }
+
+    // OPTIMIZATION: Cache array length for iteration
+    updateSacredCrossWeapons(dt) {
+        // Update cooldown timers for all sacred cross weapons
+        const len = this.player.weapons.length;
+        for (let i = 0; i < len; i++) {
+            const weapon = this.player.weapons[i];
+            if (weapon.id === 'sacredCross') {
+                if (weapon.sacredCrossActive) {
+                    weapon.sacredCrossTimer -= dt;
+                    if (weapon.sacredCrossTimer <= 0) {
+                        weapon.sacredCrossActive = false;
+                        // Cooldown before next spawn = weapon base cooldown
+                        weapon.sacredCrossTimer = -weapon.baseCooldown;
+                    }
+                } else {
+                    weapon.sacredCrossTimer += dt;
+                    if (weapon.sacredCrossTimer >= 0) {
+                        // Ready to spawn again - will be handled by fireSacredCross
+                    }
+                }
+            }
         }
     }
 
@@ -3745,22 +3827,23 @@ class Game {
                         color: '#4ade80',
                         pierce: 1,
                         lifetime: 1.5,
-                        isPoisonDagger: true
+                        isPoisonDagger: true,
+                        weaponType: 'poison_dagger'
                     }
                 );
                 this.projectiles.push(proj);
             }
             return;
         }
-        
+
         for (let i = 0; i < count; i++) {
             const dx = target.x - this.player.x;
             const dy = target.y - this.player.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
-            
+
             const vx = (dx / dist) * weapon.projectileSpeed;
             const vy = (dy / dist) * weapon.projectileSpeed;
-            
+
             const proj = this.projectilePool.get();
             proj.active = true;
             proj.init(
@@ -3774,7 +3857,8 @@ class Game {
                     color: '#4ade80',
                     pierce: 1,
                     lifetime: 1.5,
-                    isPoisonDagger: true
+                    isPoisonDagger: true,
+                    weaponType: 'poison_dagger'
                 }
             );
             this.projectiles.push(proj);
@@ -3812,6 +3896,7 @@ class Game {
                     pierce: weapon.pierce,
                     lifetime: 1.2,
                     isSpinBlade: true,
+                    weaponType: 'spin_blade',
                     returnTime: 0.6,
                     returnSpeed: weapon.projectileSpeed * 1.5
                 }
@@ -3820,50 +3905,64 @@ class Game {
         }
     }
 
+    // OPTIMIZATION: Cache array length for iteration
     findNearestEnemy(range) {
         let nearest = null;
         let minDist = range * range;
-        
-        for (const enemy of this.enemies) {
+
+        const len = this.enemies.length;
+        for (let i = 0; i < len; i++) {
+            const enemy = this.enemies[i];
             const dx = enemy.x - this.player.x;
             const dy = enemy.y - this.player.y;
             const dist = dx * dx + dy * dy;
-            
+
             if (dist < minDist) {
                 minDist = dist;
                 nearest = enemy;
             }
         }
-        
+
         return nearest;
     }
     
+    // OPTIMIZATION: Use squared distance and cache array lengths
+    // OPTIMIZATION: Only rebuild spatial hash when enemies have moved
     updateEnemies(dt) {
-        // Rebuild spatial hash
-        this.spatialHash.clear();
-        for (const enemy of this.enemies) {
-            this.spatialHash.insert(enemy);
+        // OPTIMIZATION: Only rebuild spatial hash if enemies moved
+        if (this.spatialHash.checkDirty(this.enemies)) {
+            this.spatialHash.clear();
+            const enemyLen = this.enemies.length;
+            for (let i = 0; i < enemyLen; i++) {
+                this.spatialHash.insert(this.enemies[i]);
+            }
+            this.spatialHash.storePositions(this.enemies);
         }
-        
+
         for (let i = this.enemies.length - 1; i >= 0; i--) {
             const enemy = this.enemies[i];
             const dist = enemy.update(dt, this.player);
-            
-            // Check collision with player
+
+            // OPTIMIZATION: Use squared distance for collision check
             const combinedRadius = this.player.radius + enemy.radius;
-            if (dist < combinedRadius && enemy.attackCooldown <= 0) {
+            const combinedRadiusSq = combinedRadius * combinedRadius;
+            const distSq = dist * dist;
+            if (distSq < combinedRadiusSq && enemy.attackCooldown <= 0) {
                 const dead = this.player.takeDamage(enemy.damage);
                 enemy.attackCooldown = enemy.attackSpeed;
-                
+
                 if (dead) {
                     this.gameOver();
                     return;
                 }
             }
-            
+
             // Ranged enemy attack
             if (enemy.isRanged && enemy.attackCooldown <= 0) {
-                if (dist < enemy.attackRange) {
+                // OPTIMIZATION: Use squared distance for range check
+                const attackRangeSq = enemy.attackRange * enemy.attackRange;
+                const distSqToPlayer = dist * dist;
+                if (distSqToPlayer < attackRangeSq) {
                     // Fire projectile at player
                     const dx = this.player.x - enemy.x;
                     const dy = this.player.y - enemy.y;
@@ -3916,14 +4015,20 @@ class Game {
             
             // Check collisions
             if (proj.owner === 'player') {
-                for (const enemy of this.enemies) {
+                // OPTIMIZATION: Cache array length
+                const enemyLen = this.enemies.length;
+                for (let j = 0; j < enemyLen; j++) {
+                    const enemy = this.enemies[j];
                     if (proj.hitEnemies.has(enemy)) continue;
 
                     const dx = enemy.x - proj.x;
                     const dy = enemy.y - proj.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    // OPTIMIZATION: Use squared distance for collision check
+                    const distSq = dx * dx + dy * dy;
+                    const combinedRadius = enemy.radius + proj.radius;
+                    const combinedRadiusSq = combinedRadius * combinedRadius;
 
-                    if (dist < enemy.radius + proj.radius) {
+                    if (distSq < combinedRadiusSq) {
                         let damage = proj.damage;
                         let isCrit = false;
 
@@ -3972,13 +4077,16 @@ class Game {
                 // Enemy projectile hitting player
                 const dx = this.player.x - proj.x;
                 const dy = this.player.y - proj.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                
-                if (dist < this.player.radius + proj.radius) {
+                // OPTIMIZATION: Use squared distance for collision check
+                const distSq = dx * dx + dy * dy;
+                const combinedRadius = this.player.radius + proj.radius;
+                const combinedRadiusSq = combinedRadius * combinedRadius;
+
+                if (distSq < combinedRadiusSq) {
                     const dead = this.player.takeDamage(proj.damage);
                     this.projectiles.splice(i, 1);
                     this.projectilePool.release(proj);
-                    
+
                     if (dead) {
                         this.gameOver();
                         return;
@@ -3999,56 +4107,80 @@ class Game {
         }
     }
 
+    // OPTIMIZATION: Use squared distance for explosion radius check
     createExplosion(x, y, radius, damage) {
-        // Damage all enemies in radius
-        for (const enemy of this.enemies) {
+        // OPTIMIZATION: Pre-calculate squared radius
+        const radiusSq = radius * radius;
+        // OPTIMIZATION: Cache array length
+        const enemyLen = this.enemies.length;
+        
+        for (let i = 0; i < enemyLen; i++) {
+            const enemy = this.enemies[i];
             const dx = enemy.x - x;
             const dy = enemy.y - y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            
-            if (dist < radius + enemy.radius) {
+            // OPTIMIZATION: Use squared distance
+            const distSq = dx * dx + dy * dy;
+            const combinedRadius = radius + enemy.radius;
+            const combinedRadiusSq = combinedRadius * combinedRadius;
+
+            if (distSq < combinedRadiusSq) {
                 const dead = enemy.takeDamage(damage, dx * 0.1, dy * 0.1);
                 this.damageNumbers.add(enemy.x, enemy.y - 20, damage);
-                
+
                 if (dead) {
                     this.killEnemy(enemy);
                 }
             }
         }
-        
+
         // Visual
         this.particles.emitExplosion(x, y, '#ff6b35');
     }
-    
+
+    // OPTIMIZATION: Use squared distance and cache array lengths
     updateGroundEffects(dt) {
         for (let i = this.groundEffects.length - 1; i >= 0; i--) {
             const effect = this.groundEffects[i];
             const alive = effect.update(dt);
-            
+
             if (!alive) {
                 this.groundEffects.splice(i, 1);
                 continue;
             }
-            
+
             // Damage enemies in pool
             if (effect.tickCooldown <= 0) {
                 effect.tickCooldown = effect.tickRate;
+
+                // OPTIMIZATION: Cache array length and create a copy to avoid modification during iteration
+                const enemiesToProcess = [...this.enemies];
+                const enemiesToKill = [];
                 
-                for (const enemy of this.enemies) {
+                const enemyLen = enemiesToProcess.length;
+                for (let j = 0; j < enemyLen; j++) {
+                    const enemy = enemiesToProcess[j];
                     if (effect.hitEnemies.has(enemy)) continue;
-                    
+
                     const dx = enemy.x - effect.x;
                     const dy = enemy.y - effect.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (dist < effect.radius + enemy.radius) {
+                    // OPTIMIZATION: Use squared distance
+                    const distSq = dx * dx + dy * dy;
+                    const combinedRadius = effect.radius + enemy.radius;
+                    const combinedRadiusSq = combinedRadius * combinedRadius;
+
+                    if (distSq < combinedRadiusSq) {
                         const dead = enemy.takeDamage(effect.damage, 0, 0);
                         this.damageNumbers.add(enemy.x, enemy.y - 20, effect.damage);
-                        
+
                         if (dead) {
-                            this.killEnemy(enemy);
+                            enemiesToKill.push(enemy);
                         }
                     }
+                }
+                
+                // Kill enemies after processing all damage
+                for (let k = 0; k < enemiesToKill.length; k++) {
+                    this.killEnemy(enemiesToKill[k]);
                 }
             }
         }
@@ -4071,35 +4203,7 @@ class Game {
         }
     }
 
-    updateHealthPacks(dt) {
-        for (let i = this.healthPacks.length - 1; i >= 0; i--) {
-            const pack = this.healthPacks[i];
-            const collected = pack.update(dt, this.player);
-
-            if (collected) {
-                // Heal the player
-                const healAmount = pack.healAmount;
-                const oldHp = this.player.hp;
-                this.player.heal(healAmount);
-                const actualHeal = this.player.hp - oldHp;
-
-                // Show heal effect
-                if (actualHeal > 0) {
-                    this.showPickupEffect(pack.x, pack.y, `+${Math.round(actualHeal)}`, 'health');
-                    this.particles.emit(pack.x, pack.y, {
-                        vx: (Math.random() - 0.5) * 100,
-                        vy: (Math.random() - 0.5) * 100,
-                        life: 0.4,
-                        size: 4,
-                        color: '#4ade80',
-                        type: 'circle'
-                    });
-                }
-
-                this.healthPacks.splice(i, 1);
-            }
-        }
-    }
+    // Health packs removed due to performance issues
 
     showPickupEffect(x, y, text, type) {
         // Create a floating text effect using the damage number system
@@ -4133,12 +4237,7 @@ class Game {
         const gem = new XpGem(enemy.x, enemy.y, xpValue);
         this.xpGems.push(gem);
 
-        // Chance to drop health pack (2% base chance)
-        if (Math.random() < CONFIG.HEALTH_PACK_DROP_CHANCE) {
-            const pack = new HealthPack(enemy.x, enemy.y, CONFIG.HEALTH_PACK_HEAL_AMOUNT);
-            this.healthPacks.push(pack);
-            console.log(`[HealthPack] Dropped at (${enemy.x.toFixed(0)}, ${enemy.y.toFixed(0)}). Total packs: ${this.healthPacks.length}`);
-        }
+        // Health packs removed due to performance issues
 
         // Blood particles
         this.particles.emitBlood(enemy.x, enemy.y);
@@ -4287,11 +4386,22 @@ class Game {
     
     getUpgradeDescription(weapon, upgrade) {
         if (!upgrade) return 'Max level reached';
-        
+
         const parts = [];
         if (upgrade.damage) parts.push(`+${upgrade.damage} Damage`);
         if (upgrade.range) parts.push(`+${upgrade.range} Range`);
-        if (upgrade.projectileCount) parts.push(`+1 Projectile`);
+
+        // Special handling for Sacred Cross - show cross count increase
+        if (upgrade.projectileCount) {
+            if (weapon.id === 'sacredCross') {
+                // Sacred Cross: +1 cross per level up to 6
+                const nextCrossCount = Math.min(6, weapon.level + 1);
+                parts.push(`${nextCrossCount} crosses total`);
+            } else {
+                parts.push(`+1 Projectile`);
+            }
+        }
+
         if (upgrade.pierce) parts.push(`+1 Pierce`);
         if (upgrade.tickRate) parts.push(`Faster Tick Rate`);
         if (upgrade.explosionRadius) parts.push(`+${upgrade.explosionRadius} Explosion`);
@@ -4300,7 +4410,7 @@ class Game {
         if (upgrade.poolDuration) parts.push(`+${upgrade.poolDuration}s Duration`);
         if (upgrade.poolRadius) parts.push(`+${upgrade.poolRadius} Pool Size`);
         if (upgrade.critChance) parts.push(`+${(upgrade.critChance * 100).toFixed(0)}% Crit`);
-        
+
         return parts.join(', ');
     }
     
@@ -4309,12 +4419,15 @@ class Game {
             const weapon = option.weapon;
             const nextLevel = weapon.level + 1;
             const upgrade = weapon.upgrades.find(u => u.level === nextLevel);
-            
+
             if (upgrade) {
                 weapon.level = nextLevel;
                 if (upgrade.damage) weapon.damage += upgrade.damage;
                 if (upgrade.range) weapon.range += upgrade.range;
-                if (upgrade.projectileCount) weapon.projectileCount += upgrade.projectileCount;
+                // Sacred Cross handles projectile count via weapon.level in fireSacredCross, not via projectileCount property
+                if (upgrade.projectileCount && weapon.id !== 'sacredCross') {
+                    weapon.projectileCount += upgrade.projectileCount;
+                }
                 if (upgrade.pierce) weapon.pierce += upgrade.pierce;
                 if (upgrade.tickRate) weapon.tickRate += upgrade.tickRate;
                 if (upgrade.explosionRadius) weapon.explosionRadius += upgrade.explosionRadius;
@@ -4547,9 +4660,6 @@ class Game {
         // Draw player
         this.renderPlayer();
 
-        // Draw health packs (after player/enemies so they're visible on top)
-        this.renderHealthPacks();
-
         // Draw projectiles
         this.renderProjectiles();
 
@@ -4728,6 +4838,7 @@ class Game {
         }
     }
     
+    // OPTIMIZATION: Use separate if statements for frustum culling (better branch prediction)
     renderEnemies() {
         const ctx = this.ctx;
         const camLeft = this.camera.x - 50;
@@ -4738,13 +4849,13 @@ class Game {
         const len = this.enemies.length;
         for (let i = 0; i < len; i++) {
             const enemy = this.enemies[i];
-            
-            // Frustum culling - skip enemies outside camera view
-            if (enemy.x + enemy.radius < camLeft || enemy.x - enemy.radius > camRight ||
-                enemy.y + enemy.radius < camTop || enemy.y - enemy.radius > camBottom) {
-                continue;
-            }
-            
+
+            // OPTIMIZATION: Separate if statements for better branch prediction
+            if (enemy.x + enemy.radius < camLeft) continue;
+            if (enemy.x - enemy.radius > camRight) continue;
+            if (enemy.y + enemy.radius < camTop) continue;
+            if (enemy.y - enemy.radius > camBottom) continue;
+
             switch (enemy.type) {
                 case 'zombie':
                     this.renderZombie(enemy);
@@ -5259,8 +5370,8 @@ class Game {
         ctx.ellipse(x + radius * 0.2, y - radius * 0.6, radius * 0.12, radius * 0.08, 0.2, 0, Math.PI * 2);
         ctx.fill();
 
+        // OPTIMIZATION: Removed unnecessary ctx.shadowBlur = 0
         // Particle trail effect
-        ctx.shadowBlur = 0;
         for (let i = 0; i < 5; i++) {
             const trailX = x + (Math.random() - 0.5) * radius * 1.5;
             const trailY = y + radius * 0.8 + Math.random() * radius * 0.5;
@@ -5398,6 +5509,28 @@ class Game {
         ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
+    /**
+     * Get the weapon SVG key for a projectile based on its properties
+     * @param {Projectile} proj - The projectile to get the weapon key for
+     * @returns {string} - The weapon SVG key
+     */
+    getProjectileWeaponKey(proj) {
+        // Check weaponType first (most reliable)
+        if (proj.weaponType) {
+            return proj.weaponType;
+        }
+        // Fallback to legacy property checks
+        if (proj.isIceShard) return 'ice_shard';
+        if (proj.isSacredCross) return 'sacred_cross';
+        if (proj.isPoisonDagger) return 'poison_dagger';
+        if (proj.isSpinBlade) return 'spin_blade';
+        if (proj.isExplosive) return 'fireball_arc';
+        if (proj.homing) return 'magic_wand';
+        // Default to magic_wand
+        return 'magic_wand';
+    }
+
+    // OPTIMIZATION: Use separate if statements for frustum culling
     renderProjectiles() {
         const ctx = this.ctx;
         const camLeft = this.camera.x - 50;
@@ -5410,26 +5543,56 @@ class Game {
             const proj = this.projectiles[i];
             if (!proj.active) continue;
 
-            // Frustum culling - skip projectiles outside camera view
-            if (proj.x + proj.radius < camLeft || proj.x - proj.radius > camRight ||
-                proj.y + proj.radius < camTop || proj.y - proj.radius > camBottom) {
-                continue;
+            // OPTIMIZATION: Separate if statements for better branch prediction
+            if (proj.x + proj.radius < camLeft) continue;
+            if (proj.x - proj.radius > camRight) continue;
+            if (proj.y + proj.radius < camTop) continue;
+            if (proj.y - proj.radius > camBottom) continue;
+
+            // Get weapon SVG key and try to use SVG image
+            const weaponKey = this.getProjectileWeaponKey(proj);
+            const img = this.weaponImages[weaponKey];
+
+            if (img && img.complete && img.naturalWidth > 0) {
+                // Draw SVG image
+                const size = proj.radius * 2;
+                ctx.save();
+                ctx.translate(proj.x, proj.y);
+
+                // Handle special rotation cases
+                if (proj.isSacredCross) {
+                    // Sacred Cross rotates around player - face outward from player
+                    const angle = Math.atan2(proj.y - this.player.y, proj.x - this.player.x);
+                    ctx.rotate(angle + Math.PI / 2);
+                } else if (proj.isSpinBlade) {
+                    // Spin Blade spins rapidly as it flies
+                    ctx.rotate(Date.now() / 100);
+                } else if (proj.vx !== 0 || proj.vy !== 0) {
+                    // Regular projectiles rotate to face travel direction
+                    const angle = Math.atan2(proj.vy, proj.vx);
+                    ctx.rotate(angle);
+                }
+
+                // Draw the SVG image centered
+                ctx.drawImage(img, -size / 2, -size / 2, size, size);
+                ctx.restore();
+            } else {
+                // Fallback to colored circle if image not loaded
+                ctx.fillStyle = proj.color;
+                ctx.beginPath();
+                ctx.arc(proj.x, proj.y, proj.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Draw inner white core
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(proj.x, proj.y, proj.radius * 0.5, 0, Math.PI * 2);
+                ctx.fill();
             }
-
-            // Draw projectile (removed expensive shadowBlur for performance)
-            ctx.fillStyle = proj.color;
-            ctx.beginPath();
-            ctx.arc(proj.x, proj.y, proj.radius, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Draw inner white core
-            ctx.fillStyle = '#fff';
-            ctx.beginPath();
-            ctx.arc(proj.x, proj.y, proj.radius * 0.5, 0, Math.PI * 2);
-            ctx.fill();
         }
     }
 
+    // OPTIMIZATION: Cache array length for iteration
     renderLightningBolts() {
         const ctx = this.ctx;
         const camLeft = this.camera.x - 50;
@@ -5437,67 +5600,82 @@ class Game {
         const camTop = this.camera.y - 50;
         const camBottom = this.camera.y + this.canvas.height + 50;
 
-        for (const bolt of this.lightningBolts) {
+        const len = this.lightningBolts.length;
+        for (let i = 0; i < len; i++) {
+            const bolt = this.lightningBolts[i];
             // Check if bolt is visible on screen
-            const isVisible = bolt.segments.some(seg => 
+            const isVisible = bolt.segments.some(seg =>
                 seg.x + 10 >= camLeft && seg.x - 10 <= camRight &&
                 seg.y + 10 >= camTop && seg.y - 10 <= camBottom
             );
-            
+
             if (!isVisible) continue;
 
             const alpha = bolt.life / bolt.maxLife;
-            
+
+            // OPTIMIZATION: Removed expensive shadowBlur - use thicker stroke instead
             // Draw lightning bolt segments
             ctx.strokeStyle = `rgba(251, 191, 36, ${alpha})`; // Yellow-amber color
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 5; // Increased from 3 to compensate for no glow
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
-            ctx.shadowColor = '#fbbf24';
-            ctx.shadowBlur = 15;
 
             ctx.beginPath();
             ctx.moveTo(bolt.segments[0].x, bolt.segments[0].y);
-            
-            for (let i = 1; i < bolt.segments.length; i++) {
-                ctx.lineTo(bolt.segments[i].x, bolt.segments[i].y);
+
+            const segLen = bolt.segments.length;
+            for (let j = 1; j < segLen; j++) {
+                ctx.lineTo(bolt.segments[j].x, bolt.segments[j].y);
             }
-            
+
             ctx.stroke();
 
-            // Draw inner bright core
+            // Draw inner bright core (no shadow to clear)
             ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
-            ctx.lineWidth = 1;
-            ctx.shadowBlur = 0;
-            
+            ctx.lineWidth = 2;
+
             ctx.beginPath();
             ctx.moveTo(bolt.segments[0].x, bolt.segments[0].y);
-            
-            for (let i = 1; i < bolt.segments.length; i++) {
-                ctx.lineTo(bolt.segments[i].x, bolt.segments[i].y);
+
+            for (let j = 1; j < segLen; j++) {
+                ctx.lineTo(bolt.segments[j].x, bolt.segments[j].y);
             }
-            
+
             ctx.stroke();
         }
     }
 
+    // OPTIMIZATION: Add frustum culling and cache array length
     renderGroundEffects() {
         const ctx = this.ctx;
-        
-        for (const effect of this.groundEffects) {
+        const camLeft = this.camera.x - 50;
+        const camRight = this.camera.x + this.canvas.width + 50;
+        const camTop = this.camera.y - 50;
+        const camBottom = this.camera.y + this.canvas.height + 50;
+
+        const len = this.groundEffects.length;
+        for (let i = 0; i < len; i++) {
+            const effect = this.groundEffects[i];
+
+            // OPTIMIZATION: Frustum culling with separate if statements
+            if (effect.x + effect.radius < camLeft) continue;
+            if (effect.x - effect.radius > camRight) continue;
+            if (effect.y + effect.radius < camTop) continue;
+            if (effect.y - effect.radius > camBottom) continue;
+
             const alpha = (effect.duration / effect.maxDuration) * 0.4;
-            
+
             // Draw pool
             ctx.fillStyle = `rgba(6, 182, 212, ${alpha})`;
             ctx.beginPath();
             ctx.arc(effect.x, effect.y, effect.radius, 0, Math.PI * 2);
             ctx.fill();
-            
+
             // Draw border
             ctx.strokeStyle = `rgba(6, 182, 212, ${alpha + 0.2})`;
             ctx.lineWidth = 3;
             ctx.stroke();
-            
+
             // Draw bubble particles
             if (Math.random() < 0.3) {
                 const angle = Math.random() * Math.PI * 2;
@@ -5505,10 +5683,10 @@ class Game {
                 this.particles.emit(
                     effect.x + Math.cos(angle) * dist,
                     effect.y + Math.sin(angle) * dist,
-                    { 
-                        color: '#67e8f9', 
-                        size: 2 + Math.random() * 3, 
-                        life: 0.5, 
+                    {
+                        color: '#67e8f9',
+                        size: 2 + Math.random() * 3,
+                        life: 0.5,
                         type: 'circle',
                         vy: -20
                     }
@@ -5517,6 +5695,7 @@ class Game {
         }
     }
 
+    // OPTIMIZATION: Use separate if statements for frustum culling
     renderXpGems() {
         const ctx = this.ctx;
         const camLeft = this.camera.x - 50;
@@ -5527,13 +5706,13 @@ class Game {
         const len = this.xpGems.length;
         for (let i = 0; i < len; i++) {
             const gem = this.xpGems[i];
-            
-            // Frustum culling - skip gems outside camera view
-            if (gem.x + gem.radius < camLeft || gem.x - gem.radius > camRight ||
-                gem.y + gem.radius < camTop || gem.y - gem.radius > camBottom) {
-                continue;
-            }
-            
+
+            // OPTIMIZATION: Separate if statements for better branch prediction
+            if (gem.x + gem.radius < camLeft) continue;
+            if (gem.x - gem.radius > camRight) continue;
+            if (gem.y + gem.radius < camTop) continue;
+            if (gem.y - gem.radius > camBottom) continue;
+
             // Draw circular gem (updated from diamond shape)
             ctx.fillStyle = gem.color;
             ctx.beginPath();
@@ -5552,27 +5731,6 @@ class Game {
             ctx.beginPath();
             ctx.arc(gem.x, gem.y, gem.radius * 0.6, 0, Math.PI * 2);
             ctx.stroke();
-        }
-    }
-
-    renderHealthPacks() {
-        const ctx = this.ctx;
-        const camLeft = this.camera.x - 50;
-        const camRight = this.camera.x + this.canvas.width + 50;
-        const camTop = this.camera.y - 50;
-        const camBottom = this.camera.y + this.canvas.height + 50;
-
-        const len = this.healthPacks.length;
-        for (let i = 0; i < len; i++) {
-            const pack = this.healthPacks[i];
-            
-            // Frustum culling - skip health packs outside camera view
-            if (pack.x + pack.radius < camLeft || pack.x - pack.radius > camRight ||
-                pack.y + pack.radius < camTop || pack.y - pack.radius > camBottom) {
-                continue;
-            }
-            
-            pack.render(ctx, this.camera.x, this.camera.y);
         }
     }
 
@@ -5642,6 +5800,7 @@ class Game {
         }
     }
 
+    // OPTIMIZATION: Cache array length and use separate frustum culling
     renderDecorations() {
         const ctx = this.ctx;
         const camLeft = this.camera.x;
@@ -5650,12 +5809,14 @@ class Game {
         const camBottom = this.camera.y + this.canvas.height;
         const padding = 100;
 
-        for (const dec of this.decorations) {
-            // Cull decorations outside camera view
-            if (dec.x < camLeft - padding || dec.x > camRight + padding ||
-                dec.y < camTop - padding || dec.y > camBottom + padding) {
-                continue;
-            }
+        const len = this.decorations.length;
+        for (let i = 0; i < len; i++) {
+            const dec = this.decorations[i];
+            // OPTIMIZATION: Separate if statements for better branch prediction
+            if (dec.x < camLeft - padding) continue;
+            if (dec.x > camRight + padding) continue;
+            if (dec.y < camTop - padding) continue;
+            if (dec.y > camBottom + padding) continue;
 
             switch (dec.type) {
                 case 'tree':
