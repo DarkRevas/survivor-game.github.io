@@ -995,7 +995,7 @@ const CONFIG = {
     GAME_DURATION: 1800, // 30 minutes in seconds
     SPAWN_BASE_INTERVAL: 1.0,
     SPAWN_MIN_INTERVAL: 0.15,
-    WAVE_DURATION: 30, // 30 seconds per wave
+    WAVE_DURATION: 20, // 20 seconds per wave (reduced from 30)
 
     // OPTIMIZATION: Reduced entity limits
     MAX_ENEMIES: 50,         // Reduced from 80
@@ -2210,7 +2210,8 @@ class Enemy {
         this.y = y;
         this.hp = data.baseHp * waveMultiplier;
         this.maxHp = this.hp;
-        this.damage = data.baseDamage * (1 + 0.08 * waveMultiplier);
+        // REDUCED damage scaling: 0.08 → 0.02 (4x slower damage growth)
+        this.damage = data.baseDamage * (1 + 0.02 * waveMultiplier);
         this.baseSpeed = data.baseSpeed;
         this.speed = this.baseSpeed;
         this.radius = data.radius;
@@ -5411,7 +5412,7 @@ class Game {
             wave: this.wave,
             alpha: 1,
             scale: 1.5,
-            life: 3 // seconds to display
+            life: 6 // seconds to display (increased from 3 to 6)
         });
     }
     
