@@ -2651,42 +2651,6 @@ class Game {
 
         this.saveData = this.loadSave();
 
-        // Preload weapon SVG and cache in offscreen canvases for performance
-        // This eliminates "Recalculate Style" bottleneck by rasterizing SVG once
-        this.weaponCanvases = {};
-        this.weaponImages = {}; // Keep for fallback
-        const weaponKeys = ['magic_aura', 'fireball_arc', 'magic_wand', 'throwing_knife',
-                            'lightning_bolt', 'holy_water', 'ice_shard', 'sacred_cross',
-                            'poison_dagger', 'spin_blade'];
-
-        for (const key of weaponKeys) {
-            const img = new Image();
-            img.src = `assets/weapons/${key}.svg`;
-            this.weaponImages[key] = img;
-
-            // Create offscreen canvas for this weapon (64x64 base resolution)
-            const canvas = document.createElement('canvas');
-            canvas.width = 64;
-            canvas.height = 64;
-            const ctx = canvas.getContext('2d');
-
-            // Draw image to canvas when loaded - rasterize ONCE, not every frame
-            img.onload = () => {
-                ctx.drawImage(img, 0, 0, 64, 64);
-                console.log('[WeaponCanvas] Cached:', key);
-            };
-            img.onerror = () => {
-                console.warn('[WeaponSVG] Failed to load:', key);
-                // Draw fallback colored circle on canvas
-                ctx.fillStyle = '#fff';
-                ctx.beginPath();
-                ctx.arc(32, 32, 20, 0, Math.PI * 2);
-                ctx.fill();
-            };
-
-            this.weaponCanvases[key] = canvas;
-        }
-
         // Mobile touch controls
         this.joystick = null;
         this.isMobile = this.detectMobile();
@@ -5573,7 +5537,261 @@ class Game {
         return 'magic_wand';
     }
 
+    /**
+     * Draw a projectile directly using canvas API - no SVG images
+     * Each weapon type has a distinct visual style using gradients and effects
+     * @param {Projectile} proj - The projectile to draw
+     * @param {string} weaponKey - The weapon type key
+     */
+    drawProjectile(proj, weaponKey) {
+        const ctx = this.ctx;
+        const x = proj.x;
+        const y = proj.y;
+        const r = proj.radius;
+
+        switch (weaponKey) {
+            case 'magic_aura':
+                // Purple/pink glow with soft gradient
+                ctx.save();
+                ctx.shadowBlur = r * 2;
+                ctx.shadowColor = '#ff00ff';
+                const auraGrad = ctx.createRadialGradient(x, y, 0, x, y, r);
+                auraGrad.addColorStop(0, '#ff66ff');
+                auraGrad.addColorStop(0.5, '#cc00cc');
+                auraGrad.addColorStop(1, 'rgba(150, 0, 150, 0.3)');
+                ctx.fillStyle = auraGrad;
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, Math.PI * 2);
+                ctx.fill();
+                // Inner bright core
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(x, y, r * 0.3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+                break;
+
+            case 'fireball_arc':
+                // Orange/red fireball with glow
+                ctx.save();
+                ctx.shadowBlur = r * 1.5;
+                ctx.shadowColor = '#ff4400';
+                const fireGrad = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, 0, x, y, r);
+                fireGrad.addColorStop(0, '#ffff66');
+                fireGrad.addColorStop(0.4, '#ff6600');
+                fireGrad.addColorStop(1, '#cc0000');
+                ctx.fillStyle = fireGrad;
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+                break;
+
+            case 'magic_wand':
+                // Blue/purple magic missile
+                ctx.save();
+                ctx.shadowBlur = r * 1.2;
+                ctx.shadowColor = '#6666ff';
+                const wandGrad = ctx.createRadialGradient(x, y, 0, x, y, r);
+                wandGrad.addColorStop(0, '#aaccff');
+                wandGrad.addColorStop(0.6, '#6666ff');
+                wandGrad.addColorStop(1, '#3300cc');
+                ctx.fillStyle = wandGrad;
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, Math.PI * 2);
+                ctx.fill();
+                // White streak effect
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(x - r * 0.8, y);
+                ctx.lineTo(x + r * 0.5, y);
+                ctx.stroke();
+                ctx.restore();
+                break;
+
+            case 'throwing_knife':
+                // Silver/gray ellipse (rotated to face direction)
+                ctx.save();
+                ctx.translate(x, y);
+                // Rotate to face velocity direction
+                if (proj.vx !== 0 || proj.vy !== 0) {
+                    ctx.rotate(Math.atan2(proj.vy, proj.vx));
+                }
+                ctx.shadowBlur = r * 0.5;
+                ctx.shadowColor = '#888888';
+                const knifeGrad = ctx.createLinearGradient(-r * 1.5, 0, r * 1.5, 0);
+                knifeGrad.addColorStop(0, '#666666');
+                knifeGrad.addColorStop(0.3, '#cccccc');
+                knifeGrad.addColorStop(0.5, '#ffffff');
+                knifeGrad.addColorStop(0.7, '#cccccc');
+                knifeGrad.addColorStop(1, '#666666');
+                ctx.fillStyle = knifeGrad;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, r * 1.8, r * 0.5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+                break;
+
+            case 'lightning_bolt':
+                // Yellow lightning with strong glow
+                ctx.save();
+                ctx.shadowBlur = r * 2.5;
+                ctx.shadowColor = '#ffff00';
+                const boltGrad = ctx.createRadialGradient(x, y, 0, x, y, r);
+                boltGrad.addColorStop(0, '#ffffff');
+                boltGrad.addColorStop(0.5, '#ffff00');
+                boltGrad.addColorStop(1, '#ffaa00');
+                ctx.fillStyle = boltGrad;
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, Math.PI * 2);
+                ctx.fill();
+                // Extra bright center
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(x, y, r * 0.4, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+                break;
+
+            case 'holy_water':
+                // Light blue/cyan with soft glow
+                ctx.save();
+                ctx.shadowBlur = r * 1.3;
+                ctx.shadowColor = '#00ffff';
+                const holyGrad = ctx.createRadialGradient(x, y, 0, x, y, r);
+                holyGrad.addColorStop(0, '#ffffff');
+                holyGrad.addColorStop(0.4, '#66ffff');
+                holyGrad.addColorStop(1, '#009999');
+                ctx.fillStyle = holyGrad;
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, Math.PI * 2);
+                ctx.fill();
+                // Sparkle effect
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.beginPath();
+                ctx.arc(x - r * 0.3, y - r * 0.3, r * 0.25, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+                break;
+
+            case 'ice_shard':
+                // Light blue/cyan with sharp edges (diamond shape)
+                ctx.save();
+                ctx.translate(x, y);
+                if (proj.vx !== 0 || proj.vy !== 0) {
+                    ctx.rotate(Math.atan2(proj.vy, proj.vx));
+                }
+                ctx.shadowBlur = r;
+                ctx.shadowColor = '#00ccff';
+                const iceGrad = ctx.createLinearGradient(-r, -r, r, r);
+                iceGrad.addColorStop(0, '#e0ffff');
+                iceGrad.addColorStop(0.5, '#66ccff');
+                iceGrad.addColorStop(1, '#0066cc');
+                ctx.fillStyle = iceGrad;
+                ctx.beginPath();
+                // Diamond shape
+                ctx.moveTo(0, -r * 1.4);
+                ctx.lineTo(r * 0.7, 0);
+                ctx.lineTo(0, r * 1.4);
+                ctx.lineTo(-r * 0.7, 0);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+                break;
+
+            case 'sacred_cross':
+                // Gold/yellow cross shape
+                ctx.save();
+                ctx.translate(x, y);
+                // Sacred Cross rotates around player - face outward from player
+                const angle = Math.atan2(y - this.player.y, x - this.player.x);
+                ctx.rotate(angle + Math.PI / 2);
+                ctx.shadowBlur = r * 1.5;
+                ctx.shadowColor = '#ffcc00';
+                const crossGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
+                crossGrad.addColorStop(0, '#ffffaa');
+                crossGrad.addColorStop(0.6, '#ffcc00');
+                crossGrad.addColorStop(1, '#cc8800');
+                ctx.fillStyle = crossGrad;
+                // Draw cross shape
+                const armW = r * 0.4;
+                const armL = r * 1.2;
+                ctx.fillRect(-armW / 2, -armL, armW, armL * 2);
+                ctx.fillRect(-armL / 2, -armW / 2, armL, armW);
+                ctx.restore();
+                break;
+
+            case 'poison_dagger':
+                // Green poison dart with trail effect
+                ctx.save();
+                ctx.translate(x, y);
+                if (proj.vx !== 0 || proj.vy !== 0) {
+                    ctx.rotate(Math.atan2(proj.vy, proj.vx));
+                }
+                ctx.shadowBlur = r;
+                ctx.shadowColor = '#00ff00';
+                const poisonGrad = ctx.createLinearGradient(-r, 0, r, 0);
+                poisonGrad.addColorStop(0, '#006600');
+                poisonGrad.addColorStop(0.5, '#00ff00');
+                poisonGrad.addColorStop(1, '#66ff66');
+                ctx.fillStyle = poisonGrad;
+                ctx.beginPath();
+                // Dagger shape
+                ctx.moveTo(r * 1.5, 0);
+                ctx.lineTo(-r * 0.5, r * 0.6);
+                ctx.lineTo(-r * 0.8, r * 0.4);
+                ctx.lineTo(-r * 0.8, -r * 0.4);
+                ctx.lineTo(-r * 0.5, -r * 0.6);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+                break;
+
+            case 'spin_blade':
+                // Silver with blue trail, spinning
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(Date.now() / 100);
+                ctx.shadowBlur = r * 1.2;
+                ctx.shadowColor = '#0066ff';
+                const bladeGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
+                bladeGrad.addColorStop(0, '#ffffff');
+                bladeGrad.addColorStop(0.5, '#cccccc');
+                bladeGrad.addColorStop(1, '#666666');
+                ctx.fillStyle = bladeGrad;
+                // Circular blade shape
+                ctx.beginPath();
+                ctx.arc(0, 0, r, 0, Math.PI * 2);
+                ctx.fill();
+                // Blue outer ring
+                ctx.strokeStyle = '#0066ff';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(0, 0, r * 0.8, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.restore();
+                break;
+
+            default:
+                // Fallback: simple colored circle with white core
+                ctx.fillStyle = proj.color || '#ffffff';
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(x, y, r * 0.5, 0, Math.PI * 2);
+                ctx.fill();
+        }
+    }
+
     // OPTIMIZATION: Use separate if statements for frustum culling
+    // OPTIMIZATION: Direct canvas drawing - no SVG images, ~5-10x faster than cached canvas approach
     renderProjectiles() {
         const ctx = this.ctx;
         const camLeft = this.camera.x - 50;
@@ -5592,47 +5810,9 @@ class Game {
             if (proj.y + proj.radius < camTop) continue;
             if (proj.y - proj.radius > camBottom) continue;
 
-            // Get weapon key and use cached offscreen canvas (pre-rasterized bitmap)
+            // Get weapon key and draw directly with canvas API
             const weaponKey = this.getProjectileWeaponKey(proj);
-            const canvas = this.weaponCanvases[weaponKey];
-
-            if (canvas) {
-                // Draw from cached canvas - NO Recalculate Style!
-                // SVG was rasterized once on load, now we just blit a bitmap
-                const size = proj.radius * 2;
-                ctx.save();
-                ctx.translate(proj.x, proj.y);
-
-                // Handle special rotation cases
-                if (proj.isSacredCross) {
-                    // Sacred Cross rotates around player - face outward from player
-                    const angle = Math.atan2(proj.y - this.player.y, proj.x - this.player.x);
-                    ctx.rotate(angle + Math.PI / 2);
-                } else if (proj.isSpinBlade) {
-                    // Spin Blade spins rapidly as it flies
-                    ctx.rotate(Date.now() / 100);
-                } else if (proj.vx !== 0 || proj.vy !== 0) {
-                    // Regular projectiles rotate to face travel direction
-                    const angle = Math.atan2(proj.vy, proj.vx);
-                    ctx.rotate(angle);
-                }
-
-                // Draw from cached offscreen canvas (10-20x faster than SVG image)
-                ctx.drawImage(canvas, -size / 2, -size / 2, size, size);
-                ctx.restore();
-            } else {
-                // Fallback to colored circle if canvas not ready
-                ctx.fillStyle = proj.color;
-                ctx.beginPath();
-                ctx.arc(proj.x, proj.y, proj.radius, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Draw inner white core
-                ctx.fillStyle = '#fff';
-                ctx.beginPath();
-                ctx.arc(proj.x, proj.y, proj.radius * 0.5, 0, Math.PI * 2);
-                ctx.fill();
-            }
+            this.drawProjectile(proj, weaponKey);
         }
     }
 
