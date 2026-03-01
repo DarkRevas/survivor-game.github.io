@@ -2806,6 +2806,8 @@ class XpGem {
         this.radius = 8 + value * 0.5;
         this.color = this.getColor();
         this.magnetized = false;
+        this.lifetime = 5; // XP gems disappear after 5 seconds
+        this.maxLifetime = 5;
     }
 
     getColor() {
@@ -2817,6 +2819,14 @@ class XpGem {
 
     // OPTIMIZATION: Use squared distance for range checks
     update(dt, player) {
+        // Decrease lifetime
+        this.lifetime -= dt;
+        
+        // Return false if expired (will be removed by game loop)
+        if (this.lifetime <= 0) {
+            return false;
+        }
+
         const dx = player.x - this.x;
         const dy = player.y - this.y;
         const distSq = dx * dx + dy * dy;
@@ -4867,7 +4877,8 @@ class Game {
             const gem = this.xpGems[i];
             const collected = gem.update(dt, this.player);
 
-            if (collected) {
+            if (collected === true) {
+                // Collected by player
                 const leveledUp = this.player.addXp(gem.value);
                 this.xpGems.splice(i, 1);
 
@@ -4875,6 +4886,9 @@ class Game {
                 if (leveledUp && this.state === 'playing') {
                     this.triggerLevelUp();
                 }
+            } else if (collected === false && gem.lifetime <= 0) {
+                // Expired - remove without collecting
+                this.xpGems.splice(i, 1);
             }
         }
     }
@@ -7130,6 +7144,14 @@ class Game {
             if (gem.y + gem.radius < camTop) continue;
             if (gem.y - gem.radius > camBottom) continue;
 
+            // Calculate alpha based on lifetime (fade out in last 1.5 seconds)
+            let alpha = 1;
+            if (gem.lifetime < 1.5) {
+                alpha = gem.lifetime / 1.5;
+            }
+
+            ctx.globalAlpha = alpha;
+
             // Draw circular gem (updated from diamond shape)
             ctx.fillStyle = gem.color;
             ctx.beginPath();
@@ -7148,7 +7170,21 @@ class Game {
             ctx.beginPath();
             ctx.arc(gem.x, gem.y, gem.radius * 0.6, 0, Math.PI * 2);
             ctx.stroke();
+
+            // Warning indicator when about to expire (blink in last 1.5 seconds)
+            if (gem.lifetime < 1.5) {
+                const blink = Math.sin(Date.now() / 50) > 0;
+                if (blink) {
+                    ctx.strokeStyle = 'rgba(255, 0, 0, 0.8)';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(gem.x, gem.y, gem.radius + 2, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+            }
         }
+
+        ctx.globalAlpha = 1; // Reset alpha
     }
 
     renderHealthPacks() {
