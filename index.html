@@ -2492,6 +2492,7 @@ class Enemy {
         // Debuff tracking
         this.poisonDamage = 0;
         this.poisonDuration = 0;
+        this.poisonTickTimer = 0;
         this.slowMultiplier = 1;
         this.slowDuration = 0;
     }
@@ -2502,20 +2503,37 @@ class Enemy {
         this.y += this.pushY * dt;
         this.pushX *= 0.9;
         this.pushY *= 0.9;
-        
-        // Update poison DoT
+
+        // Update poison DoT - tick every 1 second
         if (this.poisonDuration > 0) {
             this.poisonDuration -= dt;
-            // Poison deals 2% max HP per second
-            const poisonTickDamage = this.maxHp * 0.02;
-            this.hp -= poisonTickDamage;
-            if (this.hp <= 0) {
-                this.poisonDuration = 0;
-                this.poisonDamage = 0;
-                return player ? Math.sqrt((player.x - this.x) ** 2 + (player.y - this.y) ** 2) : 0;
+            
+            // Poison tick timer - deal damage every 1 second
+            if (this.poisonTickTimer === undefined) {
+                this.poisonTickTimer = 0;
             }
+            this.poisonTickTimer += dt;
+            
+            if (this.poisonTickTimer >= 1.0) {
+                this.poisonTickTimer = 0;
+                // Poison deals 2% max HP per tick (once per second)
+                const poisonTickDamage = this.maxHp * 0.02;
+                this.hp -= poisonTickDamage;
+                
+                // DEBUG: Log poison damage for bosses
+                if (this.isBoss) {
+                    console.log(`[POISON] ${this.type}: -${poisonTickDamage.toFixed(1)} dmg (${(this.maxHp * 0.02 * 100).toFixed(0)}% max HP), HP ${this.hp.toFixed(1)}`);
+                }
+                
+                if (this.hp <= 0) {
+                    this.poisonDuration = 0;
+                    this.poisonTickTimer = 0;
+                    return player ? Math.sqrt((player.x - this.x) ** 2 + (player.y - this.y) ** 2) : 0;
+                }
+            }
+            
             if (this.poisonDuration <= 0) {
-                this.poisonDamage = 0;
+                this.poisonTickTimer = 0;
             }
         }
         
@@ -3817,8 +3835,6 @@ class Game {
         const bossData = ENEMIES[bossType];
         const waveMultiplier = 1 + (this.wave - 1) * 0.3;
 
-        console.log('[BOSS] Spawning', bossData.name, 'with HP:', bossData.baseHp * waveMultiplier);
-
         // Spawn boss at player position with offset
         const angle = Math.random() * Math.PI * 2;
         const distance = 400;
@@ -3917,7 +3933,10 @@ class Game {
         const player = this.player;
         const damage = weapon.damage * player.damageMultiplier;
         const range = weapon.range * player.areaMultiplier;
-        
+
+        // DEBUG: Log damage calculation
+        console.log(`[WEAPON] ${weapon.name}: base=${weapon.damage}, mult=${player.damageMultiplier.toFixed(2)}, final=${damage.toFixed(1)}`);
+
         switch (weapon.id) {
             case 'magicAura':
                 this.fireMagicAura(weapon, damage, range);
@@ -4996,7 +5015,13 @@ class Game {
                 const enemyLen = enemiesToProcess.length;
                 for (let j = 0; j < enemyLen; j++) {
                     const enemy = enemiesToProcess[j];
-                    if (effect.hitEnemies.has(enemy)) continue;
+                    if (effect.hitEnemies.has(enemy)) {
+                        // DEBUG: Skip already hit enemy
+                        if (enemy.isBoss) {
+                            console.log(`[GROUND] Skip ${enemy.type} - already hit this pool`);
+                        }
+                        continue;
+                    }
 
                     const dx = enemy.x - effect.x;
                     const dy = enemy.y - effect.y;
@@ -5013,6 +5038,12 @@ class Game {
                         this.totalDamageDealt += effect.damage;
                         if (enemy.type === 'devil') {
                             this.damageToDevil += effect.damage;
+                        }
+
+                        // FIX: Add enemy to hit set to prevent multiple damage ticks per pool
+                        effect.hitEnemies.add(enemy);
+                        if (enemy.isBoss) {
+                            console.log(`[GROUND] Hit ${enemy.type} for ${effect.damage.toFixed(1)}, pool hits=${effect.hitEnemies.size}`);
                         }
 
                         if (dead) {

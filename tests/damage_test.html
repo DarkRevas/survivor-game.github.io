@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Damage Test - Shadow Survivor</title>
+    <style>
+        body {
+            background: #1a1a1a;
+            color: white;
+            font-family: monospace;
+            padding: 20px;
+        }
+        .test-section {
+            background: #2a2a2a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        .test-result {
+            background: #3a3a3a;
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 3px solid #4CAF50;
+        }
+        .test-result.error {
+            border-left-color: #f44336;
+        }
+        h1 { color: #4CAF50; }
+        h2 { color: #2196F3; margin-top: 20px; }
+        .value { color: #FFC107; font-weight: bold; }
+        .formula { color: #9E9E9E; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <h1>🎯 Damage Calculation Test</h1>
+    <p>Testing boss HP and damage calculations for Shadow Survivor</p>
+
+    <div id="results"></div>
+
+    <script>
+        // Import game constants
+        const CONFIG = {
+            CANVAS_WIDTH: 1920,
+            CANVAS_HEIGHT: 1080,
+            FPS: 60,
+            PLAYER_BASE_SPEED: 180,
+            PLAYER_BASE_HP: 100,
+            PLAYER_RADIUS: 15,
+            MAP_BOUNDS: { width: 4000, height: 4000 },
+            MAX_LEVEL: 50,
+            GAME_DURATION: 1800,
+            XP_BASELINE: 10,
+            BLOOD_MOON_DAMAGE_MULTIPLIER: 1.25,
+        };
+
+        const WEAPONS = {
+            magicAura: {
+                id: 'magicAura',
+                name: 'Magic Aura',
+                baseDamage: 8,
+                baseCooldown: 0.5,
+                baseRange: 80,
+                maxLevel: 8,
+                upgrades: [
+                    { level: 2, damage: 3 },
+                    { level: 3, range: 20 },
+                    { level: 4, damage: 3 },
+                    { level: 5, damage: 5 },
+                    { level: 6, range: 20 },
+                    { level: 7, damage: 6 },
+                    { level: 8, damage: 7 },
+                ]
+            },
+            fireballArc: {
+                id: 'fireballArc',
+                name: 'Fireball Arc',
+                baseDamage: 25,
+                baseCooldown: 1.2,
+                baseRange: 400,
+                maxLevel: 8,
+                upgrades: [
+                    { level: 2, damage: 10 },
+                    { level: 3, damage: 8 },
+                    { level: 4, range: 50 },
+                    { level: 5, damage: 10 },
+                    { level: 6, explosionRadius: 30 },
+                    { level: 7, damage: 8 },
+                    { level: 8, range: 50 },
+                ]
+            },
+            magicWand: {
+                id: 'magicWand',
+                name: 'Magic Wand',
+                baseDamage: 15,
+                baseCooldown: 0.8,
+                baseRange: 500,
+                maxLevel: 8,
+                upgrades: [
+                    { level: 2, damage: 8 },
+                    { level: 3, damage: 6 },
+                    { level: 4, pierce: 1 },
+                    { level: 5, damage: 8 },
+                    { level: 6, damage: 6 },
+                    { level: 7, pierce: 1 },
+                    { level: 8, damage: 8 },
+                ]
+            },
+            boneSpear: {
+                id: 'boneSpear',
+                name: 'Bone Spear',
+                baseDamage: 30,
+                baseCooldown: 1.5,
+                baseRange: 500,
+                maxLevel: 8,
+                upgrades: [
+                    { level: 2, damage: 12 },
+                    { level: 3, damage: 10 },
+                    { level: 4, pierce: 1 },
+                    { level: 5, damage: 12 },
+                    { level: 6, damage: 10 },
+                    { level: 7, pierce: 1 },
+                    { level: 8, damage: 12 },
+                ]
+            }
+        };
+
+        const ENEMIES = {
+            lordOfBones: {
+                id: 'lordOfBones',
+                name: 'Lord of Bones',
+                baseHp: 1040,
+                baseDamage: 35,
+                radius: 35,
+                waveRequirement: 5,
+                isBoss: true,
+            },
+            bloodQueen: {
+                id: 'bloodQueen',
+                name: 'Blood Queen',
+                baseHp: 1560,
+                baseDamage: 40,
+                radius: 32,
+                waveRequirement: 10,
+                isBoss: true,
+            },
+            voidLord: {
+                id: 'voidLord',
+                name: 'Void Lord',
+                baseHp: 2600,
+                baseDamage: 52,
+                radius: 40,
+                waveRequirement: 15,
+                isBoss: true,
+            },
+            devil: {
+                id: 'devil',
+                name: 'Devil',
+                baseHp: 20000,
+                baseDamage: 50,
+                radius: 45,
+                waveRequirement: 25,
+                isBoss: true,
+                isFinalBoss: true,
+            }
+        };
+
+        const PASSIVES = {
+            power: {
+                id: 'power',
+                name: 'Power Crystal',
+                maxLevel: 5,
+                values: [0.1, 0.1, 0.1, 0.1, 0.1],
+                stat: 'damage'
+            }
+        };
+
+        function log(message, isError = false) {
+            const div = document.createElement('div');
+            div.className = 'test-result' + (isError ? ' error' : '');
+            div.innerHTML = message;
+            document.getElementById('results').appendChild(div);
+        }
+
+        function testBossHP() {
+            log('<h2>📊 Boss HP Calculations</h2>');
+            
+            const bosses = ['lordOfBones', 'bloodQueen', 'voidLord', 'devil'];
+            const waves = [5, 10, 15, 25];
+            
+            bosses.forEach((bossType, index) => {
+                const wave = waves[index];
+                const bossData = ENEMIES[bossType];
+                const waveMultiplier = 1 + (wave - 1) * 0.3;
+                const hp = bossData.baseHp * waveMultiplier;
+                const damage = bossData.baseDamage * waveMultiplier;
+                
+                log(`
+                    <strong>${bossData.name}</strong> (Wave ${wave}):<br>
+                    <span class="formula">Wave Multiplier: 1 + (${wave} - 1) × 0.3 = ${waveMultiplier.toFixed(2)}</span><br>
+                    HP: <span class="value">${bossData.baseHp} × ${waveMultiplier.toFixed(2)} = ${Math.round(hp)}</span><br>
+                    Damage: <span class="value">${bossData.baseDamage} × ${waveMultiplier.toFixed(2)} = ${Math.round(damage)}</span>
+                `);
+            });
+        }
+
+        function testWeaponDamage() {
+            log('<h2>⚔️ Weapon Damage Calculations</h2>');
+            
+            const weaponTypes = ['magicAura', 'fireballArc', 'magicWand', 'boneSpear'];
+            
+            weaponTypes.forEach(weaponType => {
+                const weapon = WEAPONS[weaponType];
+                let currentDamage = weapon.baseDamage;
+                
+                log(`
+                    <strong>${weapon.name}</strong>:<br>
+                    Base Damage: <span class="value">${weapon.baseDamage}</span>
+                `);
+                
+                // Calculate max level damage
+                weapon.upgrades.forEach(upgrade => {
+                    if (upgrade.damage) {
+                        currentDamage += upgrade.damage;
+                    }
+                });
+                
+                log(`
+                    Max Level (${weapon.maxLevel}) Damage: <span class="value">${currentDamage}</span>
+                    <span class="formula">(${weapon.upgrades.filter(u => u.damage).length} damage upgrades)</span>
+                `);
+            });
+        }
+
+        function testPlayerDamageMultiplier() {
+            log('<h2>💪 Player Damage Multiplier</h2>');
+            
+            // Base multiplier
+            let multiplier = 1.0;
+            log(`Base Multiplier: <span class="value">${multiplier.toFixed(2)}x</span>`);
+            
+            // Max Power Crystal (5 levels)
+            const power = PASSIVES.power;
+            let powerBonus = 0;
+            power.values.forEach(v => powerBonus += v);
+            multiplier += powerBonus;
+            
+            log(`
+                With max Power Crystal:<br>
+                Bonus: <span class="value">+${(powerBonus * 100).toFixed(0)}%</span><br>
+                Total Multiplier: <span class="value">${multiplier.toFixed(2)}x</span>
+            `);
+        }
+
+        function testDamageToBoss() {
+            log('<h2>🎯 Damage to Boss Examples</h2>');
+            
+            const scenarios = [
+                { weapon: 'magicAura', level: 1, playerMult: 1.0, wave: 5 },
+                { weapon: 'magicAura', level: 8, playerMult: 1.5, wave: 5 },
+                { weapon: 'boneSpear', level: 1, playerMult: 1.0, wave: 5 },
+                { weapon: 'boneSpear', level: 8, playerMult: 1.5, wave: 5 },
+                { weapon: 'fireballArc', level: 8, playerMult: 1.5, wave: 25 },
+            ];
+            
+            scenarios.forEach(scenario => {
+                const weapon = WEAPONS[scenario.weapon];
+                let weaponDamage = weapon.baseDamage;
+                
+                // Calculate weapon damage at level
+                for (let i = 0; i < scenario.level - 1; i++) {
+                    const upgrade = weapon.upgrades[i];
+                    if (upgrade && upgrade.damage) {
+                        weaponDamage += upgrade.damage;
+                    }
+                }
+                
+                const finalDamage = weaponDamage * scenario.playerMult;
+                const bossType = scenario.wave >= 25 ? 'devil' : 'lordOfBones';
+                const boss = ENEMIES[bossType];
+                const waveMultiplier = 1 + (scenario.wave - 1) * 0.3;
+                const bossHp = boss.baseHp * waveMultiplier;
+                const hitsToKill = Math.ceil(bossHp / finalDamage);
+                
+                log(`
+                    <strong>${weapon.name} (Lv.${scenario.level})</strong> vs <strong>${boss.name}</strong> (Wave ${scenario.wave}):<br>
+                    Weapon Damage: ${weaponDamage} × Player Multiplier: ${scenario.playerMult.toFixed(2)}x = <span class="value">${finalDamage.toFixed(1)}</span><br>
+                    Boss HP: <span class="value">${Math.round(bossHp)}</span><br>
+                    Hits to Kill: <span class="value">${hitsToKill}</span>
+                    ${hitsToKill <= 10 ? '⚠️ TOO LOW!' : '✓ OK'}
+                `, hitsToKill <= 10);
+            });
+        }
+
+        // Run all tests
+        testBossHP();
+        testWeaponDamage();
+        testPlayerDamageMultiplier();
+        testDamageToBoss();
+    </script>
+</body>
+</html>
