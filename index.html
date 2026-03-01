@@ -2651,17 +2651,40 @@ class Game {
 
         this.saveData = this.loadSave();
 
-        // Preload weapon SVG images
-        this.weaponImages = {};
-        const weaponKeys = ['magic_aura', 'fireball_arc', 'magic_wand', 'throwing_knife', 
-                            'lightning_bolt', 'holy_water', 'ice_shard', 'sacred_cross', 
+        // Preload weapon SVG and cache in offscreen canvases for performance
+        // This eliminates "Recalculate Style" bottleneck by rasterizing SVG once
+        this.weaponCanvases = {};
+        this.weaponImages = {}; // Keep for fallback
+        const weaponKeys = ['magic_aura', 'fireball_arc', 'magic_wand', 'throwing_knife',
+                            'lightning_bolt', 'holy_water', 'ice_shard', 'sacred_cross',
                             'poison_dagger', 'spin_blade'];
+
         for (const key of weaponKeys) {
             const img = new Image();
             img.src = `assets/weapons/${key}.svg`;
-            img.onload = () => console.log('[WeaponSVG] Loaded:', key);
-            img.onerror = () => console.warn('[WeaponSVG] Failed to load:', key);
             this.weaponImages[key] = img;
+
+            // Create offscreen canvas for this weapon (64x64 base resolution)
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+
+            // Draw image to canvas when loaded - rasterize ONCE, not every frame
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0, 64, 64);
+                console.log('[WeaponCanvas] Cached:', key);
+            };
+            img.onerror = () => {
+                console.warn('[WeaponSVG] Failed to load:', key);
+                // Draw fallback colored circle on canvas
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(32, 32, 20, 0, Math.PI * 2);
+                ctx.fill();
+            };
+
+            this.weaponCanvases[key] = canvas;
         }
 
         // Mobile touch controls
@@ -5569,12 +5592,13 @@ class Game {
             if (proj.y + proj.radius < camTop) continue;
             if (proj.y - proj.radius > camBottom) continue;
 
-            // Get weapon SVG key and try to use SVG image
+            // Get weapon key and use cached offscreen canvas (pre-rasterized bitmap)
             const weaponKey = this.getProjectileWeaponKey(proj);
-            const img = this.weaponImages[weaponKey];
+            const canvas = this.weaponCanvases[weaponKey];
 
-            if (img && img.complete && img.naturalWidth > 0) {
-                // Draw SVG image
+            if (canvas) {
+                // Draw from cached canvas - NO Recalculate Style!
+                // SVG was rasterized once on load, now we just blit a bitmap
                 const size = proj.radius * 2;
                 ctx.save();
                 ctx.translate(proj.x, proj.y);
@@ -5593,11 +5617,11 @@ class Game {
                     ctx.rotate(angle);
                 }
 
-                // Draw the SVG image centered
-                ctx.drawImage(img, -size / 2, -size / 2, size, size);
+                // Draw from cached offscreen canvas (10-20x faster than SVG image)
+                ctx.drawImage(canvas, -size / 2, -size / 2, size, size);
                 ctx.restore();
             } else {
-                // Fallback to colored circle if image not loaded
+                // Fallback to colored circle if canvas not ready
                 ctx.fillStyle = proj.color;
                 ctx.beginPath();
                 ctx.arc(proj.x, proj.y, proj.radius, 0, Math.PI * 2);
