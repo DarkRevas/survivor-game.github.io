@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bloodQueenDress" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b0000;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#4a0000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d0000;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bloodQueenSkin" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd4cc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#cc8888;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="bloodAura" cx="50%" cy="30%">
+      <stop offset="0%" style="stop-color:#ff6666;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#8b0000;stop-opacity:0" />
+    </radialGradient>
+    <filter id="bloodGlow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Blood aura -->
+  <circle cx="32" cy="32" r="30" fill="url(#bloodAura)" opacity="0.4" filter="url(#bloodGlow)"/>
+  
+  <!-- Flowing dress body -->
+  <path d="M20 28 L12 56 L52 56 L44 28 Q32 20 20 28" fill="url(#bloodQueenDress)" filter="url(#bloodGlow)"/>
+  
+  <!-- Dress details -->
+  <path d="M18 30 L16 54" stroke="#660000" stroke-width="2"/>
+  <path d="M28 28 L26 54" stroke="#660000" stroke-width="2"/>
+  <path d="M36 28 L38 54" stroke="#660000" stroke-width="2"/>
+  <path d="M46 30 L48 54" stroke="#660000" stroke-width="2"/>
+  
+  <!-- Pale neck -->
+  <rect x="28" y="20" width="8" height="10" fill="url(#bloodQueenSkin)"/>
+  
+  <!-- Head -->
+  <ellipse cx="32" cy="16" rx="12" ry="14" fill="url(#bloodQueenSkin)"/>
+  
+  <!-- Blood crown -->
+  <path d="M20 8 L24 2 L28 8 L32 0 L36 8 L40 2 L44 8" fill="#8b0000" stroke="#ff0000" stroke-width="1"/>
+  
+  <!-- Blood red eyes -->
+  <ellipse cx="28" cy="16" rx="4" ry="3" fill="#ff0000" filter="url(#bloodGlow)"/>
+  <ellipse cx="36" cy="16" rx="4" ry="3" fill="#ff0000" filter="url(#bloodGlow)"/>
+  <circle cx="29" cy="15" r="1.5" fill="#ffffff"/>
+  <circle cx="37" cy="15" r="1.5" fill="#ffffff"/>
+  
+  <!-- Blood lips -->
+  <path d="M28 22 Q32 25 36 22" fill="#8b0000"/>
+  
+  <!-- Long dark hair -->
+  <path d="M20 12 Q14 16 16 28 L18 28 Q16 18 22 14" fill="#2d0000"/>
+  <path d="M44 12 Q50 16 48 28 L46 28 Q48 18 42 14" fill="#2d0000"/>
+  
+  <!-- Blood orb in hand -->
+  <circle cx="56" cy="36" r="8" fill="url(#bloodAura)" filter="url(#bloodGlow)"/>
+  <circle cx="54" cy="34" r="3" fill="#ff6666" opacity="0.6"/>
+  
+  <!-- Blood drips from dress -->
+  <path d="M24 56 L22 62 L26 62 Z" fill="#8b0000"/>
+  <path d="M36 56 L34 64 L38 64 Z" fill="#8b0000"/>
+  <path d="M44 56 L42 60 L46 60 Z" fill="#8b0000"/>
+</svg>

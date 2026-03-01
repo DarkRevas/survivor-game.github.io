@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="vampireDaggerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b0000;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#4a0000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d0000;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="daggerBlade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#c0c0c0;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#808080;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#505050;stop-opacity:1" />
+    </linearGradient>
+    <filter id="daggerGlow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Blade -->
+  <path d="M40 32 L58 32 L48 24 Z" fill="url(#daggerBlade)" filter="url(#daggerGlow)"/>
+  <path d="M40 32 L58 32 L48 40 Z" fill="url(#daggerBlade)" opacity="0.9"/>
+  
+  <!-- Blood groove -->
+  <line x1="42" y1="32" x2="54" y2="32" stroke="#8b0000" stroke-width="2"/>
+  
+  <!-- Hilt/Guard -->
+  <rect x="34" y="24" width="8" height="16" rx="2" fill="url(#vampireDaggerGradient)" filter="url(#daggerGlow)"/>
+  
+  <!-- Handle -->
+  <rect x="24" y="28" width="12" height="8" rx="1" fill="url(#vampireDaggerGradient)"/>
+  
+  <!-- Pommel -->
+  <circle cx="22" cy="32" r="5" fill="#8b0000" filter="url(#daggerGlow)"/>
+  
+  <!-- Blood drop effect -->
+  <circle cx="50" cy="36" r="3" fill="#ff0000" opacity="0.7"/>
+  <circle cx="52" cy="40" r="2" fill="#ff0000" opacity="0.5"/>
+  
+  <!-- Blade highlight -->
+  <line x1="44" y1="30" x2="52" y2="30" stroke="#ffffff" stroke-width="1.5" opacity="0.5"/>
+</svg>

@@ -86,6 +86,38 @@ const WeaponAssets = (function() {
             image: null,
             loaded: false,
             failed: false
+        },
+        soul_orb: {
+            name: 'Soul Orb',
+            svg: 'assets/weapons/soul_orb.svg',
+            emoji: '🔮',
+            image: null,
+            loaded: false,
+            failed: false
+        },
+        bone_spear: {
+            name: 'Bone Spear',
+            svg: 'assets/weapons/bone_spear.svg',
+            emoji: '🦴',
+            image: null,
+            loaded: false,
+            failed: false
+        },
+        blood_moon_chakram: {
+            name: 'Blood Moon Chakram',
+            svg: 'assets/weapons/blood_moon_chakram.svg',
+            emoji: '🌙',
+            image: null,
+            loaded: false,
+            failed: false
+        },
+        vampire_dagger: {
+            name: 'Vampire Dagger',
+            svg: 'assets/weapons/vampire_dagger.svg',
+            emoji: '🗡️',
+            image: null,
+            loaded: false,
+            failed: false
         }
     };
 

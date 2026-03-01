@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bonesGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5f5dc;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#c4b494;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b7d6b;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="bonesGlow" cx="30%" cy="30%">
+      <stop offset="0%" style="stop-color:#ffebcd;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#c4b494;stop-opacity:0" />
+    </radialGradient>
+    <filter id="bonesAura">
+      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Bone aura -->
+  <circle cx="32" cy="32" r="30" fill="url(#bonesGlow)" opacity="0.3" filter="url(#bonesAura)"/>
+  
+  <!-- Skull head -->
+  <ellipse cx="32" cy="24" rx="20" ry="18" fill="url(#bonesGradient)" filter="url(#bonesAura)"/>
+  
+  <!-- Eye sockets -->
+  <ellipse cx="25" cy="22" rx="6" ry="7" fill="#2d1a0a"/>
+  <ellipse cx="39" cy="22" rx="6" ry="7" fill="#2d1a0a"/>
+  
+  <!-- Glowing eyes inside sockets -->
+  <circle cx="26" cy="22" r="3" fill="#ff6b35"/>
+  <circle cx="40" cy="22" r="3" fill="#ff6b35"/>
+  
+  <!-- Nose cavity -->
+  <path d="M30 28 L32 34 L34 28 Z" fill="#2d1a0a"/>
+  
+  <!-- Teeth -->
+  <rect x="24" y="34" width="3" height="6" rx="1" fill="#f5f5dc"/>
+  <rect x="28" y="34" width="3" height="6" rx="1" fill="#f5f5dc"/>
+  <rect x="32" y="34" width="3" height="6" rx="1" fill="#f5f5dc"/>
+  <rect x="36" y="34" width="3" height="6" rx="1" fill="#f5f5dc"/>
+  
+  <!-- Bone crown/spikes -->
+  <path d="M16 16 L12 4 L20 12 Z" fill="url(#bonesGradient)"/>
+  <path d="M32 10 L32 -2 L38 8 Z" fill="url(#bonesGradient)"/>
+  <path d="M48 16 L52 4 L44 12 Z" fill="url(#bonesGradient)"/>
+  
+  <!-- Ribcage body -->
+  <ellipse cx="32" cy="50" rx="16" ry="12" fill="url(#bonesGradient)" opacity="0.8"/>
+  
+  <!-- Ribs -->
+  <path d="M20 46 Q16 50 20 54" stroke="#8b7d6b" stroke-width="2" fill="none"/>
+  <path d="M26 46 Q22 50 26 54" stroke="#8b7d6b" stroke-width="2" fill="none"/>
+  <path d="M38 46 Q42 50 38 54" stroke="#8b7d6b" stroke-width="2" fill="none"/>
+  <path d="M44 46 Q48 50 44 54" stroke="#8b7d6b" stroke-width="2" fill="none"/>
+  
+  <!-- Bone shoulder pads -->
+  <circle cx="12" cy="40" r="6" fill="url(#bonesGradient)"/>
+  <circle cx="52" cy="40" r="6" fill="url(#bonesGradient)"/>
+</svg>

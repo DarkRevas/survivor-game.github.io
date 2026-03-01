@@ -17,7 +17,7 @@ class CharacterRenderer {
         // Loading state
         this.loaded = false;
         this.loadProgress = 0;
-        this.totalAssets = 11;
+        this.totalAssets = 18; // Updated for 4 new monsters + 3 bosses
         
         // Hero direction (radians)
         this.heroDirection = 0;
@@ -34,9 +34,16 @@ class CharacterRenderer {
             cursed_knight: '#5a6b7c',
             plague_bats: '#6b8c42',
             necromancer: '#4a2d5c',
-            void_reaper: '#3d1f4a'
+            void_reaper: '#3d1f4a',
+            crypt_wraith: '#7d6b8f',
+            berserker_mutant: '#8b3d3d',
+            dark_priest: '#2d1a4a',
+            crystal_golem: '#4a9d8b',
+            lord_of_bones: '#c4b494',
+            blood_queen: '#8b0000',
+            void_lord: '#2d1a4a'
         };
-        
+
         // Character radii for canvas fallback
         this.radii = {
             hero: 20,
@@ -49,9 +56,16 @@ class CharacterRenderer {
             cursed_knight: 20,
             plague_bats: 8,
             necromancer: 14,
-            void_reaper: 24
+            void_reaper: 24,
+            crypt_wraith: 15,
+            berserker_mutant: 18,
+            dark_priest: 16,
+            crystal_golem: 22,
+            lord_of_bones: 35,
+            blood_queen: 32,
+            void_lord: 40
         };
-        
+
         // Asset paths
         this.assetPaths = {
             hero: 'assets/characters/hero.svg',
@@ -64,7 +78,14 @@ class CharacterRenderer {
             cursed_knight: 'assets/monsters/cursed_knight.svg',
             plague_bats: 'assets/monsters/plague_bats.svg',
             necromancer: 'assets/monsters/necromancer.svg',
-            void_reaper: 'assets/monsters/void_reaper.svg'
+            void_reaper: 'assets/monsters/void_reaper.svg',
+            crypt_wraith: 'assets/monsters/crypt_wraith.svg',
+            berserker_mutant: 'assets/monsters/berserker_mutant.svg',
+            dark_priest: 'assets/monsters/dark_priest.svg',
+            crystal_golem: 'assets/monsters/crystal_golem.svg',
+            lord_of_bones: 'assets/monsters/lord_of_bones.svg',
+            blood_queen: 'assets/monsters/blood_queen.svg',
+            void_lord: 'assets/monsters/void_lord.svg'
         };
     }
     
@@ -470,13 +491,173 @@ class CharacterRenderer {
                 ctx.arc(7, -3, 2.5, 0, Math.PI * 2);
                 ctx.fillStyle = '#c084fc';
                 ctx.fill();
-                
+
                 // Void aura
                 ctx.beginPath();
                 ctx.arc(0, 0, radius + 4, 0, Math.PI * 2);
                 ctx.strokeStyle = 'rgba(192, 132, 252, 0.3)';
                 ctx.lineWidth = 2;
                 ctx.stroke();
+                break;
+
+            case 'crypt_wraith':
+                // Ghostly hooded figure
+                ctx.beginPath();
+                ctx.ellipse(0, 0, radius * 0.7, radius, 0, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(125, 107, 143, 0.7)';
+                ctx.fill();
+
+                // Hood shadow
+                ctx.beginPath();
+                ctx.arc(0, -radius * 0.3, radius * 0.6, Math.PI, 0);
+                ctx.fillStyle = '#5a4d6a';
+                ctx.fill();
+
+                // Glowing red eyes
+                ctx.beginPath();
+                ctx.arc(-radius * 0.25, -radius * 0.2, radius * 0.2, 0, Math.PI * 2);
+                ctx.arc(radius * 0.25, -radius * 0.2, radius * 0.2, 0, Math.PI * 2);
+                ctx.fillStyle = '#ff6b6b';
+                ctx.fill();
+
+                // Wispy edges
+                ctx.globalAlpha = 0.4;
+                ctx.beginPath();
+                ctx.arc(-radius * 0.5, radius * 0.5, radius * 0.3, 0, Math.PI * 2);
+                ctx.arc(radius * 0.5, radius * 0.5, radius * 0.3, 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+                break;
+
+            case 'berserker_mutant':
+                // Wild hair
+                ctx.beginPath();
+                ctx.moveTo(-radius * 0.5, -radius * 0.6);
+                ctx.lineTo(-radius * 0.7, -radius * 0.9);
+                ctx.lineTo(-radius * 0.3, -radius * 0.7);
+                ctx.lineTo(0, -radius * 0.95);
+                ctx.lineTo(radius * 0.3, -radius * 0.7);
+                ctx.lineTo(radius * 0.7, -radius * 0.9);
+                ctx.lineTo(radius * 0.5, -radius * 0.6);
+                ctx.fillStyle = '#4a3728';
+                ctx.fill();
+
+                // Angry eyebrows
+                ctx.beginPath();
+                ctx.moveTo(-radius * 0.4, -radius * 0.3);
+                ctx.lineTo(-radius * 0.1, -radius * 0.2);
+                ctx.moveTo(radius * 0.4, -radius * 0.3);
+                ctx.lineTo(radius * 0.1, -radius * 0.2);
+                ctx.strokeStyle = '#2d1f15';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Bloodshot eyes
+                ctx.beginPath();
+                ctx.arc(-radius * 0.3, 0, radius * 0.25, 0, Math.PI * 2);
+                ctx.arc(radius * 0.3, 0, radius * 0.25, 0, Math.PI * 2);
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(-radius * 0.25, 0, radius * 0.12, 0, Math.PI * 2);
+                ctx.arc(radius * 0.25, 0, radius * 0.12, 0, Math.PI * 2);
+                ctx.fillStyle = '#ff3333';
+                ctx.fill();
+
+                // Fanged mouth
+                ctx.beginPath();
+                ctx.arc(0, radius * 0.4, radius * 0.35, 0, Math.PI, false);
+                ctx.fillStyle = '#4a0000';
+                ctx.fill();
+                break;
+
+            case 'dark_priest':
+                // Deep hood
+                ctx.beginPath();
+                ctx.arc(0, -radius * 0.2, radius * 0.7, Math.PI, 0);
+                ctx.fillStyle = '#4a3d5a';
+                ctx.fill();
+
+                // Glowing purple eyes under hood
+                ctx.beginPath();
+                ctx.arc(-radius * 0.25, 0, radius * 0.2, 0, Math.PI * 2);
+                ctx.arc(radius * 0.25, 0, radius * 0.2, 0, Math.PI * 2);
+                ctx.fillStyle = '#c084fc';
+                ctx.fill();
+
+                // Dark orb above head
+                ctx.beginPath();
+                ctx.arc(0, -radius * 0.9, radius * 0.35, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(147, 112, 219, 0.6)';
+                ctx.fill();
+
+                // Rune symbols
+                ctx.strokeStyle = '#9370db';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(-radius * 0.5, -radius * 0.8);
+                ctx.lineTo(-radius * 0.3, -radius * 0.9);
+                ctx.lineTo(-radius * 0.5, -radius * 1.0);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(radius * 0.5, -radius * 0.8);
+                ctx.lineTo(radius * 0.3, -radius * 0.9);
+                ctx.lineTo(radius * 0.5, -radius * 1.0);
+                ctx.stroke();
+                break;
+
+            case 'crystal_golem':
+                // Crystalline body
+                ctx.beginPath();
+                ctx.moveTo(0, -radius * 0.8);
+                ctx.lineTo(radius * 0.6, -radius * 0.3);
+                ctx.lineTo(radius * 0.7, radius * 0.5);
+                ctx.lineTo(0, radius * 0.8);
+                ctx.lineTo(-radius * 0.7, radius * 0.5);
+                ctx.lineTo(-radius * 0.6, -radius * 0.3);
+                ctx.closePath();
+                ctx.fillStyle = 'rgba(74, 157, 139, 0.8)';
+                ctx.fill();
+
+                // Crystal facets
+                ctx.beginPath();
+                ctx.moveTo(0, -radius * 0.5);
+                ctx.lineTo(radius * 0.3, 0);
+                ctx.lineTo(0, radius * 0.4);
+                ctx.lineTo(-radius * 0.3, 0);
+                ctx.closePath();
+                ctx.fillStyle = 'rgba(125, 211, 196, 0.5)';
+                ctx.fill();
+
+                // Glowing red eyes
+                ctx.beginPath();
+                ctx.moveTo(-radius * 0.25, -radius * 0.3);
+                ctx.lineTo(-radius * 0.1, -radius * 0.2);
+                ctx.lineTo(-radius * 0.25, -radius * 0.1);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(radius * 0.25, -radius * 0.3);
+                ctx.lineTo(radius * 0.1, -radius * 0.2);
+                ctx.lineTo(radius * 0.25, -radius * 0.1);
+                ctx.fill();
+                ctx.fillStyle = '#ff6b6b';
+                ctx.fill();
+
+                // Crystal arm spikes
+                ctx.beginPath();
+                ctx.moveTo(-radius * 0.7, 0);
+                ctx.lineTo(-radius * 0.9, -radius * 0.2);
+                ctx.lineTo(-radius * 0.85, radius * 0.2);
+                ctx.closePath();
+                ctx.fillStyle = color;
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(radius * 0.7, 0);
+                ctx.lineTo(radius * 0.9, -radius * 0.2);
+                ctx.lineTo(radius * 0.85, radius * 0.2);
+                ctx.closePath();
+                ctx.fill();
                 break;
         }
     }

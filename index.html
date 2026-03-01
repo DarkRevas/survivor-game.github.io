@@ -1270,6 +1270,93 @@ const WEAPONS = {
             { level: 7, projectileCount: 1 },
             { level: 8, damage: 8 },
         ]
+    },
+    soulOrb: {
+        id: 'soulOrb',
+        name: 'Soul Orb',
+        icon: '🔮',
+        description: 'Orbs orbit around you damaging enemies',
+        baseDamage: 15,
+        baseCooldown: 0.8,
+        baseRange: 200,
+        projectileSpeed: 250,
+        projectileCount: 3,
+        maxLevel: 8,
+        upgrades: [
+            { level: 2, damage: 5 },
+            { level: 3, projectileCount: 1 },
+            { level: 4, range: 30 },
+            { level: 5, damage: 5 },
+            { level: 6, projectileCount: 1 },
+            { level: 7, range: 30 },
+            { level: 8, damage: 5 },
+        ]
+    },
+    boneSpear: {
+        id: 'boneSpear',
+        name: 'Bone Spear',
+        icon: '🦴',
+        description: 'Piercing projectile that travels in a straight line',
+        baseDamage: 25,
+        baseCooldown: 1.2,
+        baseRange: 500,
+        projectileSpeed: 550,
+        projectileCount: 1,
+        pierce: 999,
+        maxLevel: 8,
+        upgrades: [
+            { level: 2, damage: 10 },
+            { level: 3, projectileCount: 1 },
+            { level: 4, damage: 10 },
+            { level: 5, range: 50 },
+            { level: 6, projectileCount: 1 },
+            { level: 7, damage: 10 },
+            { level: 8, range: 50 },
+        ]
+    },
+    bloodMoonChakram: {
+        id: 'bloodMoonChakram',
+        name: 'Blood Moon Chakram',
+        icon: '🌙',
+        description: 'Crescent blade that flies out and returns',
+        baseDamage: 30,
+        baseCooldown: 1.0,
+        baseRange: 350,
+        projectileSpeed: 400,
+        projectileCount: 1,
+        pierce: 1,
+        maxLevel: 8,
+        upgrades: [
+            { level: 2, damage: 10 },
+            { level: 3, projectileCount: 1 },
+            { level: 4, range: 40 },
+            { level: 5, damage: 10 },
+            { level: 6, projectileCount: 1 },
+            { level: 7, pierce: 1 },
+            { level: 8, damage: 10 },
+        ]
+    },
+    vampireDagger: {
+        id: 'vampireDagger',
+        name: 'Vampire Dagger',
+        icon: '🗡️',
+        description: 'Fast daggers that heal you on hit',
+        baseDamage: 12,
+        baseCooldown: 0.4,
+        baseRange: 180,
+        projectileSpeed: 500,
+        projectileCount: 1,
+        lifesteal: 0.1,
+        maxLevel: 8,
+        upgrades: [
+            { level: 2, damage: 5 },
+            { level: 3, projectileCount: 1 },
+            { level: 4, lifesteal: 0.05 },
+            { level: 5, damage: 5 },
+            { level: 6, projectileCount: 1 },
+            { level: 7, range: 30 },
+            { level: 8, damage: 5 },
+        ]
     }
 };
 
@@ -1383,7 +1470,7 @@ const ENEMIES = {
         id: 'zombie',
         name: 'Zombie',
         color: '#4a7c4e',
-        baseHp: 15,
+        baseHp: 23, // Increased from 15 by 50%
         baseDamage: 5,
         baseSpeed: 60,
         radius: 14,
@@ -1394,7 +1481,7 @@ const ENEMIES = {
         id: 'ghoul',
         name: 'Ghoul',
         color: '#8b4513',
-        baseHp: 10,
+        baseHp: 15, // Increased from 10 by 50%
         baseDamage: 8,
         baseSpeed: 140,
         radius: 12,
@@ -1405,7 +1492,7 @@ const ENEMIES = {
         id: 'skeleton',
         name: 'Skeleton',
         color: '#d4c5a3',
-        baseHp: 80,
+        baseHp: 120, // Increased from 80 by 50%
         baseDamage: 15,
         baseSpeed: 40,
         radius: 18,
@@ -1417,7 +1504,7 @@ const ENEMIES = {
         id: 'witch',
         name: 'Witch',
         color: '#6b2c91',
-        baseHp: 30,
+        baseHp: 45, // Increased from 30 by 50%
         baseDamage: 12,
         baseSpeed: 80,
         radius: 14,
@@ -1430,7 +1517,7 @@ const ENEMIES = {
         id: 'shadowStalker',
         name: 'Shadow Stalker',
         color: '#2d2d2d',
-        baseHp: 25,
+        baseHp: 38, // Increased from 25 by 50%
         baseDamage: 10,
         baseSpeed: 110,
         radius: 13,
@@ -1442,7 +1529,7 @@ const ENEMIES = {
         id: 'demonImp',
         name: 'Demon Imp',
         color: '#c44536',
-        baseHp: 8,
+        baseHp: 12, // Increased from 8 by 50%
         baseDamage: 6,
         baseSpeed: 160,
         radius: 10,
@@ -1454,7 +1541,7 @@ const ENEMIES = {
         id: 'cursedKnight',
         name: 'Cursed Knight',
         color: '#5a6b7c',
-        baseHp: 120,
+        baseHp: 180, // Increased from 120 by 50%
         baseDamage: 18,
         baseSpeed: 35,
         radius: 20,
@@ -1467,7 +1554,7 @@ const ENEMIES = {
         id: 'plagueBats',
         name: 'Plague Bats',
         color: '#6b8c42',
-        baseHp: 12,
+        baseHp: 18, // Increased from 12 by 50%
         baseDamage: 4,
         baseSpeed: 130,
         radius: 8,
@@ -1479,7 +1566,7 @@ const ENEMIES = {
         id: 'necromancer',
         name: 'Necromancer',
         color: '#4a2d5c',
-        baseHp: 45,
+        baseHp: 68, // Increased from 45 by 50%
         baseDamage: 8,
         baseSpeed: 55,
         radius: 14,
@@ -1493,7 +1580,7 @@ const ENEMIES = {
         id: 'voidReaper',
         name: 'Void Reaper',
         color: '#3d1f4a',
-        baseHp: 400,
+        baseHp: 600, // Increased from 400 by 50%
         baseDamage: 25,
         baseSpeed: 70,
         radius: 24,
@@ -1502,6 +1589,106 @@ const ENEMIES = {
         knockbackResist: 0.8,
         waveRequirement: 10,
         isMiniBoss: true
+    },
+    cryptWraith: {
+        id: 'cryptWraith',
+        name: 'Crypt Wraith',
+        color: '#7d6b8f',
+        baseHp: 35,
+        baseDamage: 12,
+        baseSpeed: 75,
+        radius: 15,
+        xpValue: 22,
+        attackSpeed: 1.0,
+        waveRequirement: 5,
+        knockbackResist: 1.0 // Can't be knocked back
+    },
+    berserkerMutant: {
+        id: 'berserkerMutant',
+        name: 'Berserker Mutant',
+        color: '#8b3d3d',
+        baseHp: 55,
+        baseDamage: 20,
+        baseSpeed: 95,
+        radius: 18,
+        xpValue: 30,
+        attackSpeed: 1.5,
+        waveRequirement: 6,
+        enrageThreshold: 0.5 // Speed increases below 50% HP
+    },
+    darkPriest: {
+        id: 'darkPriest',
+        name: 'Dark Priest',
+        color: '#2d1a4a',
+        baseHp: 50,
+        baseDamage: 15,
+        baseSpeed: 45,
+        radius: 16,
+        xpValue: 35,
+        attackSpeed: 2.0,
+        attackRange: 350,
+        isRanged: true,
+        waveRequirement: 8
+    },
+    crystalGolem: {
+        id: 'crystalGolem',
+        name: 'Crystal Golem',
+        color: '#4a9d8b',
+        baseHp: 150,
+        baseDamage: 18,
+        baseSpeed: 25,
+        radius: 22,
+        xpValue: 50,
+        attackSpeed: 1.2,
+        knockbackResist: 0.9,
+        waveRequirement: 9,
+        thornReflect: 0.1 // Reflects 10% damage
+    },
+    // BOSSES
+    lordOfBones: {
+        id: 'lordOfBones',
+        name: 'Lord of Bones',
+        color: '#c4b494',
+        baseHp: 800,
+        baseDamage: 30,
+        baseSpeed: 40,
+        radius: 35,
+        xpValue: 500,
+        attackSpeed: 1.5,
+        knockbackResist: 1.0,
+        waveRequirement: 5,
+        isBoss: true,
+        specialAbility: 'bone_spear' // Fires bone spears
+    },
+    bloodQueen: {
+        id: 'bloodQueen',
+        name: 'Blood Queen',
+        color: '#8b0000',
+        baseHp: 1200,
+        baseDamage: 35,
+        baseSpeed: 55,
+        radius: 32,
+        xpValue: 750,
+        attackSpeed: 1.8,
+        knockbackResist: 1.0,
+        waveRequirement: 10,
+        isBoss: true,
+        specialAbility: 'blood_bolt' // Fires homing blood bolts
+    },
+    voidLord: {
+        id: 'voidLord',
+        name: 'Void Lord',
+        color: '#2d1a4a',
+        baseHp: 2000,
+        baseDamage: 45,
+        baseSpeed: 35,
+        radius: 40,
+        xpValue: 1500,
+        attackSpeed: 1.2,
+        knockbackResist: 1.0,
+        waveRequirement: 15,
+        isBoss: true,
+        specialAbility: 'void_blast' // Creates void zones
     }
 };
 
@@ -2106,6 +2293,7 @@ class Player {
         this.invincible = false;
         this.invincibleTimer = 0;
         this.radius = CONFIG.PLAYER_RADIUS;
+        this.regeneration = 0; // HP per second from regeneration
     }
     
     getXpForLevel(level) {
@@ -2168,6 +2356,11 @@ class Player {
             if (this.invincibleTimer <= 0) {
                 this.invincible = false;
             }
+        }
+
+        // Apply regeneration
+        if (this.regeneration > 0 && this.hp < this.maxHp) {
+            this.hp = Math.min(this.hp + this.regeneration * dt, this.maxHp);
         }
 
         // OPTIMIZATION: Cache array length for weapon cooldown update
@@ -2349,6 +2542,12 @@ class Projectile {
         this.isSacredCross = config.isSacredCross || false;
         this.isPoisonDagger = config.isPoisonDagger || false;
         this.isSpinBlade = config.isSpinBlade || false;
+        this.isSoulOrb = config.isSoulOrb || false;
+        this.isBoneSpear = config.isBoneSpear || false;
+        this.isBloodMoonChakram = config.isBloodMoonChakram || false;
+        this.isVampireDagger = config.isVampireDagger || false;
+        this.isBatSwarm = config.isBatSwarm || false;
+        this.lifesteal = config.lifesteal || 0;
         this.orbitAngle = config.orbitAngle || 0;
         this.orbitSpeed = config.orbitSpeed || 0;
         this.orbitRadius = config.orbitRadius || 0;
@@ -2384,6 +2583,12 @@ class Projectile {
         this.isSacredCross = false;
         this.isPoisonDagger = false;
         this.isSpinBlade = false;
+        this.isSoulOrb = false;
+        this.isBoneSpear = false;
+        this.isBloodMoonChakram = false;
+        this.isVampireDagger = false;
+        this.isBatSwarm = false;
+        this.lifesteal = 0;
         this.orbitAngle = 0;
         this.orbitSpeed = 0;
         this.orbitRadius = 0;
@@ -2396,6 +2601,81 @@ class Projectile {
     }
 
     update(dt, player, enemies, game) {
+        // Handle Soul Orb orbit behavior
+        if (this.isSoulOrb) {
+            this.orbitAngle += this.orbitSpeed * dt;
+            this.x = player.x + Math.cos(this.orbitAngle) * this.orbitRadius;
+            this.y = player.y + Math.sin(this.orbitAngle) * this.orbitRadius;
+            this.lifetime -= dt;
+
+            // Clear hitEnemies periodically
+            this.hitClearTimer -= dt;
+            if (this.hitClearTimer <= 0) {
+                this.hitEnemies.clear();
+                this.hitClearTimer = 0.3;
+            }
+
+            // Check collision with enemies
+            const enemyLen = enemies.length;
+            for (let i = 0; i < enemyLen; i++) {
+                const enemy = enemies[i];
+                if (this.hitEnemies.has(enemy)) continue;
+
+                const dx = enemy.x - this.x;
+                const dy = enemy.y - this.y;
+                const distSq = dx * dx + dy * dy;
+                const combinedRadiusSq = (enemy.radius + this.radius) * (enemy.radius + this.radius);
+
+                if (distSq < combinedRadiusSq) {
+                    enemy.takeDamage(this.damage, 0, 0);
+                    if (game && game.damageNumbers) {
+                        game.damageNumbers.add(enemy.x, enemy.y - 20, this.damage);
+                    }
+                    this.hitEnemies.add(enemy);
+                }
+            }
+
+            // Emit soul particles
+            if (game && game.particles && Math.random() < 0.2) {
+                const angle = Math.random() * Math.PI * 2;
+                const dist = Math.random() * 10;
+                game.particles.emit(
+                    this.x + Math.cos(angle) * dist,
+                    this.y + Math.sin(angle) * dist,
+                    { color: '#9370db', size: 2, life: 0.4, type: 'circle' }
+                );
+            }
+
+            return this.lifetime > 0 && this.active;
+        }
+
+        // Handle Blood Moon Chakram return behavior
+        if (this.isBloodMoonChakram) {
+            this.returnTime -= dt;
+            if (this.returnTime <= 0 && !this.isReturning) {
+                this.isReturning = true;
+                this.hitEnemies.clear();
+            }
+
+            if (this.isReturning) {
+                const dx = player.x - this.x;
+                const dy = player.y - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist > 10) {
+                    this.vx = (dx / dist) * this.returnSpeed;
+                    this.vy = (dy / dist) * this.returnSpeed;
+                } else {
+                    this.lifetime = 0;
+                }
+            }
+        }
+
+        // Handle Vampire Dagger lifesteal
+        if (this.isVampireDagger && this.lifesteal > 0) {
+            // Lifesteal is applied in collision check below
+        }
+
         // Handle Sacred Cross orbit behavior
         if (this.isSacredCross) {
             this.orbitAngle += this.orbitSpeed * dt;
@@ -2527,14 +2807,14 @@ class XpGem {
         this.color = this.getColor();
         this.magnetized = false;
     }
-    
+
     getColor() {
         if (this.value >= 50) return '#ffd700'; // Gold
         if (this.value >= 10) return '#ff4444'; // Red
         if (this.value >= 5) return '#44ff44'; // Green
         return '#4488ff'; // Blue
     }
-    
+
     // OPTIMIZATION: Use squared distance for range checks
     update(dt, player) {
         const dx = player.x - this.x;
@@ -2571,6 +2851,58 @@ class XpGem {
             return false;
         }
         // OPTIMIZATION: Use squared distance for initial collection check
+        const combinedRadius = player.radius + this.radius;
+        if (distSq < combinedRadius * combinedRadius) {
+            return true;
+        }
+        return false;
+    }
+}
+
+class HealthPack {
+    constructor(x, y, healPercent) {
+        this.x = x;
+        this.y = y;
+        this.healPercent = healPercent;
+        this.radius = 12;
+        this.magnetized = false;
+        this.bobOffset = Math.random() * Math.PI * 2;
+    }
+
+    update(dt, player) {
+        // Bob animation
+        this.bobOffset += dt * 3;
+
+        const dx = player.x - this.x;
+        const dy = player.y - this.y;
+        const distSq = dx * dx + dy * dy;
+
+        const magnetRange = 100 * (1 + (player.passives.goldMagnet || 0));
+        const magnetRangeSq = magnetRange * magnetRange;
+
+        if (distSq < magnetRangeSq) {
+            this.magnetized = true;
+        }
+
+        if (this.magnetized) {
+            const speed = 350;
+            const dist = Math.sqrt(distSq);
+            if (dist > 0) {
+                this.x += (dx / dist) * speed * dt;
+                this.y += (dy / dist) * speed * dt;
+            }
+
+            const collectDx = player.x - this.x;
+            const collectDy = player.y - this.y;
+            const collectDistSq = collectDx * collectDx + collectDy * collectDy;
+            const combinedRadius = player.radius + this.radius;
+
+            if (collectDistSq < combinedRadius * combinedRadius) {
+                return true;
+            }
+            return false;
+        }
+
         const combinedRadius = player.radius + this.radius;
         if (distSq < combinedRadius * combinedRadius) {
             return true;
@@ -2619,7 +2951,7 @@ class Game {
         this.enemies = [];
         this.projectiles = [];
         this.xpGems = [];
-        // Health packs removed due to performance issues
+        this.healthPacks = [];
         this.groundEffects = [];
         this.lightningBolts = [];
 
@@ -2797,7 +3129,7 @@ class Game {
         this.enemies = [];
         this.projectiles = [];
         this.xpGems = [];
-        // Health packs removed due to performance issues
+        this.healthPacks = [];
         this.groundEffects = [];
         this.lightningBolts = [];
         this.decorations = [];
@@ -2983,6 +3315,9 @@ class Game {
         // Update XP gems
         this.updateXpGems(dt);
 
+        // Update health packs
+        this.updateHealthPacks(dt);
+
         // Update particles
         this.particles.update(dt);
         
@@ -3023,7 +3358,11 @@ class Game {
         const weights = this.getEnemyWeights();
 
         let type = this.weightedRandom(types, weights);
-        const waveMultiplier = Math.pow(2.5, this.wave - 1);
+        
+        // FIXED: Linear damage/HP scaling instead of exponential
+        // Old: Math.pow(2.5, this.wave - 1) = 1, 2.5, 6.25, 15.6, 39, 97... (way too fast)
+        // New: 1 + (wave-1) * 0.3 = 1, 1.3, 1.6, 1.9, 2.2, 2.5... (much smoother)
+        const waveMultiplier = 1 + (this.wave - 1) * 0.3;
 
         let x, y;
 
@@ -3065,7 +3404,8 @@ class Game {
 
         for (let i = 0; i < actualCount; i++) {
             const type = this.weightedRandom(types, weights);
-            const waveMultiplier = Math.pow(2.5, this.wave - 1);
+            // FIXED: Use same linear scaling as spawnEnemy
+            const waveMultiplier = 1 + (this.wave - 1) * 0.3;
 
             const angle = (Math.PI * 2 / count) * i + Math.random() * 0.3;
             const distance = 350 + Math.random() * 50;
@@ -3095,8 +3435,12 @@ class Game {
         if (this.wave >= 4) types.push('shadowStalker');
         if (this.wave >= 5) types.push('witch');
         if (this.wave >= 5) types.push('plagueBats');
+        if (this.wave >= 5) types.push('cryptWraith'); // NEW
         if (this.wave >= 6) types.push('cursedKnight');
+        if (this.wave >= 6) types.push('berserkerMutant'); // NEW
         if (this.wave >= 7) types.push('necromancer');
+        if (this.wave >= 8) types.push('darkPriest'); // NEW
+        if (this.wave >= 9) types.push('crystalGolem'); // NEW
         if (this.wave >= 10) types.push('voidReaper');
         return types;
     }
@@ -3109,8 +3453,12 @@ class Game {
         if (this.wave >= 4) weights.push(15); // shadowStalker
         if (this.wave >= 5) weights.push(12); // witch
         if (this.wave >= 5) weights.push(15); // plagueBats
+        if (this.wave >= 5) weights.push(12); // cryptWraith
         if (this.wave >= 6) weights.push(10); // cursedKnight
+        if (this.wave >= 6) weights.push(12); // berserkerMutant
         if (this.wave >= 7) weights.push(8); // necromancer
+        if (this.wave >= 8) weights.push(8); // darkPriest
+        if (this.wave >= 9) weights.push(6); // crystalGolem
         if (this.wave >= 10) weights.push(2); // voidReaper (rare)
 
         // Adjust weights based on wave - reduce early enemies as game progresses
@@ -3141,15 +3489,25 @@ class Game {
         if (this.wave % CONFIG.BLOOD_MOON_INTERVAL === 0 && Math.random() < CONFIG.BLOOD_MOON_CHANCE) {
             this.triggerBloodMoon();
         }
-        
+
         // Enemy Siege: Every 3 waves, 30% chance
         if (this.wave % CONFIG.ENEMY_SIEGE_INTERVAL === 0 && Math.random() < CONFIG.ENEMY_SIEGE_CHANCE) {
             this.triggerEnemySiege();
         }
-        
+
         // Treasure Wave: Every 4 waves, 25% chance
         if (this.wave % CONFIG.TREASURE_WAVE_INTERVAL === 0 && Math.random() < CONFIG.TREASURE_WAVE_CHANCE) {
             this.triggerTreasureWave();
+        }
+
+        // Bat Swarm: Every 4 waves, 35% chance - bats fly across screen
+        if (this.wave % 4 === 0 && Math.random() < 0.35) {
+            this.triggerBatSwarm();
+        }
+
+        // BOSS SPAWN: Every 5 waves, guaranteed boss
+        if (this.wave % 5 === 0 && this.wave >= 5) {
+            this.triggerBossSpawn();
         }
     }
     
@@ -3209,7 +3567,7 @@ class Game {
     triggerTreasureWave() {
         this.activeEvents.treasureWave = true;
         this.showEventNotification('💎 TREASURE WAVE 💎', '#fbbf24');
-        
+
         // Visual effect - gold particles
         for (let i = 0; i < 40; i++) {
             const angle = Math.random() * Math.PI * 2;
@@ -3217,9 +3575,9 @@ class Game {
             this.particles.emit(
                 this.player.x + Math.cos(angle) * dist,
                 this.player.y + Math.sin(angle) * dist,
-                { 
-                    color: '#fbbf24', 
-                    size: 4 + Math.random() * 4, 
+                {
+                    color: '#fbbf24',
+                    size: 4 + Math.random() * 4,
                     life: 1.0,
                     type: 'circle',
                     vy: -50
@@ -3227,7 +3585,149 @@ class Game {
             );
         }
     }
-    
+
+    /**
+     * Trigger Bat Swarm event - bats fly across screen from random direction
+     */
+    triggerBatSwarm() {
+        console.log('[BAT SWARM] Triggering bat swarm at wave', this.wave);
+        this.showEventNotification('🦇 BAT SWARM 🦇', '#6b8c42');
+
+        // Spawn bats from one side flying to the other
+        const numBats = 30 + Math.floor(Math.random() * 20);
+        const side = Math.floor(Math.random() * 4); // 0=top, 1=right, 2=bottom, 3=left
+
+        for (let i = 0; i < numBats; i++) {
+            let startX, startY, vx, vy;
+            const speed = 200 + Math.random() * 100;
+            const offset = (i / numBats) * CONFIG.CANVAS_WIDTH;
+
+            switch (side) {
+                case 0: // Top to bottom
+                    startX = this.camera.x + offset;
+                    startY = this.camera.y - 50;
+                    vx = (Math.random() - 0.5) * 50;
+                    vy = speed;
+                    break;
+                case 1: // Right to left
+                    startX = this.camera.x + CONFIG.CANVAS_WIDTH + 50;
+                    startY = this.camera.y + offset;
+                    vx = -speed;
+                    vy = (Math.random() - 0.5) * 50;
+                    break;
+                case 2: // Bottom to top
+                    startX = this.camera.x + offset;
+                    startY = this.camera.y + CONFIG.CANVAS_HEIGHT + 50;
+                    vx = (Math.random() - 0.5) * 50;
+                    vy = -speed;
+                    break;
+                case 3: // Left to right
+                    startX = this.camera.x - 50;
+                    startY = this.camera.y + offset;
+                    vx = speed;
+                    vy = (Math.random() - 0.5) * 50;
+                    break;
+            }
+
+            // Create bat projectile that flies across screen
+            const bat = this.projectilePool.get();
+            bat.active = true;
+            bat.init(
+                startX, startY,
+                vx, vy,
+                5 + this.wave * 0.5, // Small damage
+                'enemy',
+                {
+                    speed: speed,
+                    radius: 6,
+                    color: '#6b8c42',
+                    lifetime: 8,
+                    isBatSwarm: true
+                }
+            );
+            this.projectiles.push(bat);
+        }
+
+        // Visual effect - bat particles
+        for (let i = 0; i < 20; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = Math.random() * 300;
+            this.particles.emit(
+                this.player.x + Math.cos(angle) * dist,
+                this.player.y + Math.sin(angle) * dist,
+                {
+                    color: '#6b8c42',
+                    size: 3 + Math.random() * 3,
+                    life: 1.5,
+                    type: 'circle',
+                    vy: -20
+                }
+            );
+        }
+    }
+
+    /**
+     * Trigger boss spawn - spawns a powerful boss enemy
+     */
+    triggerBossSpawn() {
+        console.log('[BOSS] Triggering boss spawn at wave', this.wave);
+        
+        let bossType;
+
+        // Select boss based on wave
+        if (this.wave < 10) {
+            bossType = 'lordOfBones';
+        } else if (this.wave < 15) {
+            bossType = 'bloodQueen';
+        } else {
+            bossType = 'voidLord';
+        }
+
+        const bossData = ENEMIES[bossType];
+        const waveMultiplier = 1 + (this.wave - 1) * 0.3;
+
+        console.log('[BOSS] Spawning', bossData.name, 'with HP:', bossData.baseHp * waveMultiplier);
+
+        // Spawn boss at player position with offset
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 400;
+        const x = this.player.x + Math.cos(angle) * distance;
+        const y = this.player.y + Math.sin(angle) * distance;
+
+        const boss = new Enemy(bossType, x, y, waveMultiplier);
+
+        // Boss-specific enhancements
+        boss.isBoss = true;
+        boss.specialAbility = bossData.specialAbility;
+        boss.abilityCooldown = 0;
+        boss.abilityInterval = 3; // Use ability every 3 seconds
+
+        this.enemies.push(boss);
+
+        // Show boss notification
+        this.showEventNotification(`⚠️ BOSS: ${bossData.name.toUpperCase()} ⚠️`, '#ef4444');
+
+        // Visual effect - dramatic particles
+        for (let i = 0; i < 80; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = Math.random() * 200;
+            this.particles.emit(
+                x + Math.cos(angle) * dist,
+                y + Math.sin(angle) * dist,
+                {
+                    color: bossData.color,
+                    size: 8 + Math.random() * 8,
+                    life: 2.0,
+                    type: 'square',
+                    vy: -40
+                }
+            );
+        }
+
+        // Screen shake effect
+        this.screenShake = 10;
+    }
+
     /**
      * End Treasure Wave event
      */
@@ -3313,6 +3813,18 @@ class Game {
                 break;
             case 'spinBlade':
                 this.fireSpinBlade(weapon, damage, range);
+                break;
+            case 'soulOrb':
+                this.fireSoulOrb(weapon, damage, range);
+                break;
+            case 'boneSpear':
+                this.fireBoneSpear(weapon, damage, range);
+                break;
+            case 'bloodMoonChakram':
+                this.fireBloodMoonChakram(weapon, damage, range);
+                break;
+            case 'vampireDagger':
+                this.fireVampireDagger(weapon, damage, range);
                 break;
         }
     }
@@ -3893,6 +4405,155 @@ class Game {
         }
     }
 
+    fireSoulOrb(weapon, damage, range) {
+        const count = weapon.projectileCount + this.player.projectileBonus;
+
+        for (let i = 0; i < count; i++) {
+            const baseAngle = (Math.PI * 2 / count) * i;
+            const proj = this.projectilePool.get();
+            proj.active = true;
+            proj.init(
+                this.player.x, this.player.y,
+                0, 0,
+                damage,
+                'player',
+                {
+                    speed: 0,
+                    radius: 8,
+                    color: '#9370db',
+                    pierce: 999,
+                    lifetime: 15, // FIXED: Orbs last 15 seconds instead of forever
+                    weaponType: 'soul_orb',
+                    isSoulOrb: true,
+                    orbitAngle: baseAngle,
+                    orbitSpeed: 2.5,
+                    orbitRadius: range,
+                    orbitCenterX: this.player.x,
+                    orbitCenterY: this.player.y
+                }
+            );
+            this.projectiles.push(proj);
+        }
+    }
+
+    fireBoneSpear(weapon, damage, range) {
+        const count = weapon.projectileCount + this.player.projectileBonus;
+        let facing = { ...this.player.facing };
+
+        if (facing.x === 0 && facing.y === 0) {
+            facing.x = 1;
+        }
+
+        for (let i = 0; i < count; i++) {
+            const spreadAngle = (i - (count - 1) / 2) * 0.1;
+            const cos = Math.cos(spreadAngle);
+            const sin = Math.sin(spreadAngle);
+
+            const vx = (facing.x * cos - facing.y * sin) * weapon.projectileSpeed;
+            const vy = (facing.x * sin + facing.y * cos) * weapon.projectileSpeed;
+
+            const proj = this.projectilePool.get();
+            proj.active = true;
+            proj.init(
+                this.player.x, this.player.y,
+                vx, vy,
+                damage,
+                'player',
+                {
+                    speed: weapon.projectileSpeed,
+                    radius: 7,
+                    color: '#d4c4a8',
+                    pierce: weapon.pierce || 999,
+                    lifetime: 3,
+                    weaponType: 'bone_spear',
+                    isBoneSpear: true
+                }
+            );
+            this.projectiles.push(proj);
+        }
+    }
+
+    fireBloodMoonChakram(weapon, damage, range) {
+        const count = weapon.projectileCount + this.player.projectileBonus;
+        let facing = { ...this.player.facing };
+
+        if (facing.x === 0 && facing.y === 0) {
+            facing.x = 1;
+        }
+
+        for (let i = 0; i < count; i++) {
+            const spreadAngle = (i - (count - 1) / 2) * 0.15;
+            const cos = Math.cos(spreadAngle);
+            const sin = Math.sin(spreadAngle);
+
+            const vx = (facing.x * cos - facing.y * sin) * weapon.projectileSpeed;
+            const vy = (facing.x * sin + facing.y * cos) * weapon.projectileSpeed;
+
+            const proj = this.projectilePool.get();
+            proj.active = true;
+            proj.init(
+                this.player.x, this.player.y,
+                vx, vy,
+                damage,
+                'player',
+                {
+                    speed: weapon.projectileSpeed,
+                    radius: 9,
+                    color: '#ff6b6b',
+                    pierce: weapon.pierce || 1,
+                    lifetime: 1.5,
+                    weaponType: 'blood_moon_chakram',
+                    isBloodMoonChakram: true,
+                    returnTime: 0.75,
+                    returnSpeed: weapon.projectileSpeed * 1.3
+                }
+            );
+            this.projectiles.push(proj);
+        }
+    }
+
+    fireVampireDagger(weapon, damage, range) {
+        const count = weapon.projectileCount + this.player.projectileBonus;
+        const target = this.findNearestEnemy(range);
+
+        for (let i = 0; i < count; i++) {
+            let vx, vy;
+
+            if (target) {
+                const dx = target.x - this.player.x;
+                const dy = target.y - this.player.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                vx = (dx / dist) * weapon.projectileSpeed;
+                vy = (dy / dist) * weapon.projectileSpeed;
+            } else {
+                let facing = { ...this.player.facing };
+                if (facing.x === 0 && facing.y === 0) facing.x = 1;
+                vx = facing.x * weapon.projectileSpeed;
+                vy = facing.y * weapon.projectileSpeed;
+            }
+
+            const proj = this.projectilePool.get();
+            proj.active = true;
+            proj.init(
+                this.player.x, this.player.y,
+                vx, vy,
+                damage,
+                'player',
+                {
+                    speed: weapon.projectileSpeed,
+                    radius: 5,
+                    color: '#8b0000',
+                    pierce: 0,
+                    lifetime: 2,
+                    weaponType: 'vampire_dagger',
+                    isVampireDagger: true,
+                    lifesteal: weapon.lifesteal || 0.1
+                }
+            );
+            this.projectiles.push(proj);
+        }
+    }
+
     // OPTIMIZATION: Cache array length for iteration
     findNearestEnemy(range) {
         let nearest = null;
@@ -4044,6 +4705,14 @@ class Game {
                         // Apply Poison Dagger poison effect
                         if (proj.isPoisonDagger) {
                             enemy.applyPoison(5.0);
+                        }
+
+                        // Apply Vampire Dagger lifesteal
+                        if (proj.isVampireDagger && proj.lifesteal > 0) {
+                            const healAmount = damage * proj.lifesteal;
+                            this.player.heal(healAmount);
+                            // Show heal effect
+                            this.showPickupEffect(this.player.x, this.player.y - 20, `+${Math.round(healAmount)}`, 'health');
                         }
 
                         if (dead) {
@@ -4210,7 +4879,23 @@ class Game {
         }
     }
 
-    // Health packs removed due to performance issues
+    updateHealthPacks(dt) {
+        for (let i = this.healthPacks.length - 1; i >= 0; i--) {
+            const pack = this.healthPacks[i];
+            const collected = pack.update(dt, this.player);
+
+            if (collected) {
+                // Heal player
+                const healAmount = this.player.maxHp * pack.healPercent;
+                this.player.heal(healAmount);
+
+                // Show pickup effect
+                this.showPickupEffect(pack.x, pack.y, `+${Math.round(healAmount)} HP`, 'health');
+
+                this.healthPacks.splice(i, 1);
+            }
+        }
+    }
 
     showPickupEffect(x, y, text, type) {
         // Create a floating text effect using the damage number system
@@ -4244,10 +4929,22 @@ class Game {
         const gem = new XpGem(enemy.x, enemy.y, xpValue);
         this.xpGems.push(gem);
 
-        // Health packs removed due to performance issues
+        // Spawn health pack every 100 kills
+        if (this.kills % 100 === 0) {
+            this.spawnHealthPack();
+        }
 
         // Blood particles
         this.particles.emitBlood(enemy.x, enemy.y);
+    }
+
+    spawnHealthPack() {
+        // Spawn at random position within map bounds
+        const padding = 100;
+        const x = padding + Math.random() * (CONFIG.MAP_BOUNDS.width - padding * 2);
+        const y = padding + Math.random() * (CONFIG.MAP_BOUNDS.height - padding * 2);
+        const healthPack = new HealthPack(x, y, 0.2); // Heals 20% HP
+        this.healthPacks.push(healthPack);
     }
     
     triggerLevelUp() {
@@ -4487,6 +5184,9 @@ class Game {
                     case 'pickupRange':
                         this.player.passives.goldMagnet = (this.player.passives.goldMagnet || 0) + value;
                         break;
+                    case 'regeneration':
+                        this.player.regeneration += value;
+                        break;
                 }
             }
         }
@@ -4660,6 +5360,9 @@ class Game {
 
         // Draw XP gems
         this.renderXpGems();
+
+        // Draw health packs
+        this.renderHealthPacks();
 
         // Draw enemies
         this.renderEnemies();
@@ -4893,6 +5596,29 @@ class Game {
                     break;
                 case 'voidReaper':
                     this.renderVoidReaper(enemy);
+                    break;
+                // NEW MONSTERS
+                case 'cryptWraith':
+                    this.renderCryptWraith(enemy);
+                    break;
+                case 'berserkerMutant':
+                    this.renderBerserkerMutant(enemy);
+                    break;
+                case 'darkPriest':
+                    this.renderDarkPriest(enemy);
+                    break;
+                case 'crystalGolem':
+                    this.renderCrystalGolem(enemy);
+                    break;
+                // BOSSES
+                case 'lordOfBones':
+                    this.renderLordOfBones(enemy);
+                    break;
+                case 'bloodQueen':
+                    this.renderBloodQueen(enemy);
+                    break;
+                case 'voidLord':
+                    this.renderVoidLord(enemy);
                     break;
             }
 
@@ -5394,6 +6120,359 @@ class Game {
         ctx.stroke();
     }
 
+    // ==================== BOSS RENDERING ====================
+    renderLordOfBones(enemy) {
+        const ctx = this.ctx;
+        const { x, y, radius } = enemy;
+
+        // Bone-colored body with glow
+        const bodyGradient = ctx.createRadialGradient(x, y - radius * 0.3, 0, x, y, radius);
+        bodyGradient.addColorStop(0, '#f5f5dc');
+        bodyGradient.addColorStop(0.5, '#c4b494');
+        bodyGradient.addColorStop(1, '#8b7d6b');
+
+        ctx.fillStyle = bodyGradient;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Skull face
+        ctx.fillStyle = '#2d1a0a';
+        ctx.beginPath();
+        ctx.ellipse(x - radius * 0.25, y - radius * 0.15, radius * 0.2, radius * 0.25, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + radius * 0.25, y - radius * 0.15, radius * 0.2, radius * 0.25, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Glowing orange eyes
+        ctx.fillStyle = '#ff6b35';
+        ctx.beginPath();
+        ctx.arc(x - radius * 0.25, y - radius * 0.15, radius * 0.1, 0, Math.PI * 2);
+        ctx.arc(x + radius * 0.25, y - radius * 0.15, radius * 0.1, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Bone crown/spikes
+        ctx.fillStyle = '#c4b494';
+        ctx.beginPath();
+        ctx.moveTo(x - radius * 0.5, y - radius * 0.8);
+        ctx.lineTo(x - radius * 0.7, y - radius * 1.2);
+        ctx.lineTo(x - radius * 0.3, y - radius * 0.9);
+        ctx.lineTo(x, y - radius * 1.3);
+        ctx.lineTo(x + radius * 0.3, y - radius * 0.9);
+        ctx.lineTo(x + radius * 0.7, y - radius * 1.2);
+        ctx.lineTo(x + radius * 0.5, y - radius * 0.8);
+        ctx.closePath();
+        ctx.fill();
+
+        // Ribcage pattern
+        ctx.strokeStyle = '#8b7d6b';
+        ctx.lineWidth = 2;
+        for (let i = -2; i <= 2; i++) {
+            ctx.beginPath();
+            ctx.arc(x, y + radius * 0.3, radius * 0.8 - i * radius * 0.15, 0.2, Math.PI - 0.2);
+            ctx.stroke();
+        }
+
+        // Boss health bar indicator
+        ctx.strokeStyle = '#ff4444';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(x, y, radius * 1.1, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    renderBloodQueen(enemy) {
+        const ctx = this.ctx;
+        const { x, y, radius } = enemy;
+
+        // Blood red dress/body
+        const dressGradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        dressGradient.addColorStop(0, '#cc0000');
+        dressGradient.addColorStop(0.6, '#8b0000');
+        dressGradient.addColorStop(1, '#4a0000');
+
+        ctx.fillStyle = dressGradient;
+        ctx.beginPath();
+        ctx.ellipse(x, y, radius * 0.9, radius * 1.1, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Pale face
+        ctx.fillStyle = '#ffd4cc';
+        ctx.beginPath();
+        ctx.arc(x, y - radius * 0.5, radius * 0.4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Blood crown
+        ctx.fillStyle = '#8b0000';
+        ctx.beginPath();
+        ctx.moveTo(x - radius * 0.35, y - radius * 0.7);
+        ctx.lineTo(x - radius * 0.35, y - radius * 0.95);
+        ctx.lineTo(x - radius * 0.2, y - radius * 0.75);
+        ctx.lineTo(x, y - radius * 1.0);
+        ctx.lineTo(x + radius * 0.2, y - radius * 0.75);
+        ctx.lineTo(x + radius * 0.35, y - radius * 0.95);
+        ctx.lineTo(x + radius * 0.35, y - radius * 0.7);
+        ctx.closePath();
+        ctx.fill();
+
+        // Blood red eyes
+        ctx.fillStyle = '#ff0000';
+        ctx.beginPath();
+        ctx.ellipse(x - radius * 0.15, y - radius * 0.5, radius * 0.12, radius * 0.08, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + radius * 0.15, y - radius * 0.5, radius * 0.12, radius * 0.08, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Blood aura
+        ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(x, y, radius * 1.15, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    renderVoidLord(enemy) {
+        const ctx = this.ctx;
+        const { x, y, radius } = enemy;
+
+        // Void aura
+        const voidGradient = ctx.createRadialGradient(x, y, 0, x, y, radius * 1.2);
+        voidGradient.addColorStop(0, 'rgba(192, 132, 252, 0.3)');
+        voidGradient.addColorStop(0.5, 'rgba(107, 44, 145, 0.5)');
+        voidGradient.addColorStop(1, 'rgba(45, 26, 74, 0)');
+
+        ctx.fillStyle = voidGradient;
+        ctx.beginPath();
+        ctx.arc(x, y, radius * 1.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Dark body
+        const bodyGradient = ctx.createRadialGradient(x, y - radius * 0.2, 0, x, y, radius);
+        bodyGradient.addColorStop(0, '#6b4c7a');
+        bodyGradient.addColorStop(0.5, '#3d2a5a');
+        bodyGradient.addColorStop(1, '#1a0f2e');
+
+        ctx.fillStyle = bodyGradient;
+        ctx.beginPath();
+        ctx.ellipse(x, y, radius * 0.95, radius * 1.05, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Void face mask
+        ctx.fillStyle = '#0f051e';
+        ctx.beginPath();
+        ctx.ellipse(x, y - radius * 0.3, radius * 0.5, radius * 0.4, 0, Math.PI, 0);
+        ctx.fill();
+
+        // Glowing purple eyes
+        ctx.fillStyle = '#c084fc';
+        ctx.beginPath();
+        ctx.ellipse(x - radius * 0.2, y - radius * 0.35, radius * 0.15, radius * 0.1, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + radius * 0.2, y - radius * 0.35, radius * 0.15, radius * 0.1, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Void crown/horns
+        ctx.fillStyle = '#2d1a4a';
+        ctx.beginPath();
+        ctx.moveTo(x - radius * 0.4, y - radius * 0.7);
+        ctx.lineTo(x - radius * 0.6, y - radius * 1.1);
+        ctx.lineTo(x - radius * 0.25, y - radius * 0.8);
+        ctx.lineTo(x, y - radius * 1.2);
+        ctx.lineTo(x + radius * 0.25, y - radius * 0.8);
+        ctx.lineTo(x + radius * 0.6, y - radius * 1.1);
+        ctx.lineTo(x + radius * 0.4, y - radius * 0.7);
+        ctx.closePath();
+        ctx.fill();
+
+        // Void stars inside body
+        ctx.fillStyle = '#c084fc';
+        for (let i = 0; i < 8; i++) {
+            const starX = x + (Math.random() - 0.5) * radius * 1.2;
+            const starY = y + (Math.random() - 0.5) * radius * 1.4;
+            ctx.beginPath();
+            ctx.arc(starX, starY, radius * 0.05, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Boss health bar indicator
+        ctx.strokeStyle = '#c084fc';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(x, y, radius * 1.15, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    // ==================== NEW MONSTER RENDERING ====================
+    renderCryptWraith(enemy) {
+        const ctx = this.ctx;
+        const { x, y, radius } = enemy;
+
+        // Ghostly translucent body
+        ctx.fillStyle = 'rgba(125, 107, 143, 0.7)';
+        ctx.beginPath();
+        ctx.ellipse(x, y, radius * 0.7, radius, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Hood
+        ctx.fillStyle = '#5a4d6a';
+        ctx.beginPath();
+        ctx.arc(x, y - radius * 0.3, radius * 0.5, Math.PI, 0);
+        ctx.fill();
+
+        // Glowing red eyes
+        ctx.fillStyle = '#ff6b6b';
+        ctx.beginPath();
+        ctx.arc(x - radius * 0.2, y - radius * 0.25, radius * 0.12, 0, Math.PI * 2);
+        ctx.arc(x + radius * 0.2, y - radius * 0.25, radius * 0.12, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Wispy edges
+        ctx.globalAlpha = 0.4;
+        ctx.fillStyle = '#7d6b8f';
+        ctx.beginPath();
+        ctx.arc(x - radius * 0.4, y + radius * 0.5, radius * 0.25, 0, Math.PI * 2);
+        ctx.arc(x + radius * 0.4, y + radius * 0.5, radius * 0.25, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+    }
+
+    renderBerserkerMutant(enemy) {
+        const ctx = this.ctx;
+        const { x, y, radius } = enemy;
+
+        // Reddish body
+        const bodyGradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        bodyGradient.addColorStop(0, '#c48b8b');
+        bodyGradient.addColorStop(1, '#8b3d3d');
+
+        ctx.fillStyle = bodyGradient;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Wild hair
+        ctx.fillStyle = '#4a3728';
+        ctx.beginPath();
+        ctx.arc(x, y - radius * 0.6, radius * 0.5, Math.PI, 0);
+        ctx.fill();
+
+        // Angry eyebrows
+        ctx.strokeStyle = '#2d1f15';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x - radius * 0.3, y - radius * 0.4);
+        ctx.lineTo(x - radius * 0.1, y - radius * 0.3);
+        ctx.moveTo(x + radius * 0.3, y - radius * 0.4);
+        ctx.lineTo(x + radius * 0.1, y - radius * 0.3);
+        ctx.stroke();
+
+        // Bloodshot eyes
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(x - radius * 0.25, y - radius * 0.15, radius * 0.18, 0, Math.PI * 2);
+        ctx.arc(x + radius * 0.25, y - radius * 0.15, radius * 0.18, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ff3333';
+        ctx.beginPath();
+        ctx.arc(x - radius * 0.2, y - radius * 0.15, radius * 0.08, 0, Math.PI * 2);
+        ctx.arc(x + radius * 0.2, y - radius * 0.15, radius * 0.08, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Rage veins
+        ctx.strokeStyle = '#8b3d3d';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(x + radius * 0.3, y - radius * 0.5);
+        ctx.quadraticCurveTo(x + radius * 0.4, y - radius * 0.4, x + radius * 0.35, y - radius * 0.3);
+        ctx.stroke();
+    }
+
+    renderDarkPriest(enemy) {
+        const ctx = this.ctx;
+        const { x, y, radius } = enemy;
+
+        // Dark purple robe
+        const robeGradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        robeGradient.addColorStop(0, '#4a3d5a');
+        robeGradient.addColorStop(1, '#1a0f2e');
+
+        ctx.fillStyle = robeGradient;
+        ctx.beginPath();
+        ctx.ellipse(x, y, radius * 0.8, radius * 1.1, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Deep hood
+        ctx.fillStyle = '#2d1a4a';
+        ctx.beginPath();
+        ctx.arc(x, y - radius * 0.3, radius * 0.5, Math.PI, 0);
+        ctx.fill();
+
+        // Glowing purple eyes
+        ctx.fillStyle = '#c084fc';
+        ctx.beginPath();
+        ctx.arc(x - radius * 0.2, y - radius * 0.25, radius * 0.12, 0, Math.PI * 2);
+        ctx.arc(x + radius * 0.2, y - radius * 0.25, radius * 0.12, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Dark orb above head
+        ctx.fillStyle = 'rgba(147, 112, 219, 0.6)';
+        ctx.beginPath();
+        ctx.arc(x, y - radius * 0.8, radius * 0.3, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    renderCrystalGolem(enemy) {
+        const ctx = this.ctx;
+        const { x, y, radius } = enemy;
+
+        // Crystalline body
+        const crystalGradient = ctx.createLinearGradient(x - radius, y - radius, x + radius, y + radius);
+        crystalGradient.addColorStop(0, '#7dd3c4');
+        crystalGradient.addColorStop(0.5, '#4a9d8b');
+        crystalGradient.addColorStop(1, '#2d5a4f');
+
+        ctx.fillStyle = crystalGradient;
+        ctx.beginPath();
+        ctx.moveTo(x, y - radius * 0.9);
+        ctx.lineTo(x + radius * 0.7, y - radius * 0.3);
+        ctx.lineTo(x + radius * 0.8, y + radius * 0.5);
+        ctx.lineTo(x, y + radius * 0.9);
+        ctx.lineTo(x - radius * 0.8, y + radius * 0.5);
+        ctx.lineTo(x - radius * 0.7, y - radius * 0.3);
+        ctx.closePath();
+        ctx.fill();
+
+        // Crystal facets
+        ctx.fillStyle = 'rgba(125, 211, 196, 0.5)';
+        ctx.beginPath();
+        ctx.moveTo(x, y - radius * 0.5);
+        ctx.lineTo(x + radius * 0.4, y);
+        ctx.lineTo(x, y + radius * 0.4);
+        ctx.lineTo(x - radius * 0.4, y);
+        ctx.closePath();
+        ctx.fill();
+
+        // Glowing red eyes
+        ctx.fillStyle = '#ff6b6b';
+        ctx.beginPath();
+        ctx.moveTo(x - radius * 0.3, y - radius * 0.3);
+        ctx.lineTo(x - radius * 0.15, y - radius * 0.2);
+        ctx.lineTo(x - radius * 0.3, y - radius * 0.1);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(x + radius * 0.3, y - radius * 0.3);
+        ctx.lineTo(x + radius * 0.15, y - radius * 0.2);
+        ctx.lineTo(x + radius * 0.3, y - radius * 0.1);
+        ctx.fill();
+
+        // Crystal spikes
+        ctx.strokeStyle = '#4a9d8b';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x - radius * 0.8, y);
+        ctx.lineTo(x - radius * 1.1, y - radius * 0.2);
+        ctx.moveTo(x + radius * 0.8, y);
+        ctx.lineTo(x + radius * 1.1, y - radius * 0.2);
+        ctx.stroke();
+    }
+
     showWaveNotification() {
         this.waveNotifications.push({
             wave: this.wave,
@@ -5777,6 +6856,120 @@ class Game {
                 ctx.restore();
                 break;
 
+            case 'soul_orb':
+                // Purple soul orb with ghostly glow
+                ctx.save();
+                ctx.shadowBlur = r * 2;
+                ctx.shadowColor = '#9370db';
+                const soulGrad = ctx.createRadialGradient(x, y, 0, x, y, r);
+                soulGrad.addColorStop(0, '#e0b0ff');
+                soulGrad.addColorStop(0.5, '#9370db');
+                soulGrad.addColorStop(1, 'rgba(75, 0, 130, 0.3)');
+                ctx.fillStyle = soulGrad;
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, Math.PI * 2);
+                ctx.fill();
+                // Swirl pattern inside
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = 'rgba(224, 176, 255, 0.6)';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.arc(x, y, r * 0.6, 0, Math.PI * 1.5);
+                ctx.stroke();
+                ctx.restore();
+                break;
+
+            case 'bone_spear':
+                // Bone-colored piercing spear (rotated)
+                ctx.save();
+                ctx.translate(x, y);
+                if (proj.vx !== 0 || proj.vy !== 0) {
+                    ctx.rotate(Math.atan2(proj.vy, proj.vx));
+                }
+                ctx.shadowBlur = r * 0.8;
+                ctx.shadowColor = '#d4c4a8';
+                const boneGrad = ctx.createLinearGradient(-r * 2, 0, r * 2, 0);
+                boneGrad.addColorStop(0, '#f5f5dc');
+                boneGrad.addColorStop(0.5, '#e8dcc4');
+                boneGrad.addColorStop(1, '#d4c4a8');
+                ctx.fillStyle = boneGrad;
+                // Spear shape
+                ctx.beginPath();
+                ctx.ellipse(0, 0, r * 2.5, r * 0.5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                // Spear tip
+                ctx.fillStyle = '#c4b494';
+                ctx.beginPath();
+                ctx.moveTo(r * 1.5, 0);
+                ctx.lineTo(r * 2.5, -r * 0.4);
+                ctx.lineTo(r * 2.5, r * 0.4);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+                break;
+
+            case 'blood_moon_chakram':
+                // Red crescent blade (rotated)
+                ctx.save();
+                ctx.translate(x, y);
+                if (proj.vx !== 0 || proj.vy !== 0) {
+                    ctx.rotate(Math.atan2(proj.vy, proj.vx));
+                }
+                ctx.shadowBlur = r * 1.5;
+                ctx.shadowColor = '#ff6b6b';
+                const chakramGrad = ctx.createLinearGradient(-r, -r, r, r);
+                chakramGrad.addColorStop(0, '#ff6b6b');
+                chakramGrad.addColorStop(0.5, '#8b0000');
+                chakramGrad.addColorStop(1, '#4a0000');
+                ctx.fillStyle = chakramGrad;
+                // Crescent shape
+                ctx.beginPath();
+                ctx.arc(0, 0, r * 1.2, 0.3, Math.PI - 0.3);
+                ctx.arc(r * 0.5, 0, r * 0.8, Math.PI + 0.3, -0.3);
+                ctx.closePath();
+                ctx.fill();
+                // Sharp edge highlight
+                ctx.strokeStyle = '#ffcccc';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(0, 0, r * 1.15, 0.4, Math.PI - 0.4);
+                ctx.stroke();
+                ctx.restore();
+                break;
+
+            case 'vampire_dagger':
+                // Dark red dagger with blood effect (rotated)
+                ctx.save();
+                ctx.translate(x, y);
+                if (proj.vx !== 0 || proj.vy !== 0) {
+                    ctx.rotate(Math.atan2(proj.vy, proj.vx));
+                }
+                ctx.shadowBlur = r;
+                ctx.shadowColor = '#8b0000';
+                const daggerGrad = ctx.createLinearGradient(-r * 1.5, 0, r * 1.5, 0);
+                daggerGrad.addColorStop(0, '#4a0000');
+                daggerGrad.addColorStop(0.5, '#8b0000');
+                daggerGrad.addColorStop(1, '#cc0000');
+                ctx.fillStyle = daggerGrad;
+                // Dagger shape
+                ctx.beginPath();
+                ctx.moveTo(r * 1.5, 0);
+                ctx.lineTo(-r * 0.3, r * 0.5);
+                ctx.lineTo(-r * 0.5, r * 0.4);
+                ctx.lineTo(-r * 0.8, r * 0.5);
+                ctx.lineTo(-r * 0.8, -r * 0.5);
+                ctx.lineTo(-r * 0.5, -r * 0.4);
+                ctx.lineTo(-r * 0.3, -r * 0.5);
+                ctx.closePath();
+                ctx.fill();
+                // Blood drop
+                ctx.fillStyle = '#ff0000';
+                ctx.beginPath();
+                ctx.arc(-r * 0.4, 0, r * 0.2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+                break;
+
             default:
                 // Fallback: simple colored circle with white core
                 ctx.fillStyle = proj.color || '#ffffff';
@@ -5955,6 +7148,52 @@ class Game {
             ctx.beginPath();
             ctx.arc(gem.x, gem.y, gem.radius * 0.6, 0, Math.PI * 2);
             ctx.stroke();
+        }
+    }
+
+    renderHealthPacks() {
+        const ctx = this.ctx;
+        const camLeft = this.camera.x - 50;
+        const camRight = this.camera.x + this.canvas.width + 50;
+        const camTop = this.camera.y - 50;
+        const camBottom = this.camera.y + this.canvas.height + 50;
+
+        const len = this.healthPacks.length;
+        for (let i = 0; i < len; i++) {
+            const pack = this.healthPacks[i];
+
+            // Frustum culling
+            if (pack.x + pack.radius < camLeft) continue;
+            if (pack.x - pack.radius > camRight) continue;
+            if (pack.y + pack.radius < camTop) continue;
+            if (pack.y - pack.radius > camBottom) continue;
+
+            const bobY = pack.y + Math.sin(pack.bobOffset) * 3;
+
+            // Draw cross (red cross on white background)
+            const size = pack.radius * 2;
+
+            // White background circle
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(pack.x, bobY, pack.radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Red cross
+            ctx.fillStyle = '#ef4444';
+            const crossWidth = size * 0.6;
+            const crossThickness = size * 0.2;
+            ctx.fillRect(pack.x - crossThickness / 2, bobY - size * 0.4, crossThickness, size * 0.8);
+            ctx.fillRect(pack.x - size * 0.4, bobY - crossThickness / 2, size * 0.8, crossThickness);
+
+            // Glow effect when magnetized
+            if (pack.magnetized) {
+                ctx.strokeStyle = 'rgba(239, 68, 68, 0.6)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(pack.x, bobY, pack.radius + 4, 0, Math.PI * 2);
+                ctx.stroke();
+            }
         }
     }
 

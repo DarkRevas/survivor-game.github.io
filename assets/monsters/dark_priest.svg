@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="priestRobe" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a3d5a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2d1a4a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a0f2e;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="darkOrb" cx="30%" cy="30%">
+      <stop offset="0%" style="stop-color:#9370db;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#2d1a4a;stop-opacity:1" />
+    </radialGradient>
+    <filter id="darkAura">
+      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Dark aura -->
+  <circle cx="32" cy="32" r="28" fill="url(#darkOrb)" opacity="0.2" filter="url(#darkAura)"/>
+  
+  <!-- Robed body -->
+  <path d="M22 28 L32 56 L42 28 Q44 36 42 44 L36 56 L28 56 L22 44 Q20 36 22 28" fill="url(#priestRobe)"/>
+  
+  <!-- Hooded head -->
+  <path d="M24 28 Q32 12 40 28 Q42 34 40 38 L24 38 Q22 34 24 28" fill="url(#priestRobe)"/>
+  
+  <!-- Deep hood shadow -->
+  <path d="M26 30 Q32 20 38 30 Q39 34 38 36 L26 36 Q25 34 26 30" fill="#1a0f2e"/>
+  
+  <!-- Glowing eyes under hood -->
+  <ellipse cx="29" cy="32" rx="3.5" ry="2.5" fill="#c084fc" filter="url(#darkAura)"/>
+  <ellipse cx="35" cy="32" rx="3.5" ry="2.5" fill="#c084fc" filter="url(#darkAura)"/>
+  <circle cx="30" cy="32" r="1.5" fill="#ffffff"/>
+  <circle cx="36" cy="32" r="1.5" fill="#ffffff"/>
+  
+  <!-- Raised hands summoning -->
+  <circle cx="16" cy="24" r="6" fill="url(#priestRobe)"/>
+  <circle cx="48" cy="24" r="6" fill="url(#priestRobe)"/>
+  
+  <!-- Dark orb being summoned -->
+  <circle cx="32" cy="14" r="7" fill="url(#darkOrb)" filter="url(#darkAura)"/>
+  <circle cx="30" cy="12" r="3" fill="#9370db" opacity="0.5"/>
+  
+  <!-- Rune symbols around orb -->
+  <path d="M26 10 L28 14 L26 18" stroke="#9370db" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <path d="M38 10 L36 14 L38 18" stroke="#9370db" stroke-width="1.5" fill="none" opacity="0.6"/>
+</svg>

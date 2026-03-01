@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="soulOrbGradient" cx="30%" cy="30%">
+      <stop offset="0%" style="stop-color:#e0b0ff;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#9370db;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4b0082;stop-opacity:1" />
+    </radialGradient>
+    <filter id="soulGlow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Outer glow -->
+  <circle cx="32" cy="32" r="28" fill="url(#soulOrbGradient)" opacity="0.4" filter="url(#soulGlow)"/>
+  
+  <!-- Main orb -->
+  <circle cx="32" cy="32" r="20" fill="url(#soulOrbGradient)" filter="url(#soulGlow)"/>
+  
+  <!-- Inner highlight -->
+  <circle cx="26" cy="26" r="8" fill="#ffffff" opacity="0.4"/>
+  
+  <!-- Swirl pattern -->
+  <path d="M32 18 Q40 24 38 32 Q36 40 32 46" stroke="#e0b0ff" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M28 20 Q20 28 22 36 Q24 42 28 46" stroke="#e0b0ff" stroke-width="1.5" fill="none" opacity="0.5"/>
+</svg>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="wraithBody" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#a890b8;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#7d6b8f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4a3d5a;stop-opacity:0.3" />
+    </linearGradient>
+    <radialGradient id="wraithGlow" cx="50%" cy="30%">
+      <stop offset="0%" style="stop-color:#d0b0e0;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#7d6b8f;stop-opacity:0" />
+    </radialGradient>
+    <filter id="wraithBlur">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Ethereal trail -->
+  <ellipse cx="32" cy="52" rx="20" ry="10" fill="url(#wraithBody)" opacity="0.3" filter="url(#wraithBlur)"/>
+  <ellipse cx="32" cy="48" rx="16" ry="8" fill="url(#wraithBody)" opacity="0.4"/>
+  
+  <!-- Main body (ghostly form) -->
+  <ellipse cx="32" cy="32" rx="18" ry="22" fill="url(#wraithBody)" filter="url(#wraithBlur)"/>
+  
+  <!-- Inner glow -->
+  <ellipse cx="32" cy="28" rx="12" ry="14" fill="url(#wraithGlow)"/>
+  
+  <!-- Hood shape -->
+  <path d="M20 24 Q32 10 44 24 Q46 30 44 34 L20 34 Q18 30 20 24" fill="#5a4d6a" opacity="0.6"/>
+  
+  <!-- Glowing eyes -->
+  <ellipse cx="27" cy="30" rx="4" ry="3" fill="#ff6b6b" filter="url(#wraithBlur)"/>
+  <ellipse cx="37" cy="30" rx="4" ry="3" fill="#ff6b6b" filter="url(#wraithBlur)"/>
+  <circle cx="28" cy="29" r="1.5" fill="#ffffff"/>
+  <circle cx="38" cy="29" r="1.5" fill="#ffffff"/>
+  
+  <!-- Wispy edges -->
+  <path d="M16 36 Q12 42 14 48" stroke="url(#wraithBody)" stroke-width="3" fill="none" opacity="0.5"/>
+  <path d="M48 36 Q52 42 50 48" stroke="url(#wraithBody)" stroke-width="3" fill="none" opacity="0.5"/>
+</svg>
