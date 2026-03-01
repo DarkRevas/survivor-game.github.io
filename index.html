@@ -4015,10 +4015,13 @@ class Game {
             
             // Check collisions
             if (proj.owner === 'player') {
-                // OPTIMIZATION: Cache array length
-                const enemyLen = this.enemies.length;
+                // OPTIMIZATION: Create a copy of enemies array to avoid modification during iteration
+                const enemiesToProcess = [...this.enemies];
+                const enemiesToKill = [];
+                
+                const enemyLen = enemiesToProcess.length;
                 for (let j = 0; j < enemyLen; j++) {
-                    const enemy = this.enemies[j];
+                    const enemy = enemiesToProcess[j];
                     if (proj.hitEnemies.has(enemy)) continue;
 
                     const dx = enemy.x - proj.x;
@@ -4047,16 +4050,16 @@ class Game {
 
                         // Apply Ice Shard slow effect
                         if (proj.isIceShard) {
-                            enemy.applySlow(0.5, 1.5); // 50% speed for 1.5 seconds
+                            enemy.applySlow(0.5, 1.5);
                         }
 
                         // Apply Poison Dagger poison effect
                         if (proj.isPoisonDagger) {
-                            enemy.applyPoison(5.0); // Poison for 5 seconds
+                            enemy.applyPoison(5.0);
                         }
 
                         if (dead) {
-                            this.killEnemy(enemy);
+                            enemiesToKill.push(enemy);
                         }
 
                         if (proj.isExplosive) {
@@ -4073,6 +4076,14 @@ class Game {
                         if (!proj.isExplosive && proj.pierce <= 0) break;
                     }
                 }
+                
+                // Kill enemies after processing all collisions
+                for (let k = 0; k < enemiesToKill.length; k++) {
+                    this.killEnemy(enemiesToKill[k]);
+                }
+                
+                // Check if projectile was already removed
+                if (i >= this.projectiles.length || !this.projectiles[i]) continue;
             } else {
                 // Enemy projectile hitting player
                 const dx = this.player.x - proj.x;
@@ -4111,11 +4122,14 @@ class Game {
     createExplosion(x, y, radius, damage) {
         // OPTIMIZATION: Pre-calculate squared radius
         const radiusSq = radius * radius;
-        // OPTIMIZATION: Cache array length
-        const enemyLen = this.enemies.length;
         
+        // Create a copy to avoid modification during iteration
+        const enemiesToProcess = [...this.enemies];
+        const enemiesToKill = [];
+        
+        const enemyLen = enemiesToProcess.length;
         for (let i = 0; i < enemyLen; i++) {
-            const enemy = this.enemies[i];
+            const enemy = enemiesToProcess[i];
             const dx = enemy.x - x;
             const dy = enemy.y - y;
             // OPTIMIZATION: Use squared distance
@@ -4128,9 +4142,14 @@ class Game {
                 this.damageNumbers.add(enemy.x, enemy.y - 20, damage);
 
                 if (dead) {
-                    this.killEnemy(enemy);
+                    enemiesToKill.push(enemy);
                 }
             }
+        }
+        
+        // Kill enemies after processing all damage
+        for (let i = 0; i < enemiesToKill.length; i++) {
+            this.killEnemy(enemiesToKill[i]);
         }
 
         // Visual
