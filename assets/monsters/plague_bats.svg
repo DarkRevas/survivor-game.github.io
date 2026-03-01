@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Plague green gradient -->
+    <radialGradient id="plagueGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#8bac5f"/>
+      <stop offset="50%" stop-color="#6b8c42"/>
+      <stop offset="100%" stop-color="#4a6b2d"/>
+    </radialGradient>
+    
+    <!-- Disease aura glow -->
+    <filter id="plagueGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Wing membrane pattern -->
+    <pattern id="wingPattern" patternUnits="userSpaceOnUse" width="4" height="4">
+      <path d="M 0 0 L 4 4 M 4 0 L 0 4" stroke="#4a6b2d" stroke-width="0.5" opacity="0.3"/>
+    </pattern>
+  </defs>
+  
+  <!-- Disease cloud underneath -->
+  <ellipse cx="32" cy="45" rx="22" ry="8" fill="#6b8c42" opacity="0.2" filter="url(#plagueGlow)">
+    <animate attributeName="rx" values="22;24;22" dur="1.5s" repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Swarm of 3 bats -->
+  
+  <!-- Bat 1 (center, largest) -->
+  <g id="bat1">
+    <!-- Left wing -->
+    <path d="M 28 32 Q 18 28 12 30 Q 14 36 20 38 Q 24 36 28 34" 
+          fill="url(#plagueGrad)" stroke="#4a6b2d" stroke-width="1">
+      <animate attributeName="d" values="M 28 32 Q 18 28 12 30 Q 14 36 20 38 Q 24 36 28 34;
+                                          M 28 32 Q 18 24 10 26 Q 12 32 18 34 Q 24 34 28 34;
+                                          M 28 32 Q 18 28 12 30 Q 14 36 20 38 Q 24 36 28 34" 
+               dur="0.3s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Right wing -->
+    <path d="M 36 32 Q 46 28 52 30 Q 50 36 44 38 Q 40 36 36 34" 
+          fill="url(#plagueGrad)" stroke="#4a6b2d" stroke-width="1">
+      <animate attributeName="d" values="M 36 32 Q 46 28 52 30 Q 50 36 44 38 Q 40 36 36 34;
+                                          M 36 32 Q 46 24 54 26 Q 52 32 46 34 Q 40 34 36 34;
+                                          M 36 32 Q 46 28 52 30 Q 50 36 44 38 Q 40 36 36 34" 
+               dur="0.3s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Body -->
+    <ellipse cx="32" cy="34" rx="5" ry="6" fill="url(#plagueGrad)" stroke="#4a6b2d" stroke-width="1"/>
+    
+    <!-- Head -->
+    <circle cx="32" cy="28" r="4" fill="url(#plagueGrad)" stroke="#4a6b2d" stroke-width="1"/>
+    
+    <!-- Ears -->
+    <path d="M 29 25 L 28 20 L 31 24 Z" fill="#6b8c42"/>
+    <path d="M 35 25 L 36 20 L 33 24 Z" fill="#6b8c42"/>
+    
+    <!-- Glowing eyes -->
+    <circle cx="30" cy="28" r="1.5" fill="#c0ff80" filter="url(#plagueGlow)">
+      <animate attributeName="opacity" values="1;0.5;1" dur="0.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="34" cy="28" r="1.5" fill="#c0ff80" filter="url(#plagueGlow)">
+      <animate attributeName="opacity" values="1;0.5;1" dur="0.4s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Bat 2 (left, smaller) -->
+  <g id="bat2" opacity="0.85">
+    <!-- Left wing -->
+    <path d="M 16 38 Q 10 34 6 36 Q 7 40 11 42 Q 14 40 16 39" 
+          fill="url(#plagueGrad)" stroke="#4a6b2d" stroke-width="0.8">
+      <animate attributeName="d" values="M 16 38 Q 10 34 6 36 Q 7 40 11 42 Q 14 40 16 39;
+                                          M 16 38 Q 10 32 4 34 Q 5 38 9 40 Q 13 40 16 39;
+                                          M 16 38 Q 10 34 6 36 Q 7 40 11 42 Q 14 40 16 39" 
+               dur="0.25s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Right wing -->
+    <path d="M 22 38 Q 26 36 28 38 Q 27 41 24 42 Q 22 41 20 40" 
+          fill="url(#plagueGrad)" stroke="#4a6b2d" stroke-width="0.8">
+      <animate attributeName="d" values="M 22 38 Q 26 36 28 38 Q 27 41 24 42 Q 22 41 20 40;
+                                          M 22 38 Q 26 34 30 36 Q 29 40 25 41 Q 22 41 20 40;
+                                          M 22 38 Q 26 36 28 38 Q 27 41 24 42 Q 22 41 20 40" 
+               dur="0.25s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Body -->
+    <ellipse cx="19" cy="40" rx="3.5" ry="4" fill="url(#plagueGrad)" stroke="#4a6b2d" stroke-width="0.8"/>
+    
+    <!-- Head -->
+    <circle cx="19" cy="36" r="2.5" fill="url(#plagueGrad)" stroke="#4a6b2d" stroke-width="0.8"/>
+    
+    <!-- Eyes -->
+    <circle cx="18" cy="36" r="1" fill="#c0ff80" filter="url(#plagueGlow)"/>
+    <circle cx="20" cy="36" r="1" fill="#c0ff80" filter="url(#plagueGlow)"/>
+    
+    <animateTransform attributeName="transform" type="translate" values="0 0; -2 -3; 0 0" dur="0.5s" repeatCount="indefinite"/>
+  </g>
+  
+  <!-- Bat 3 (right, smaller) -->
+  <g id="bat3" opacity="0.85">
+    <!-- Left wing -->
+    <path d="M 40 36 Q 36 34 34 36 Q 35 39 38 40 Q 40 39 42 38" 
+          fill="url(#plagueGrad)" stroke="#4a6b2d" stroke-width="0.8">
+      <animate attributeName="d" values="M 40 36 Q 36 34 34 36 Q 35 39 38 40 Q 40 39 42 38;
+                                          M 40 36 Q 36 32 32 34 Q 33 38 37 39 Q 40 39 42 38;
+                                          M 40 36 Q 36 34 34 36 Q 35 39 38 40 Q 40 39 42 38" 
+               dur="0.35s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Right wing -->
+    <path d="M 46 36 Q 52 32 58 34 Q 57 38 53 40 Q 50 38 48 37" 
+          fill="url(#plagueGrad)" stroke="#4a6b2d" stroke-width="0.8">
+      <animate attributeName="d" values="M 46 36 Q 52 32 58 34 Q 57 38 53 40 Q 50 38 48 37;
+                                          M 46 36 Q 54 30 60 32 Q 59 36 55 38 Q 50 38 48 37;
+                                          M 46 36 Q 52 32 58 34 Q 57 38 53 40 Q 50 38 48 37" 
+               dur="0.35s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Body -->
+    <ellipse cx="43" cy="38" rx="3.5" ry="4" fill="url(#plagueGrad)" stroke="#4a6b2d" stroke-width="0.8"/>
+    
+    <!-- Head -->
+    <circle cx="43" cy="34" r="2.5" fill="url(#plagueGrad)" stroke="#4a6b2d" stroke-width="0.8"/>
+    
+    <!-- Eyes -->
+    <circle cx="42" cy="34" r="1" fill="#c0ff80" filter="url(#plagueGlow)"/>
+    <circle cx="44" cy="34" r="1" fill="#c0ff80" filter="url(#plagueGlow)"/>
+    
+    <animateTransform attributeName="transform" type="translate" values="0 0; 2 -2; 0 0" dur="0.45s" repeatCount="indefinite"/>
+  </g>
+  
+  <!-- Disease particles/spores -->
+  <g filter="url(#plagueGlow)">
+    <circle cx="25" cy="48" r="1.5" fill="#8bac5f" opacity="0.6">
+      <animate attributeName="cy" values="48;44;48" dur="0.8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.6;0.2;0.6" dur="0.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="38" cy="50" r="1" fill="#8bac5f" opacity="0.5">
+      <animate attributeName="cy" values="50;46;50" dur="1s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5;0.1;0.5" dur="1s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="32" cy="52" r="1.2" fill="#8bac5f" opacity="0.4">
+      <animate attributeName="cy" values="52;48;52" dur="0.9s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4;0.1;0.4" dur="0.9s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="45" cy="46" r="0.8" fill="#8bac5f" opacity="0.5">
+      <animate attributeName="cy" values="46;42;46" dur="0.7s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5;0.2;0.5" dur="0.7s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

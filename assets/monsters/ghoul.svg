@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Ghoul body gradient -->
+    <radialGradient id="ghoulBodyGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#a0522d"/>
+      <stop offset="50%" stop-color="#8b4513"/>
+      <stop offset="100%" stop-color="#6b3310"/>
+    </radialGradient>
+    
+    <!-- Inner glow for eyes -->
+    <filter id="eyeGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Shadow underneath -->
+  <ellipse cx="32" cy="38" rx="14" ry="5" fill="#000000" opacity="0.35"/>
+  
+  <!-- Main body (elongated, sharp features) -->
+  <ellipse cx="32" cy="32" rx="12" ry="14" fill="url(#ghoulBodyGrad)" stroke="#5c3010" stroke-width="1.5"/>
+  
+  <!-- Sharp cheek bones -->
+  <path d="M 20 30 L 24 34 L 22 38" fill="#6b3310" opacity="0.5"/>
+  <path d="M 44 30 L 40 34 L 42 38" fill="#6b3310" opacity="0.5"/>
+  
+  <!-- Forehead ridges -->
+  <path d="M 28 20 Q 32 22 36 20" fill="none" stroke="#5c3010" stroke-width="1.5" opacity="0.6"/>
+  <path d="M 29 24 Q 32 25 35 24" fill="none" stroke="#5c3010" stroke-width="1" opacity="0.5"/>
+  
+  <!-- Eyes (glowing yellow, menacing) -->
+  <ellipse cx="28" cy="29" rx="5" ry="4" fill="#1a0a00" opacity="0.9"/>
+  <ellipse cx="38" cy="29" rx="5" ry="4" fill="#1a0a00" opacity="0.9"/>
+  
+  <!-- Glowing yellow iris -->
+  <circle cx="28" cy="29" r="3" fill="#ffd700" filter="url(#eyeGlow)">
+    <animate attributeName="r" values="3;3.5;3" dur="0.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="38" cy="29" r="3" fill="#ffd700" filter="url(#eyeGlow)">
+    <animate attributeName="r" values="3;3.5;3" dur="0.5s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Vertical slit pupils -->
+  <ellipse cx="28" cy="29" rx="1" ry="2.5" fill="#000000"/>
+  <ellipse cx="38" cy="29" rx="1" ry="2.5" fill="#000000"/>
+  
+  <!-- Sharp nose -->
+  <path d="M 32 32 L 30 38 L 34 38 Z" fill="#5c3010" opacity="0.7"/>
+  
+  <!-- Grinning mouth with sharp teeth -->
+  <path d="M 24 44 Q 32 50 40 44" fill="#1a0a00" stroke="#5c3010" stroke-width="1"/>
+  
+  <!-- Sharp teeth -->
+  <path d="M 26 44 L 28 48 L 30 44" fill="#d4c5a3"/>
+  <path d="M 30 44 L 32 49 L 34 44" fill="#d4c5a3"/>
+  <path d="M 34 44 L 36 48 L 38 44" fill="#d4c5a3"/>
+  
+  <!-- Pointed ears -->
+  <path d="M 18 28 L 14 22 L 18 26 Z" fill="#8b4513" stroke="#5c3010" stroke-width="1"/>
+  <path d="M 46 28 L 50 22 L 46 26 Z" fill="#8b4513" stroke="#5c3010" stroke-width="1"/>
+  
+  <!-- Sinewy neck tendons -->
+  <path d="M 28 48 L 26 54" stroke="#5c3010" stroke-width="1" opacity="0.5"/>
+  <path d="M 36 48 L 38 54" stroke="#5c3010" stroke-width="1" opacity="0.5"/>
+</svg>

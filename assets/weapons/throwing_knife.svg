@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Blade gradient -->
+    <linearGradient id="bladeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e5e7eb;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#9ca3af;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#6b7280;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4b5563;stop-opacity:1" />
+    </linearGradient>
+    <!-- Handle gradient -->
+    <linearGradient id="knifeHandleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#374151;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1f2937;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#111827;stop-opacity:1" />
+    </linearGradient>
+    <!-- Shine gradient -->
+    <linearGradient id="bladeShineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Blade -->
+  <path d="M 48 32 L 20 20 L 22 26 L 12 30 L 22 34 L 20 40 Z" fill="url(#bladeGradient)" stroke="#374151" stroke-width="1.5" stroke-linejoin="round" />
+  
+  <!-- Blade edge highlight -->
+  <path d="M 46 32 L 22 22 L 22 26" fill="none" stroke="#f3f4f6" stroke-width="1" opacity="0.6" stroke-linecap="round" />
+  
+  <!-- Blade shine -->
+  <path d="M 35 28 L 24 24 L 24 26 L 35 30" fill="url(#bladeShineGradient)" opacity="0.5" />
+  
+  <!-- Handle -->
+  <rect x="8" y="28" width="14" height="8" rx="2" fill="url(#knifeHandleGradient)" stroke="#1f2937" stroke-width="1.5" />
+  
+  <!-- Handle grip lines -->
+  <line x1="12" y1="30" x2="12" y2="34" stroke="#4b5563" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="16" y1="30" x2="16" y2="34" stroke="#4b5563" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="20" y1="30" x2="20" y2="34" stroke="#4b5563" stroke-width="1.5" stroke-linecap="round" />
+  
+  <!-- Handle guard -->
+  <rect x="20" y="26" width="3" height="12" rx="1" fill="#6b7280" stroke="#374151" stroke-width="1" />
+  
+  <!-- Tip highlight -->
+  <circle cx="48" cy="32" r="1.5" fill="#ffffff" opacity="0.7" />
+</svg>

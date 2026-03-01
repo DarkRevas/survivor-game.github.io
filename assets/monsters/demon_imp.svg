@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Demon Imp body gradient -->
+    <radialGradient id="impBodyGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#ff7b5c"/>
+      <stop offset="50%" stop-color="#c44536"/>
+      <stop offset="100%" stop-color="#8b2d22"/>
+    </radialGradient>
+    
+    <!-- Fire glow effect -->
+    <filter id="fireGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Inner fire gradient for eyes -->
+    <radialGradient id="eyeFire" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="30%" stop-color="#ffd700"/>
+      <stop offset="70%" stop-color="#ff8c00"/>
+      <stop offset="100%" stop-color="#ff4500"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Shadow -->
+  <ellipse cx="32" cy="42" rx="12" ry="4" fill="#000000" opacity="0.35"/>
+  
+  <!-- Main body (small, round imp) -->
+  <ellipse cx="32" cy="36" rx="10" ry="11" fill="url(#impBodyGrad)" stroke="#8b2d22" stroke-width="1.5"/>
+  
+  <!-- Belly highlight -->
+  <ellipse cx="32" cy="40" rx="6" ry="5" fill="#ff7b5c" opacity="0.3"/>
+  
+  <!-- Small horns -->
+  <path d="M 26 24 L 24 16 L 28 22 Z" fill="#8b2d22" stroke="#5c1d16" stroke-width="1"/>
+  <path d="M 38 24 L 40 16 L 36 22 Z" fill="#8b2d22" stroke="#5c1d16" stroke-width="1"/>
+  
+  <!-- Horn highlights -->
+  <path d="M 26 20 L 27 18" stroke="#c44536" stroke-width="1" opacity="0.6"/>
+  <path d="M 38 20 L 37 18" stroke="#c44536" stroke-width="1" opacity="0.6"/>
+  
+  <!-- Pointed ears -->
+  <path d="M 20 32 L 15 28 L 20 34 Z" fill="#c44536" stroke="#8b2d22" stroke-width="1"/>
+  <path d="M 44 32 L 49 28 L 44 34 Z" fill="#c44536" stroke="#8b2d22" stroke-width="1"/>
+  
+  <!-- Eyes (large, glowing with fire) -->
+  <ellipse cx="28" cy="33" rx="4.5" ry="4" fill="#1a0a00"/>
+  <ellipse cx="38" cy="33" rx="4.5" ry="4" fill="#1a0a00"/>
+  
+  <!-- Fiery iris -->
+  <circle cx="28" cy="33" r="2.5" fill="url(#eyeFire)" filter="url(#fireGlow)">
+    <animate attributeName="r" values="2.5;3;2.5" dur="0.3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="38" cy="33" r="2.5" fill="url(#eyeFire)" filter="url(#fireGlow)">
+    <animate attributeName="r" values="2.5;3;2.5" dur="0.3s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Black pupils -->
+  <circle cx="29" cy="33" r="1.2" fill="#000000"/>
+  <circle cx="39" cy="33" r="1.2" fill="#000000"/>
+  
+  <!-- Eye shine -->
+  <circle cx="29" cy="32" r="0.7" fill="#ffffff"/>
+  <circle cx="39" cy="32" r="0.7" fill="#ffffff"/>
+  
+  <!-- Mischievous grin -->
+  <path d="M 26 42 Q 32 48 38 42" fill="#1a0a00" stroke="#5c1d16" stroke-width="1"/>
+  
+  <!-- Sharp teeth in grin -->
+  <path d="M 28 42 L 29 45 L 30 42" fill="#f5f5dc"/>
+  <path d="M 31 43 L 32 47 L 33 43" fill="#f5f5dc"/>
+  <path d="M 34 42 L 35 45 L 36 42" fill="#f5f5dc"/>
+  
+  <!-- Small fangs -->
+  <path d="M 27 42 L 28 46 L 29 42" fill="#ffffff"/>
+  <path d="M 37 42 L 36 46 L 35 42" fill="#ffffff"/>
+  
+  <!-- Brow ridges (angry expression) -->
+  <path d="M 24 28 Q 28 30 30 28" fill="none" stroke="#8b2d22" stroke-width="2" opacity="0.6"/>
+  <path d="M 34 28 Q 36 30 40 28" fill="none" stroke="#8b2d22" stroke-width="2" opacity="0.6"/>
+  
+  <!-- Nostrils -->
+  <circle cx="30" cy="38" r="1" fill="#5c1d16" opacity="0.6"/>
+  <circle cx="34" cy="38" r="1" fill="#5c1d16" opacity="0.6"/>
+  
+  <!-- Fire particles around imp -->
+  <circle cx="22" cy="28" r="1.5" fill="#ff8c00" filter="url(#fireGlow)" opacity="0.7">
+    <animate attributeName="cy" values="28;24;28" dur="0.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.7;0.3;0.7" dur="0.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="44" cy="30" r="1" fill="#ffd700" filter="url(#fireGlow)" opacity="0.6">
+    <animate attributeName="cy" values="30;26;30" dur="0.6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.6;0.2;0.6" dur="0.6s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="32" cy="20" r="1" fill="#ff6b35" filter="url(#fireGlow)" opacity="0.5">
+    <animate attributeName="cy" values="20;16;20" dur="0.4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;0.2;0.5" dur="0.4s" repeatCount="indefinite"/>
+  </circle>
+</svg>

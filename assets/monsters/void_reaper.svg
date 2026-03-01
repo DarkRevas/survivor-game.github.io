@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Void Reaper body gradient -->
+    <radialGradient id="voidGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#5a2d6b"/>
+      <stop offset="40%" stop-color="#3d1f4a"/>
+      <stop offset="70%" stop-color="#2a1235"/>
+      <stop offset="100%" stop-color="#1a0a24"/>
+    </radialGradient>
+    
+    <!-- Void energy glow -->
+    <filter id="voidGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Scythe blade gradient -->
+    <linearGradient id="scytheBlade" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b5fbf"/>
+      <stop offset="50%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#e9d5ff"/>
+    </linearGradient>
+    
+    <!-- Dark particle trail -->
+    <linearGradient id="particleTrail" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c084fc" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#4a2d5c" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Large imposing shadow -->
+  <ellipse cx="32" cy="48" rx="26" ry="8" fill="#000000" opacity="0.5"/>
+  <ellipse cx="32" cy="48" rx="28" ry="10" fill="#3d1f4a" opacity="0.25" filter="url(#voidGlow)"/>
+  
+  <!-- Scythe (behind the reaper) -->
+  <g id="scythe">
+    <!-- Scythe handle -->
+    <rect x="52" y="8" width="4" height="52" fill="#2d1a3d" rx="2"/>
+    
+    <!-- Scythe blade (curved, menacing) -->
+    <path d="M 54 12 Q 62 15 60 28 Q 56 35 50 32 Q 52 22 54 12" 
+          fill="url(#scytheBlade)" stroke="#8b5fbf" stroke-width="1.5" filter="url(#voidGlow)"/>
+    
+    <!-- Blade glow effect -->
+    <path d="M 54 12 Q 62 15 60 28 Q 56 35 50 32 Q 52 22 54 12" 
+          fill="none" stroke="#e9d5ff" stroke-width="1" opacity="0.5" filter="url(#voidGlow)"/>
+    
+    <!-- Energy trail from blade -->
+    <path d="M 58 20 Q 65 25 62 32" fill="none" stroke="url(#particleTrail)" stroke-width="3" opacity="0.4">
+      <animate attributeName="d" values="M 58 20 Q 65 25 62 32;
+                                          M 58 20 Q 66 24 63 30;
+                                          M 58 20 Q 65 25 62 32" 
+               dur="0.5s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Main body (large, imposing figure) -->
+  <ellipse cx="32" cy="38" rx="22" ry="20" fill="url(#voidGrad)" stroke="#2a1235" stroke-width="2.5"/>
+  
+  <!-- Body texture/armor plates -->
+  <path d="M 20 30 Q 32 35 44 30" fill="none" stroke="#2a1235" stroke-width="2" opacity="0.4"/>
+  <path d="M 18 38 Q 32 42 46 38" fill="none" stroke="#2a1235" stroke-width="2" opacity="0.3"/>
+  <path d="M 22 46 Q 32 50 42 46" fill="none" stroke="#2a1235" stroke-width="1.5" opacity="0.3"/>
+  
+  <!-- Chest glow (void energy core) -->
+  <ellipse cx="32" cy="36" rx="8" ry="6" fill="#4a2d5c" opacity="0.4" filter="url(#voidGlow)">
+    <animate attributeName="opacity" values="0.4;0.6;0.4" dur="1.5s" repeatCount="indefinite"/>
+  </ellipse>
+  <ellipse cx="32" cy="36" rx="4" ry="3" fill="#c084fc" opacity="0.6" filter="url(#voidGlow)">
+    <animate attributeName="opacity" values="0.6;0.8;0.6" dur="1.5s" repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Shoulder spikes/armor -->
+  <path d="M 12 32 L 8 24 L 14 30 Z" fill="#2a1235" stroke="#3d1f4a" stroke-width="1"/>
+  <path d="M 52 32 L 56 24 L 50 30 Z" fill="#2a1235" stroke="#3d1f4a" stroke-width="1"/>
+  
+  <!-- Hooded head -->
+  <ellipse cx="32" cy="24" rx="16" ry="14" fill="url(#voidGrad)" stroke="#2a1235" stroke-width="2"/>
+  
+  <!-- Deep hood shadow -->
+  <path d="M 20 24 Q 32 34 44 24" fill="#1a0a24" opacity="0.8"/>
+  
+  <!-- Hood rim highlight -->
+  <path d="M 18 20 Q 32 10 46 20 Q 44 24 32 22 Q 20 24 18 20" 
+        fill="url(#voidGrad)" stroke="#5a2d6b" stroke-width="1"/>
+  
+  <!-- Menacing glowing eyes -->
+  <ellipse cx="27" cy="24" rx="5" ry="4" fill="#0a0014"/>
+  <ellipse cx="39" cy="24" rx="5" ry="4" fill="#0a0014"/>
+  
+  <circle cx="28" cy="24" r="2.5" fill="#c084fc" filter="url(#voidGlow)">
+    <animate attributeName="r" values="2.5;3;2.5" dur="0.6s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="40" cy="24" r="2.5" fill="#c084fc" filter="url(#voidGlow)">
+    <animate attributeName="r" values="2.5;3;2.5" dur="0.6s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Slit pupils -->
+  <ellipse cx="28" cy="24" rx="0.8" ry="3" fill="#000000"/>
+  <ellipse cx="40" cy="24" rx="0.8" ry="3" fill="#000000"/>
+  
+  <!-- Eye shine -->
+  <circle cx="29" cy="23" r="0.8" fill="#ffffff" opacity="0.7"/>
+  <circle cx="41" cy="23" r="0.8" fill="#ffffff" opacity="0.7"/>
+  
+  <!-- Dark particle trail around reaper -->
+  <g filter="url(#voidGlow)">
+    <circle cx="10" cy="35" r="2" fill="#c084fc" opacity="0.5">
+      <animate attributeName="cx" values="10;6;10" dur="1s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5;0.1;0.5" dur="1s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="54" cy="40" r="1.5" fill="#e9d5ff" opacity="0.4">
+      <animate attributeName="cx" values="54;58;54" dur="1.2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4;0.1;0.4" dur="1.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="32" cy="56" r="2" fill="#c084fc" opacity="0.4">
+      <animate attributeName="cy" values="56;60;56" dur="0.8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4;0.1;0.4" dur="0.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="15" cy="20" r="1.5" fill="#e9d5ff" opacity="0.3">
+      <animate attributeName="cy" values="20;15;20" dur="1.1s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3;0.05;0.3" dur="1.1s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="50" cy="18" r="1" fill="#c084fc" opacity="0.4">
+      <animate attributeName="cy" values="18;12;18" dur="0.9s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4;0.1;0.4" dur="0.9s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Void aura rings -->
+  <circle cx="32" cy="38" r="28" fill="none" stroke="#c084fc" stroke-width="1" opacity="0.1" filter="url(#voidGlow)">
+    <animate attributeName="r" values="28;30;28" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.1;0.05;0.1" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="32" cy="38" r="32" fill="none" stroke="#8b5fbf" stroke-width="0.5" opacity="0.08" filter="url(#voidGlow)">
+    <animate attributeName="r" values="32;34;32" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.08;0.03;0.08" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Floating void runes -->
+  <path d="M 8 28 L 12 25 L 12 31 Z" fill="none" stroke="#c084fc" stroke-width="1.5" opacity="0.4" filter="url(#voidGlow)">
+    <animate attributeName="opacity" values="0.4;0.7;0.4" dur="2s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 56 28 L 52 25 L 52 31 Z" fill="none" stroke="#c084fc" stroke-width="1.5" opacity="0.4" filter="url(#voidGlow)">
+    <animate attributeName="opacity" values="0.4;0.7;0.4" dur="2.5s" repeatCount="indefinite"/>
+  </path>
+</svg>

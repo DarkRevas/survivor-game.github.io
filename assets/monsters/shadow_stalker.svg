@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Shadow Stalker body gradient -->
+    <radialGradient id="stalkerBodyGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#4a4a4a"/>
+      <stop offset="50%" stop-color="#2d2d2d"/>
+      <stop offset="100%" stop-color="#1a1a1a"/>
+    </radialGradient>
+    
+    <!-- Semi-transparent shadow effect -->
+    <radialGradient id="shadowFade" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2d2d2d" stop-opacity="0.9"/>
+      <stop offset="70%" stop-color="#1a1a1a" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0.3"/>
+    </radialGradient>
+    
+    <!-- Red eye glow -->
+    <filter id="redGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Stealth blur effect -->
+    <filter id="stealthBlur">
+      <feGaussianBlur stdDeviation="0.5"/>
+    </filter>
+  </defs>
+  
+  <!-- Shadow pool underneath -->
+  <ellipse cx="32" cy="40" rx="18" ry="6" fill="#000000" opacity="0.5">
+    <animate attributeName="rx" values="18;20;18" dur="2s" repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Wisp-like shadow trails -->
+  <path d="M 15 35 Q 8 30 5 35 Q 8 40 15 38" fill="#1a1a1a" opacity="0.4" filter="url(#stealthBlur)">
+    <animate attributeName="d" values="M 15 35 Q 8 30 5 35 Q 8 40 15 38;
+                                        M 15 35 Q 6 32 3 36 Q 7 39 15 38;
+                                        M 15 35 Q 8 30 5 35 Q 8 40 15 38" 
+             dur="1.5s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 49 35 Q 56 30 59 35 Q 56 40 49 38" fill="#1a1a1a" opacity="0.4" filter="url(#stealthBlur)">
+    <animate attributeName="d" values="M 49 35 Q 56 30 59 35 Q 56 40 49 38;
+                                        M 49 35 Q 58 32 61 36 Q 57 39 49 38;
+                                        M 49 35 Q 56 30 59 35 Q 56 40 49 38" 
+             dur="1.8s" repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Main body (sleek, stealthy shape) -->
+  <ellipse cx="32" cy="34" rx="13" ry="14" fill="url(#stalkerBodyGrad)" filter="url(#stealthBlur)"/>
+  
+  <!-- Body highlights (subtle) -->
+  <ellipse cx="28" cy="30" rx="5" ry="4" fill="#4a4a4a" opacity="0.3"/>
+  
+  <!-- Shadowy edges fading out -->
+  <ellipse cx="32" cy="34" rx="13" ry="14" fill="url(#shadowFade)"/>
+  
+  <!-- Glowing red eyes (menacing, predatory) -->
+  <ellipse cx="27" cy="31" rx="4.5" ry="3.5" fill="#0a0a0a"/>
+  <ellipse cx="39" cy="31" rx="4.5" ry="3.5" fill="#0a0a0a"/>
+  
+  <!-- Red iris with glow -->
+  <circle cx="28" cy="31" r="2.5" fill="#ff3333" filter="url(#redGlow)">
+    <animate attributeName="r" values="2.5;3;2.5" dur="0.4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="40" cy="31" r="2.5" fill="#ff3333" filter="url(#redGlow)">
+    <animate attributeName="r" values="2.5;3;2.5" dur="0.4s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Slit pupils -->
+  <ellipse cx="28" cy="31" rx="0.8" ry="3" fill="#000000"/>
+  <ellipse cx="40" cy="31" rx="0.8" ry="3" fill="#000000"/>
+  
+  <!-- Eye shine -->
+  <circle cx="29" cy="30" r="0.8" fill="#ffffff" opacity="0.8"/>
+  <circle cx="41" cy="30" r="0.8" fill="#ffffff" opacity="0.8"/>
+  
+  <!-- Sharp cheekbones -->
+  <path d="M 22 34 L 26 38 L 24 40" fill="#1a1a1a" opacity="0.5"/>
+  <path d="M 42 34 L 38 38 L 40 40" fill="#1a1a1a" opacity="0.5"/>
+  
+  <!-- Sinister mouth slit -->
+  <path d="M 28 42 Q 32 44 36 42" fill="none" stroke="#0a0a0a" stroke-width="1.5"/>
+  
+  <!-- Shadow tendrils emanating -->
+  <path d="M 20 34 Q 12 32 8 36" fill="none" stroke="#1a1a1a" stroke-width="2" opacity="0.4" filter="url(#stealthBlur)">
+    <animate attributeName="d" values="M 20 34 Q 12 32 8 36;
+                                        M 20 34 Q 10 30 6 34;
+                                        M 20 34 Q 12 32 8 36" 
+             dur="1.2s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 44 34 Q 52 32 56 36" fill="none" stroke="#1a1a1a" stroke-width="2" opacity="0.4" filter="url(#stealthBlur)">
+    <animate attributeName="d" values="M 44 34 Q 52 32 56 36;
+                                        M 44 34 Q 54 30 58 34;
+                                        M 44 34 Q 52 32 56 36" 
+             dur="1.4s" repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Floating shadow particles -->
+  <circle cx="18" cy="25" r="1.5" fill="#2d2d2d" opacity="0.5" filter="url(#stealthBlur)">
+    <animate attributeName="cy" values="25;20;25" dur="1s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;0.2;0.5" dur="1s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="48" cy="22" r="1" fill="#2d2d2d" opacity="0.4" filter="url(#stealthBlur)">
+    <animate attributeName="cy" values="22;27;22" dur="1.3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.4;0.1;0.4" dur="1.3s" repeatCount="indefinite"/>
+  </circle>
+</svg>

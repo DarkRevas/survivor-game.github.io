@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Fire gradient -->
+    <radialGradient id="fireCoreGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="20%" style="stop-color:#ffa94d;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ff8c42;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff6b35;stop-opacity:1" />
+    </radialGradient>
+    <!-- Fire trail gradient -->
+    <linearGradient id="fireTrailGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff6b35;stop-opacity:0" />
+      <stop offset="50%" style="stop-color:#ff8c42;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#ffa94d;stop-opacity:1" />
+    </linearGradient>
+    <!-- Glow filter -->
+    <filter id="fireGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Fire trail -->
+  <path d="M 8 32 Q 16 28, 24 32 Q 20 30, 28 32" fill="none" stroke="url(#fireTrailGradient)" stroke-width="8" stroke-linecap="round" opacity="0.7">
+    <animate attributeName="d" values="M 8 32 Q 16 28, 24 32 Q 20 30, 28 32; M 8 32 Q 16 36, 24 32 Q 20 34, 28 32; M 8 32 Q 16 28, 24 32 Q 20 30, 28 32" dur="0.3s" repeatCount="indefinite" />
+  </path>
+  
+  <!-- Outer fire glow -->
+  <circle cx="40" cy="32" r="18" fill="#ff6b35" opacity="0.3" filter="url(#fireGlow)" />
+  
+  <!-- Main fireball -->
+  <circle cx="40" cy="32" r="14" fill="url(#fireCoreGradient)" stroke="#ff6b35" stroke-width="2" filter="url(#fireGlow)" />
+  
+  <!-- Fire flames around -->
+  <path d="M 40 18 L 44 24 L 40 22 L 36 24 Z" fill="#ffa94d" opacity="0.9">
+    <animate attributeName="d" values="M 40 18 L 44 24 L 40 22 L 36 24 Z; M 40 16 L 45 23 L 40 21 L 35 23 Z; M 40 18 L 44 24 L 40 22 L 36 24 Z" dur="0.2s" repeatCount="indefinite" />
+  </path>
+  <path d="M 54 32 L 48 34 L 50 32 L 48 30 Z" fill="#ff8c42" opacity="0.8">
+    <animate attributeName="d" values="M 54 32 L 48 34 L 50 32 L 48 30 Z; M 56 32 L 49 35 L 51 32 L 49 29 Z; M 54 32 L 48 34 L 50 32 L 48 30 Z" dur="0.25s" repeatCount="indefinite" />
+  </path>
+  <path d="M 40 46 L 36 40 L 40 42 L 44 40 Z" fill="#ffa94d" opacity="0.85">
+    <animate attributeName="d" values="M 40 46 L 36 40 L 40 42 L 44 40 Z; M 40 48 L 35 41 L 40 43 L 45 41 Z; M 40 46 L 36 40 L 40 42 L 44 40 Z" dur="0.22s" repeatCount="indefinite" />
+  </path>
+  <path d="M 26 32 L 32 30 L 30 32 L 32 34 Z" fill="#ff8c42" opacity="0.7">
+    <animate attributeName="d" values="M 26 32 L 32 30 L 30 32 L 32 34 Z; M 24 32 L 31 29 L 29 32 L 31 35 Z; M 26 32 L 32 30 L 30 32 L 32 34 Z" dur="0.18s" repeatCount="indefinite" />
+  </path>
+  
+  <!-- Core highlight -->
+  <ellipse cx="37" cy="29" rx="4" ry="4" fill="#ffffff" opacity="0.7" />
+</svg>

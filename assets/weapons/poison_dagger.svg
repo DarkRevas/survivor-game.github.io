@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Poison blade gradient -->
+    <linearGradient id="poisonBladeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#86efac;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#4ade80;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#22c55e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#16a34a;stop-opacity:1" />
+    </linearGradient>
+    <!-- Handle gradient -->
+    <linearGradient id="poisonHandleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#374151;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1f2937;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#111827;stop-opacity:1" />
+    </linearGradient>
+    <!-- Poison glow -->
+    <radialGradient id="poisonGlowGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#4ade80;stop-opacity:0.5" />
+      <stop offset="70%" style="stop-color:#22c55e;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#22c55e;stop-opacity:0" />
+    </radialGradient>
+    <!-- Glow filter -->
+    <filter id="poisonGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Poison aura -->
+  <ellipse cx="36" cy="30" rx="22" ry="18" fill="url(#poisonGlowGradient)" />
+  
+  <!-- Blade -->
+  <path d="M 48 28 L 24 16 L 26 22 L 16 26 L 26 30 L 24 36 Z" fill="url(#poisonBladeGradient)" stroke="#16a34a" stroke-width="1.5" stroke-linejoin="round" filter="url(#poisonGlow)" />
+  
+  <!-- Poison drip effect on blade -->
+  <path d="M 20 26 L 24 28 L 22 32 L 18 30 Z" fill="#86efac" opacity="0.7" />
+  
+  <!-- Blade edge highlight -->
+  <path d="M 46 28 L 26 18 L 26 22" fill="none" stroke="#bbf7d0" stroke-width="1" opacity="0.7" stroke-linecap="round" />
+  
+  <!-- Poison veins on blade -->
+  <path d="M 30 24 Q 34 26, 38 24" fill="none" stroke="#22c55e" stroke-width="1" opacity="0.6" />
+  <path d="M 28 28 Q 32 30, 36 28" fill="none" stroke="#16a34a" stroke-width="1" opacity="0.5" />
+  
+  <!-- Handle -->
+  <rect x="8" y="24" width="12" height="8" rx="2" fill="url(#poisonHandleGradient)" stroke="#1f2937" stroke-width="1.5" />
+  
+  <!-- Handle poison vial -->
+  <circle cx="14" cy="28" r="3" fill="#4ade80" stroke="#16a34a" stroke-width="1" opacity="0.8" />
+  <circle cx="12" cy="27" r="1" fill="#86efac" opacity="0.7" />
+  
+  <!-- Handle grip lines -->
+  <line x1="18" y1="25" x2="18" y2="31" stroke="#4ade80" stroke-width="1" stroke-linecap="round" opacity="0.5" />
+  <line x1="21" y1="25" x2="21" y2="31" stroke="#4ade80" stroke-width="1" stroke-linecap="round" opacity="0.5" />
+  
+  <!-- Handle guard -->
+  <rect x="20" y="22" width="3" height="12" rx="1" fill="#374151" stroke="#1f2937" stroke-width="1" />
+  
+  <!-- Poison droplets -->
+  <circle cx="48" cy="28" r="2" fill="#4ade80" opacity="0.8">
+    <animate attributeName="cy" values="28;32;28" dur="2s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="44" cy="34" r="1.5" fill="#22c55e" opacity="0.6">
+    <animate attributeName="cy" values="34;38;34" dur="2.5s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2.5s" repeatCount="indefinite" />
+  </circle>
+  
+  <!-- Toxic fumes -->
+  <path d="M 52 20 Q 54 18, 52 16" fill="none" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round" opacity="0.4">
+    <animate attributeName="d" values="M 52 20 Q 54 18, 52 16; M 52 20 Q 50 18, 52 16; M 52 20 Q 54 18, 52 16" dur="1.5s" repeatCount="indefinite" />
+  </path>
+  <path d="M 54 24 Q 56 22, 54 20" fill="none" stroke="#22c55e" stroke-width="1" stroke-linecap="round" opacity="0.3">
+    <animate attributeName="d" values="M 54 24 Q 56 22, 54 20; M 54 24 Q 52 22, 54 20; M 54 24 Q 56 22, 54 20" dur="1.8s" repeatCount="indefinite" />
+  </path>
+</svg>

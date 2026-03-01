@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Necromancer robe gradient -->
+    <radialGradient id="necroRobeGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#6b3d7c"/>
+      <stop offset="50%" stop-color="#4a2d5c"/>
+      <stop offset="100%" stop-color="#2d1a3d"/>
+    </radialGradient>
+    
+    <!-- Dark magic glow -->
+    <filter id="darkMagic" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Staff energy gradient -->
+    <linearGradient id="staffEnergy" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#4a2d5c" stop-opacity="0"/>
+      <stop offset="40%" stop-color="#8b5fbf" stop-opacity="0.4"/>
+      <stop offset="80%" stop-color="#c084fc" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#e9d5ff" stop-opacity="1"/>
+    </linearGradient>
+    
+    <!-- Skull on staff -->
+    <radialGradient id="skullGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#d4c5a3"/>
+      <stop offset="100%" stop-color="#a8987a"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Shadow with magic aura -->
+  <ellipse cx="32" cy="42" rx="18" ry="6" fill="#000000" opacity="0.4"/>
+  <ellipse cx="32" cy="42" rx="20" ry="7" fill="#4a2d5c" opacity="0.2" filter="url(#darkMagic)"/>
+  
+  <!-- Staff (behind necromancer) -->
+  <rect x="50" y="12" width="4" height="48" fill="#3d2828" rx="2"/>
+  
+  <!-- Staff energy flow -->
+  <rect x="49" y="12" width="6" height="48" fill="url(#staffEnergy)" filter="url(#darkMagic)"/>
+  
+  <!-- Skull on top of staff -->
+  <g id="staffSkull">
+    <circle cx="52" cy="9" r="5" fill="url(#skullGrad)" stroke="#8b7868" stroke-width="1"/>
+    <!-- Eye sockets -->
+    <circle cx="50" cy="8" r="1.5" fill="#1a1a1a"/>
+    <circle cx="54" cy="8" r="1.5" fill="#1a1a1a"/>
+    <!-- Glowing eyes in skull -->
+    <circle cx="50" cy="8" r="0.8" fill="#c084fc" filter="url(#darkMagic)">
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="1s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="54" cy="8" r="0.8" fill="#c084fc" filter="url(#darkMagic)">
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="1s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Nose cavity -->
+    <path d="M 52 10 L 51 12 L 53 12 Z" fill="#1a1a1a"/>
+  </g>
+  
+  <!-- Main body (hooded robe) -->
+  <ellipse cx="32" cy="36" rx="14" ry="16" fill="url(#necroRobeGrad)" stroke="#2d1a3d" stroke-width="1.5"/>
+  
+  <!-- Robe folds -->
+  <path d="M 24 28 Q 26 36 24 46" fill="none" stroke="#2d1a3d" stroke-width="1.5" opacity="0.5"/>
+  <path d="M 40 28 Q 38 36 40 46" fill="none" stroke="#2d1a3d" stroke-width="1.5" opacity="0.5"/>
+  <path d="M 32 24 L 32 48" fill="none" stroke="#2d1a3d" stroke-width="1" opacity="0.3"/>
+  <path d="M 28 26 Q 32 30 36 26" fill="none" stroke="#2d1a3d" stroke-width="1" opacity="0.4"/>
+  
+  <!-- Deep hood shadow -->
+  <path d="M 22 28 Q 32 38 42 28" fill="#1a0a2e" opacity="0.7"/>
+  
+  <!-- Hood rim -->
+  <path d="M 20 26 Q 32 18 44 26 Q 42 30 32 28 Q 22 30 20 26" 
+        fill="url(#necroRobeGrad)" stroke="#2d1a3d" stroke-width="1"/>
+  
+  <!-- Glowing eyes under hood -->
+  <ellipse cx="28" cy="30" rx="4" ry="3" fill="#0a0014"/>
+  <ellipse cx="38" cy="30" rx="4" ry="3" fill="#0a0014"/>
+  
+  <circle cx="29" cy="30" r="2" fill="#c084fc" filter="url(#darkMagic)">
+    <animate attributeName="r" values="2;2.5;2" dur="0.8s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="39" cy="30" r="2" fill="#c084fc" filter="url(#darkMagic)">
+    <animate attributeName="r" values="2;2.5;2" dur="0.8s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Skeletal hands holding staff (visible) -->
+  <ellipse cx="46" cy="34" rx="4" ry="3" fill="#d4c5a3" stroke="#a8987a" stroke-width="0.5"/>
+  <circle cx="44" cy="33" r="1" fill="#d4c5a3"/>
+  <circle cx="47" cy="32" r="1" fill="#d4c5a3"/>
+  <circle cx="49" cy="33" r="1" fill="#d4c5a3"/>
+  
+  <!-- Magical particles around necromancer -->
+  <g filter="url(#darkMagic)">
+    <circle cx="18" cy="30" r="2" fill="#c084fc" opacity="0.6">
+      <animate attributeName="cy" values="30;25;30" dur="1s" repeatCount="indefinite"/>
+      <animate attributeName="cx" values="18;20;18" dur="1.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="55" cy="35" r="1.5" fill="#e9d5ff" opacity="0.5">
+      <animate attributeName="cy" values="35;40;35" dur="1.2s" repeatCount="indefinite"/>
+      <animate attributeName="cx" values="55;53;55" dur="1.3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="25" cy="48" r="1.5" fill="#c084fc" opacity="0.4">
+      <animate attributeName="cy" values="48;52;48" dur="0.9s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="45" cy="20" r="1" fill="#e9d5ff" opacity="0.5">
+      <animate attributeName="cy" values="20;16;20" dur="0.7s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Summoning runes (floating symbols) -->
+  <path d="M 12 38 L 15 35 L 18 38 L 15 41 Z" fill="none" stroke="#c084fc" stroke-width="1" opacity="0.5" filter="url(#darkMagic)">
+    <animate attributeName="opacity" values="0.5;0.8;0.5" dur="2s" repeatCount="indefinite"/>
+  </path>
+  <circle cx="52" cy="45" r="3" fill="none" stroke="#c084fc" stroke-width="1" opacity="0.4" filter="url(#darkMagic)">
+    <animate attributeName="r" values="3;4;3" dur="1.5s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Magic aura ring -->
+  <circle cx="32" cy="36" r="20" fill="none" stroke="#c084fc" stroke-width="1" opacity="0.15" filter="url(#darkMagic)">
+    <animate attributeName="r" values="20;22;20" dur="2.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.15;0.08;0.15" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+</svg>

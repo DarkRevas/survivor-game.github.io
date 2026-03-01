@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Witch robe gradient -->
+    <radialGradient id="witchRobeGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#8b5fbf"/>
+      <stop offset="50%" stop-color="#6b2c91"/>
+      <stop offset="100%" stop-color="#4a1d6b"/>
+    </radialGradient>
+    
+    <!-- Hat gradient -->
+    <linearGradient id="hatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5a237c"/>
+      <stop offset="100%" stop-color="#3d1852"/>
+    </linearGradient>
+    
+    <!-- Magic glow -->
+    <filter id="magicGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Staff glow gradient -->
+    <linearGradient id="staffGlow" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#c084fc" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#c084fc" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#e9d5ff" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Shadow -->
+  <ellipse cx="32" cy="40" rx="16" ry="5" fill="#000000" opacity="0.35"/>
+  
+  <!-- Staff (behind witch) -->
+  <rect x="48" y="15" width="3" height="45" fill="#4a3728" rx="1"/>
+  <rect x="47" y="15" width="5" height="45" fill="url(#staffGlow)" filter="url(#magicGlow)"/>
+  
+  <!-- Staff crystal/orb at top -->
+  <circle cx="49.5" cy="12" r="5" fill="#c084fc" filter="url(#magicGlow)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="1s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="49.5" cy="12" r="2.5" fill="#ffffff" opacity="0.8"/>
+  
+  <!-- Magic particles around staff -->
+  <circle cx="55" cy="20" r="1.5" fill="#c084fc" filter="url(#magicGlow)">
+    <animate attributeName="cy" values="20;15;20" dur="0.8s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="44" cy="25" r="1" fill="#e9d5ff" filter="url(#magicGlow)">
+    <animate attributeName="cy" values="25;30;25" dur="1s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Main body (robe) -->
+  <ellipse cx="32" cy="36" rx="14" ry="15" fill="url(#witchRobeGrad)" stroke="#3d1852" stroke-width="1.5"/>
+  
+  <!-- Robe folds -->
+  <path d="M 26 28 Q 28 36 26 44" fill="none" stroke="#4a1d6b" stroke-width="1.5" opacity="0.5"/>
+  <path d="M 38 28 Q 36 36 38 44" fill="none" stroke="#4a1d6b" stroke-width="1.5" opacity="0.5"/>
+  <path d="M 32 26 L 32 48" fill="none" stroke="#4a1d6b" stroke-width="1" opacity="0.3"/>
+  
+  <!-- Pointed hat -->
+  <path d="M 18 28 L 32 8 L 46 28 Z" fill="url(#hatGrad)" stroke="#3d1852" stroke-width="1.5"/>
+  
+  <!-- Hat band -->
+  <rect x="18" y="26" width="28" height="4" fill="#3d1852"/>
+  <circle cx="32" cy="28" r="2" fill="#c084fc" filter="url(#magicGlow)"/>
+  
+  <!-- Hat brim shadow -->
+  <ellipse cx="32" cy="28" rx="15" ry="4" fill="#2d1240" opacity="0.5"/>
+  
+  <!-- Hood shadow over face -->
+  <path d="M 24 28 Q 32 35 40 28" fill="#2d1240" opacity="0.6"/>
+  
+  <!-- Glowing eyes under hood -->
+  <ellipse cx="28" cy="32" rx="3.5" ry="2.5" fill="#1a0a2e"/>
+  <ellipse cx="38" cy="32" rx="3.5" ry="2.5" fill="#1a0a2e"/>
+  
+  <circle cx="29" cy="32" r="1.5" fill="#c084fc" filter="url(#magicGlow)">
+    <animate attributeName="r" values="1.5;2;1.5" dur="0.7s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="39" cy="32" r="1.5" fill="#c084fc" filter="url(#magicGlow)">
+    <animate attributeName="r" values="1.5;2;1.5" dur="0.7s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Hooked nose under hood -->
+  <path d="M 32 34 L 30 38 L 33 37 Z" fill="#4a1d6b" opacity="0.5"/>
+  
+  <!-- Mysterious smile -->
+  <path d="M 28 40 Q 32 42 36 40" fill="none" stroke="#4a1d6b" stroke-width="1" opacity="0.4"/>
+  
+  <!-- Magic aura around witch -->
+  <circle cx="32" cy="36" r="18" fill="none" stroke="#c084fc" stroke-width="1" opacity="0.2" filter="url(#magicGlow)">
+    <animate attributeName="r" values="18;20;18" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.2;0.1;0.2" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>

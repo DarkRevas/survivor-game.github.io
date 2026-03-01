@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Magic orb gradient -->
+    <radialGradient id="magicOrbGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#e879f9;stop-opacity:1" />
+      <stop offset="40%" style="stop-color:#c084fc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#a855f7;stop-opacity:1" />
+    </radialGradient>
+    <!-- Outer glow gradient -->
+    <radialGradient id="magicGlowGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#c084fc;stop-opacity:0.8" />
+      <stop offset="60%" style="stop-color:#a855f7;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#a855f7;stop-opacity:0" />
+    </radialGradient>
+    <!-- Sparkle gradient -->
+    <radialGradient id="sparkleGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e879f9;stop-opacity:0" />
+    </radialGradient>
+    <!-- Glow filter -->
+    <filter id="magicGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Outer glow aura -->
+  <circle cx="32" cy="32" r="28" fill="url(#magicGlowGradient)" />
+  
+  <!-- Magic aura rings -->
+  <ellipse cx="32" cy="32" rx="24" ry="8" fill="none" stroke="#c084fc" stroke-width="2" opacity="0.6">
+    <animate attributeName="ry" values="8;12;8" dur="2s" repeatCount="indefinite" />
+  </ellipse>
+  <ellipse cx="32" cy="32" rx="8" ry="20" fill="none" stroke="#e879f9" stroke-width="2" opacity="0.5">
+    <animate attributeName="rx" values="8;12;8" dur="2s" repeatCount="indefinite" />
+  </ellipse>
+  
+  <!-- Main magic orb -->
+  <circle cx="32" cy="32" r="14" fill="url(#magicOrbGradient)" stroke="#a855f7" stroke-width="2" filter="url(#magicGlow)" />
+  
+  <!-- Orb highlight -->
+  <ellipse cx="28" cy="28" rx="5" ry="5" fill="#ffffff" opacity="0.6" />
+  
+  <!-- Sparkles around orb -->
+  <circle cx="48" cy="20" r="2" fill="url(#sparkleGradient)" opacity="0.9">
+    <animate attributeName="opacity" values="0.9;0.3;0.9" dur="1.5s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="16" cy="24" r="1.5" fill="url(#sparkleGradient)" opacity="0.8">
+    <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.2s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="50" cy="40" r="1.5" fill="url(#sparkleGradient)" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;0.3;0.7" dur="1.8s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="18" cy="44" r="2" fill="url(#sparkleGradient)" opacity="0.8">
+    <animate attributeName="opacity" values="0.8;0.4;0.8" dur="1.4s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="32" cy="14" r="1.5" fill="url(#sparkleGradient)" opacity="0.9">
+    <animate attributeName="opacity" values="0.9;0.3;0.9" dur="1.6s" repeatCount="indefinite" />
+  </circle>
+</svg>
