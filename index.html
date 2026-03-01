@@ -85,6 +85,36 @@
             margin-top: 8px;
         }
 
+        .shield-container {
+            width: 250px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            padding: 5px;
+            border: 2px solid #4a90e2;
+            margin-top: 8px;
+        }
+
+        .shield-bar {
+            height: 20px;
+            background: linear-gradient(90deg, #4a90e2 0%, #67b8e3 100%);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .shield-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px black;
+        }
+
         .xp-bar {
             height: 20px;
             background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
@@ -912,6 +942,12 @@
                 <div class="xp-bar" id="xpBar" style="width: 0%">
                 </div>
             </div>
+            <!-- Immortality Shield UI -->
+            <div class="shield-container" id="shieldContainer" style="display: none;">
+                <div class="shield-bar">
+                    <span class="shield-text" id="shieldText">🛡️🛡️🛡️</span>
+                </div>
+            </div>
             <div class="weapon-bar" id="weaponBar"></div>
             <div class="bottom-stats right">
                 <div class="stat-box">
@@ -995,7 +1031,7 @@ const CONFIG = {
     GAME_DURATION: 1800, // 30 minutes in seconds
     SPAWN_BASE_INTERVAL: 1.0,
     SPAWN_MIN_INTERVAL: 0.15,
-    WAVE_DURATION: 20, // 20 seconds per wave (reduced from 30)
+    WAVE_DURATION: 15, // 15 seconds per wave
 
     // OPTIMIZATION: Reduced entity limits
     MAX_ENEMIES: 50,         // Reduced from 80
@@ -1446,6 +1482,15 @@ const PASSIVES = {
         maxLevel: 5,
         values: [5, 2, 2, 2, 2],
         stat: 'thornDamage'
+    },
+    immortalityShield: {
+        id: 'immortalityShield',
+        name: 'Immortality Shield',
+        icon: '🛡️',
+        description: 'Blocks incoming damage with charges that recharge over time',
+        maxLevel: 1,
+        values: [1],
+        stat: 'immortalityShield'
     }
 };
 
@@ -1457,7 +1502,7 @@ const ENEMIES = {
         color: '#4a7c4e',
         baseHp: 30, // +30% HP, +15% damage
         baseDamage: 6,
-        baseSpeed: 60,
+        baseSpeed: 66, // 60 * 1.1 = 66
         radius: 14,
         xpValue: 5,
         attackSpeed: 1.0
@@ -1468,7 +1513,7 @@ const ENEMIES = {
         color: '#8b4513',
         baseHp: 20, // +30% HP, +15% damage
         baseDamage: 9,
-        baseSpeed: 140,
+        baseSpeed: 154, // 140 * 1.1 = 154
         radius: 12,
         xpValue: 8,
         attackSpeed: 0.8
@@ -1479,7 +1524,7 @@ const ENEMIES = {
         color: '#d4c5a3',
         baseHp: 156, // +30% HP, +15% damage
         baseDamage: 17,
-        baseSpeed: 40,
+        baseSpeed: 44, // 40 * 1.1 = 44
         radius: 18,
         xpValue: 25,
         attackSpeed: 1.5,
@@ -1491,7 +1536,7 @@ const ENEMIES = {
         color: '#6b2c91',
         baseHp: 59, // +30% HP, +15% damage
         baseDamage: 14,
-        baseSpeed: 80,
+        baseSpeed: 88, // 80 * 1.1 = 88
         radius: 14,
         xpValue: 20,
         attackSpeed: 2.0,
@@ -1504,7 +1549,7 @@ const ENEMIES = {
         color: '#2d2d2d',
         baseHp: 49, // +30% HP, +15% damage
         baseDamage: 12,
-        baseSpeed: 110,
+        baseSpeed: 121, // 110 * 1.1 = 121
         radius: 13,
         xpValue: 12,
         attackSpeed: 0.9,
@@ -1516,7 +1561,7 @@ const ENEMIES = {
         color: '#c44536',
         baseHp: 16, // +30% HP, +15% damage
         baseDamage: 7,
-        baseSpeed: 160,
+        baseSpeed: 176, // 160 * 1.1 = 176
         radius: 10,
         xpValue: 10,
         attackSpeed: 0.7,
@@ -1528,7 +1573,7 @@ const ENEMIES = {
         color: '#5a6b7c',
         baseHp: 234, // +30% HP, +15% damage
         baseDamage: 21,
-        baseSpeed: 35,
+        baseSpeed: 39, // 35 * 1.1 = 38.5 -> 39
         radius: 20,
         xpValue: 35,
         attackSpeed: 1.8,
@@ -1541,7 +1586,7 @@ const ENEMIES = {
         color: '#6b8c42',
         baseHp: 23, // +30% HP, +15% damage
         baseDamage: 5,
-        baseSpeed: 130,
+        baseSpeed: 143, // 130 * 1.1 = 143
         radius: 8,
         xpValue: 8,
         attackSpeed: 0.6,
@@ -1553,7 +1598,7 @@ const ENEMIES = {
         color: '#4a2d5c',
         baseHp: 88, // +30% HP, +15% damage
         baseDamage: 9,
-        baseSpeed: 55,
+        baseSpeed: 61, // 55 * 1.1 = 60.5 -> 61
         radius: 14,
         xpValue: 30,
         attackSpeed: 2.5,
@@ -1567,7 +1612,7 @@ const ENEMIES = {
         color: '#3d1f4a',
         baseHp: 780, // +30% HP, +15% damage
         baseDamage: 29,
-        baseSpeed: 70,
+        baseSpeed: 77, // 70 * 1.1 = 77
         radius: 24,
         xpValue: 150,
         attackSpeed: 1.2,
@@ -1581,7 +1626,7 @@ const ENEMIES = {
         color: '#7d6b8f',
         baseHp: 46, // +30% HP, +15% damage
         baseDamage: 14,
-        baseSpeed: 75,
+        baseSpeed: 83, // 75 * 1.1 = 82.5 -> 83
         radius: 15,
         xpValue: 22,
         attackSpeed: 1.0,
@@ -1594,7 +1639,7 @@ const ENEMIES = {
         color: '#8b3d3d',
         baseHp: 72, // +30% HP, +15% damage
         baseDamage: 23,
-        baseSpeed: 95,
+        baseSpeed: 105, // 95 * 1.1 = 104.5 -> 105
         radius: 18,
         xpValue: 30,
         attackSpeed: 1.5,
@@ -1607,7 +1652,7 @@ const ENEMIES = {
         color: '#2d1a4a',
         baseHp: 65, // +30% HP, +15% damage
         baseDamage: 17,
-        baseSpeed: 45,
+        baseSpeed: 50, // 45 * 1.1 = 49.5 -> 50
         radius: 16,
         xpValue: 35,
         attackSpeed: 2.0,
@@ -1621,7 +1666,7 @@ const ENEMIES = {
         color: '#4a9d8b',
         baseHp: 195, // +30% HP, +15% damage
         baseDamage: 21,
-        baseSpeed: 25,
+        baseSpeed: 28, // 25 * 1.1 = 27.5 -> 28
         radius: 22,
         xpValue: 50,
         attackSpeed: 1.2,
@@ -1636,7 +1681,7 @@ const ENEMIES = {
         color: '#c4b494',
         baseHp: 1040, // +30% HP, +15% damage
         baseDamage: 35,
-        baseSpeed: 40,
+        baseSpeed: 44, // 40 * 1.1 = 44
         radius: 35,
         xpValue: 500,
         attackSpeed: 1.5,
@@ -1651,7 +1696,7 @@ const ENEMIES = {
         color: '#8b0000',
         baseHp: 1560, // +30% HP, +15% damage
         baseDamage: 40,
-        baseSpeed: 55,
+        baseSpeed: 61, // 55 * 1.1 = 60.5 -> 61
         radius: 32,
         xpValue: 750,
         attackSpeed: 1.8,
@@ -1666,7 +1711,7 @@ const ENEMIES = {
         color: '#2d1a4a',
         baseHp: 2600, // +30% HP, +15% damage
         baseDamage: 52,
-        baseSpeed: 35,
+        baseSpeed: 39, // 35 * 1.1 = 38.5 -> 39
         radius: 40,
         xpValue: 1500,
         attackSpeed: 1.2,
@@ -1674,6 +1719,23 @@ const ENEMIES = {
         waveRequirement: 15,
         isBoss: true,
         specialAbility: 'void_blast' // Creates void zones
+    },
+    // FINAL BOSS
+    devil: {
+        id: 'devil',
+        name: 'Devil',
+        color: '#8b0000',
+        baseHp: 20000,
+        baseDamage: 50,
+        baseSpeed: 210, // Faster than player (180)
+        radius: 45,
+        xpValue: 5000,
+        attackSpeed: 1.0,
+        knockbackResist: 1.0,
+        waveRequirement: 25,
+        isBoss: true,
+        isFinalBoss: true,
+        specialAbility: 'devil_blast'
     }
 };
 
@@ -2279,6 +2341,11 @@ class Player {
         this.invincibleTimer = 0;
         this.radius = CONFIG.PLAYER_RADIUS;
         this.regeneration = 0; // HP per second from regeneration
+        // Immortality Shield properties
+        this.shieldCharges = 0;
+        this.shieldMaxCharges = 3;
+        this.shieldRechargeTimer = 0;
+        this.shieldRechargeInterval = 10; // Recharge 1 charge every 10 seconds
     }
     
     getXpForLevel(level) {
@@ -2304,11 +2371,22 @@ class Player {
     
     takeDamage(amount) {
         if (this.invincible) return false;
-        
+
+        // Check for Immortality Shield - consume charge to block damage
+        if (this.passives.immortalityShield && this.shieldCharges > 0) {
+            this.shieldCharges--;
+            this.shieldRechargeTimer = 0; // Start recharge timer
+            // Show shield block effect
+            if (this.game) {
+                this.game.showShieldBlockEffect(this.x, this.y);
+            }
+            return false; // No damage taken
+        }
+
         this.hp -= amount;
         this.invincible = true;
         this.invincibleTimer = 0.5;
-        
+
         return this.hp <= 0;
     }
     
@@ -2318,7 +2396,7 @@ class Player {
     
     update(dt, input) {
         const movement = input.getMovement();
-        
+
         if (movement.dx !== 0 || movement.dy !== 0) {
             this.facing = { x: movement.dx, y: movement.dy };
             // Normalize
@@ -2326,15 +2404,15 @@ class Player {
             this.facing.x /= len;
             this.facing.y /= len;
         }
-        
+
         const speed = this.speed * (1 + this.movementBonus);
         this.x += movement.dx * speed * dt;
         this.y += movement.dy * speed * dt;
-        
+
         // Clamp to map bounds
         this.x = Math.max(this.speed, Math.min(CONFIG.MAP_BOUNDS.width - this.speed, this.x));
         this.y = Math.max(this.speed, Math.min(CONFIG.MAP_BOUNDS.height - this.speed, this.y));
-        
+
         // Update invincibility
         if (this.invincible) {
             this.invincibleTimer -= dt;
@@ -2346,6 +2424,15 @@ class Player {
         // Apply regeneration
         if (this.regeneration > 0 && this.hp < this.maxHp) {
             this.hp = Math.min(this.hp + this.regeneration * dt, this.maxHp);
+        }
+
+        // Update Immortality Shield recharge
+        if (this.passives.immortalityShield && this.shieldCharges < this.shieldMaxCharges) {
+            this.shieldRechargeTimer += dt;
+            if (this.shieldRechargeTimer >= this.shieldRechargeInterval) {
+                this.shieldCharges++;
+                this.shieldRechargeTimer = 0;
+            }
         }
 
         // OPTIMIZATION: Cache array length for weapon cooldown update
@@ -2617,7 +2704,15 @@ class Projectile {
                     if (game && game.damageNumbers) {
                         game.damageNumbers.add(enemy.x, enemy.y - 20, Math.round(explosionDmg), true);
                     }
-                    
+
+                    // Track damage dealt
+                    if (game) {
+                        game.totalDamageDealt += explosionDmg;
+                        if (enemy.type === 'devil') {
+                            game.damageToDevil += explosionDmg;
+                        }
+                    }
+
                     // Create explosion particles
                     if (game && game.particles) {
                         for (let p = 0; p < 8; p++) {
@@ -2630,7 +2725,7 @@ class Projectile {
                             );
                         }
                     }
-                    
+
                     this.hasExploded = true;
                     this.lifetime = 0; // Mark for removal
                     break;
@@ -2711,6 +2806,14 @@ class Projectile {
                         game.damageNumbers.add(enemy.x, enemy.y - 20, this.damage);
                     }
                     this.hitEnemies.add(enemy);
+
+                    // Track damage dealt
+                    if (game) {
+                        game.totalDamageDealt += this.damage;
+                        if (enemy.type === 'devil') {
+                            game.damageToDevil += this.damage;
+                        }
+                    }
 
                     if (dead) {
                         // Enemy will be killed by game loop
@@ -2974,6 +3077,10 @@ class Game {
         this.spawnTimer = 0;
         this.kills = 0;
 
+        // Damage tracking system
+        this.totalDamageDealt = 0;
+        this.damageToDevil = 0;
+
         this.state = 'start'; // start, playing, paused, levelup, gameover, victory
         this.levelUpPending = false;
         this.pendingLevel = 0;
@@ -2992,6 +3099,9 @@ class Game {
         };
         this.bloodMoonTimer = 0;
         this.eventNotifications = [];
+
+        // Shield block effects
+        this.shieldBlockEffects = [];
 
         this.saveData = this.loadSave();
 
@@ -3153,6 +3263,10 @@ class Game {
         this.levelUpPending = false;
         this.waveNotifications = [];
 
+        // Reset damage tracking
+        this.totalDamageDealt = 0;
+        this.damageToDevil = 0;
+
         // Reset event state
         this.activeEvents = {
             bloodMoon: false,
@@ -3160,6 +3274,9 @@ class Game {
         };
         this.bloodMoonTimer = 0;
         this.eventNotifications = [];
+
+        // Reset shield block effects
+        this.shieldBlockEffects = [];
 
         // Generate map decorations
         this.generateDecorations();
@@ -3683,11 +3800,13 @@ class Game {
      */
     triggerBossSpawn() {
         console.log('[BOSS] Triggering boss spawn at wave', this.wave);
-        
+
         let bossType;
 
-        // Select boss based on wave
-        if (this.wave < 10) {
+        // Select boss based on wave - Devil spawns at wave 25 as final boss
+        if (this.wave >= 25) {
+            bossType = 'devil';
+        } else if (this.wave < 10) {
             bossType = 'lordOfBones';
         } else if (this.wave < 15) {
             bossType = 'bloodQueen';
@@ -3716,8 +3835,12 @@ class Game {
 
         this.enemies.push(boss);
 
-        // Show boss notification
-        this.showEventNotification(`⚠️ BOSS: ${bossData.name.toUpperCase()} ⚠️`, '#ef4444');
+        // Show boss notification - special notification for Devil
+        if (bossType === 'devil') {
+            this.showEventNotification(`⚠️ FINAL BOSS: ${bossData.name.toUpperCase()} ⚠️`, '#ff0000');
+        } else {
+            this.showEventNotification(`⚠️ BOSS: ${bossData.name.toUpperCase()} ⚠️`, '#ef4444');
+        }
 
         // Visual effect - dramatic particles
         for (let i = 0; i < 80; i++) {
@@ -3865,6 +3988,12 @@ class Game {
             if (distSq <= rangeWithRadius * rangeWithRadius) {
                 const dead = enemy.takeDamage(tickDamage, 0, 0);
                 this.damageNumbers.add(enemy.x, enemy.y - 20, tickDamage);
+
+                // Track damage dealt
+                this.totalDamageDealt += tickDamage;
+                if (enemy.type === 'devil') {
+                    this.damageToDevil += tickDamage;
+                }
 
                 if (dead) {
                     enemiesToKill.push(enemy);
@@ -4028,6 +4157,12 @@ class Game {
             );
 
             this.damageNumbers.add(currentTarget.x, currentTarget.y - 20, chainDamage);
+
+            // Track damage dealt
+            this.totalDamageDealt += chainDamage;
+            if (currentTarget.type === 'devil') {
+                this.damageToDevil += chainDamage;
+            }
 
             // Store lightning bolt endpoints for rendering
             chainOrigins.push({
@@ -4709,6 +4844,12 @@ class Game {
                         const dead = enemy.takeDamage(damage, knockbackX, knockbackY);
                         this.damageNumbers.add(enemy.x, enemy.y - 20, damage, isCrit);
 
+                        // Track damage dealt
+                        this.totalDamageDealt += damage;
+                        if (enemy.type === 'devil') {
+                            this.damageToDevil += damage;
+                        }
+
                         proj.hitEnemies.add(enemy);
 
                         // Apply Ice Shard slow effect
@@ -4793,11 +4934,11 @@ class Game {
     createExplosion(x, y, radius, damage) {
         // OPTIMIZATION: Pre-calculate squared radius
         const radiusSq = radius * radius;
-        
+
         // Create a copy to avoid modification during iteration
         const enemiesToProcess = [...this.enemies];
         const enemiesToKill = [];
-        
+
         const enemyLen = enemiesToProcess.length;
         for (let i = 0; i < enemyLen; i++) {
             const enemy = enemiesToProcess[i];
@@ -4812,12 +4953,18 @@ class Game {
                 const dead = enemy.takeDamage(damage, dx * 0.1, dy * 0.1);
                 this.damageNumbers.add(enemy.x, enemy.y - 20, damage);
 
+                // Track damage dealt
+                this.totalDamageDealt += damage;
+                if (enemy.type === 'devil') {
+                    this.damageToDevil += damage;
+                }
+
                 if (dead) {
                     enemiesToKill.push(enemy);
                 }
             }
         }
-        
+
         // Kill enemies after processing all damage
         for (let i = 0; i < enemiesToKill.length; i++) {
             this.killEnemy(enemiesToKill[i]);
@@ -4845,7 +4992,7 @@ class Game {
                 // OPTIMIZATION: Cache array length and create a copy to avoid modification during iteration
                 const enemiesToProcess = [...this.enemies];
                 const enemiesToKill = [];
-                
+
                 const enemyLen = enemiesToProcess.length;
                 for (let j = 0; j < enemyLen; j++) {
                     const enemy = enemiesToProcess[j];
@@ -4862,12 +5009,18 @@ class Game {
                         const dead = enemy.takeDamage(effect.damage, 0, 0);
                         this.damageNumbers.add(enemy.x, enemy.y - 20, effect.damage);
 
+                        // Track damage dealt
+                        this.totalDamageDealt += effect.damage;
+                        if (enemy.type === 'devil') {
+                            this.damageToDevil += effect.damage;
+                        }
+
                         if (dead) {
                             enemiesToKill.push(enemy);
                         }
                     }
                 }
-                
+
                 // Kill enemies after processing all damage
                 for (let k = 0; k < enemiesToKill.length; k++) {
                     this.killEnemy(enemiesToKill[k]);
@@ -5154,11 +5307,11 @@ class Game {
             const passiveId = option.passiveId;
             const passive = PASSIVES[passiveId];
             const current = this.player.passives[passiveId] || 0;
-            
+
             if (current < passive.maxLevel) {
                 this.player.passives[passiveId] = current + 1;
                 const value = passive.values[current];
-                
+
                 switch (passive.stat) {
                     case 'movementSpeed':
                         this.player.movementBonus += value;
@@ -5184,6 +5337,10 @@ class Game {
                         break;
                     case 'regeneration':
                         this.player.regeneration += value;
+                        break;
+                    case 'immortalityShield':
+                        // Grant full shield charges when acquiring Immortality Shield
+                        this.player.shieldCharges = this.player.shieldMaxCharges;
                         break;
                 }
             }
@@ -5222,6 +5379,23 @@ class Game {
 
         title.textContent = 'GAME OVER';
         title.className = 'game-over-title';
+
+        // Build damage stats
+        let damageStats = `
+            <div class="stat-item">
+                <div class="stat-item-label">Total Damage Dealt</div>
+                <div class="stat-item-value">${Math.round(this.totalDamageDealt)}</div>
+            </div>
+        `;
+        if (this.damageToDevil > 0) {
+            damageStats += `
+                <div class="stat-item">
+                    <div class="stat-item-label">Damage to Devil</div>
+                    <div class="stat-item-value">${Math.round(this.damageToDevil)}</div>
+                </div>
+            `;
+        }
+
         stats.innerHTML = `
             <div class="stat-item">
                 <div class="stat-item-label">Time Survived</div>
@@ -5239,6 +5413,7 @@ class Game {
                 <div class="stat-item-label">Wave Reached</div>
                 <div class="stat-item-value">${this.wave}</div>
             </div>
+            ${damageStats}
         `;
 
         screen.style.display = 'block';
@@ -5264,6 +5439,23 @@ class Game {
 
         title.textContent = 'VICTORY!';
         title.className = 'victory-title';
+
+        // Build damage stats
+        let damageStats = `
+            <div class="stat-item">
+                <div class="stat-item-label">Total Damage Dealt</div>
+                <div class="stat-item-value">${Math.round(this.totalDamageDealt)}</div>
+            </div>
+        `;
+        if (this.damageToDevil > 0) {
+            damageStats += `
+                <div class="stat-item">
+                    <div class="stat-item-label">Damage to Devil</div>
+                    <div class="stat-item-value">${Math.round(this.damageToDevil)}</div>
+                </div>
+            `;
+        }
+
         stats.innerHTML = `
             <div class="stat-item">
                 <div class="stat-item-label">Time Survived</div>
@@ -5281,8 +5473,9 @@ class Game {
                 <div class="stat-item-label">Wave Completed</div>
                 <div class="stat-item-value">${this.wave}</div>
             </div>
+            ${damageStats}
         `;
-        
+
         screen.style.display = 'block';
     }
     
@@ -5299,11 +5492,30 @@ class Game {
         document.getElementById('xpBar').style.width = `${xpPercent}%`;
 
         document.getElementById('timer').textContent = this.formatTime(this.gameTime);
-        
+
         const hpPercent = Math.max(0, Math.min(100, (this.player.hp / this.player.maxHp) * 100));
         document.getElementById('healthBar').style.width = `${hpPercent}%`;
         document.getElementById('healthText').textContent = `${Math.ceil(this.player.hp)} / ${this.player.maxHp}`;
-        
+
+        // Update shield UI
+        const shieldContainer = document.getElementById('shieldContainer');
+        const shieldText = document.getElementById('shieldText');
+        if (this.player.passives.immortalityShield) {
+            shieldContainer.style.display = 'block';
+            // Show shield icons based on current charges
+            let shieldIcons = '';
+            for (let i = 0; i < this.player.shieldMaxCharges; i++) {
+                if (i < this.player.shieldCharges) {
+                    shieldIcons += '🛡️';
+                } else {
+                    shieldIcons += '⬜';
+                }
+            }
+            shieldText.textContent = shieldIcons;
+        } else {
+            shieldContainer.style.display = 'none';
+        }
+
         document.getElementById('killsValue').textContent = this.kills;
         document.getElementById('waveValue').textContent = this.wave;
     }
@@ -5381,6 +5593,9 @@ class Game {
 
         // Draw damage numbers (screen space)
         this.damageNumbers.render(ctx, this.camera.x, this.camera.y);
+
+        // Draw shield block effects
+        this.renderShieldBlockEffects();
 
         // Draw wave notifications
         this.renderWaveNotifications();
@@ -5617,6 +5832,10 @@ class Game {
                     break;
                 case 'voidLord':
                     this.renderVoidLord(enemy);
+                    break;
+                // FINAL BOSS
+                case 'devil':
+                    this.renderDevil(enemy);
                     break;
             }
 
@@ -6297,6 +6516,97 @@ class Game {
         ctx.stroke();
     }
 
+    renderDevil(enemy) {
+        const ctx = this.ctx;
+        const { x, y, radius } = enemy;
+
+        // Fiery aura
+        const fireAura = ctx.createRadialGradient(x, y, 0, x, y, radius * 1.5);
+        fireAura.addColorStop(0, 'rgba(255, 100, 0, 0.4)');
+        fireAura.addColorStop(0.5, 'rgba(200, 50, 0, 0.3)');
+        fireAura.addColorStop(1, 'rgba(100, 0, 0, 0)');
+
+        ctx.fillStyle = fireAura;
+        ctx.beginPath();
+        ctx.arc(x, y, radius * 1.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Dark red body
+        const bodyGradient = ctx.createRadialGradient(x - radius * 0.3, y - radius * 0.3, 0, x, y, radius);
+        bodyGradient.addColorStop(0, '#ff4444');
+        bodyGradient.addColorStop(0.5, '#aa0000');
+        bodyGradient.addColorStop(1, '#550000');
+
+        ctx.fillStyle = bodyGradient;
+        ctx.beginPath();
+        ctx.ellipse(x, y, radius * 1.0, radius * 1.05, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Horns
+        ctx.fillStyle = '#1a0505';
+        ctx.beginPath();
+        ctx.moveTo(x - radius * 0.5, y - radius * 0.6);
+        ctx.lineTo(x - radius * 0.8, y - radius * 1.3);
+        ctx.lineTo(x - radius * 0.3, y - radius * 0.8);
+        ctx.lineTo(x + radius * 0.3, y - radius * 0.8);
+        ctx.lineTo(x + radius * 0.8, y - radius * 1.3);
+        ctx.lineTo(x + radius * 0.5, y - radius * 0.6);
+        ctx.closePath();
+        ctx.fill();
+
+        // Glowing yellow eyes
+        ctx.fillStyle = '#ffdd00';
+        ctx.beginPath();
+        ctx.ellipse(x - radius * 0.3, y - radius * 0.2, radius * 0.2, radius * 0.12, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + radius * 0.3, y - radius * 0.2, radius * 0.2, radius * 0.12, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Black slit pupils
+        ctx.fillStyle = '#000000';
+        ctx.beginPath();
+        ctx.ellipse(x - radius * 0.3, y - radius * 0.2, radius * 0.08, radius * 0.12, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + radius * 0.3, y - radius * 0.2, radius * 0.08, radius * 0.12, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Menacing grin
+        ctx.strokeStyle = '#ff6600';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(x, y + radius * 0.3, radius * 0.3, 0.1 * Math.PI, 0.9 * Math.PI);
+        ctx.stroke();
+
+        // Sharp teeth
+        ctx.fillStyle = '#ffffff';
+        for (let i = 0; i < 5; i++) {
+            const toothX = x - radius * 0.25 + (radius * 0.125 * i);
+            const toothY = y + radius * 0.35 + Math.sin(i * 0.5) * radius * 0.05;
+            ctx.beginPath();
+            ctx.moveTo(toothX - radius * 0.05, toothY);
+            ctx.lineTo(toothX, toothY + radius * 0.08);
+            ctx.lineTo(toothX + radius * 0.05, toothY);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // Fire particles around devil
+        if (Math.random() < 0.3) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = radius * (0.8 + Math.random() * 0.5);
+            this.particles.emit(
+                x + Math.cos(angle) * dist,
+                y + Math.sin(angle) * dist,
+                { color: '#ff6600', size: 4 + Math.random() * 4, life: 0.5, type: 'circle', vy: -30 }
+            );
+        }
+
+        // Boss health bar indicator - golden for final boss
+        ctx.strokeStyle = '#ffd700';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.arc(x, y, radius * 1.15, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
     // ==================== NEW MONSTER RENDERING ====================
     renderCryptWraith(enemy) {
         const ctx = this.ctx;
@@ -6478,6 +6788,50 @@ class Game {
             scale: 1.5,
             life: 6 // seconds to display (increased from 3 to 6)
         });
+    }
+
+    showShieldBlockEffect(x, y) {
+        this.shieldBlockEffects.push({
+            x: x,
+            y: y,
+            alpha: 1,
+            radius: 30,
+            life: 0.5
+        });
+    }
+
+    renderShieldBlockEffects() {
+        const ctx = this.ctx;
+        for (let i = this.shieldBlockEffects.length - 1; i >= 0; i--) {
+            const effect = this.shieldBlockEffects[i];
+            effect.life -= 1 / 60;
+            effect.alpha = Math.min(1, effect.life * 2);
+            effect.radius = 30 + (1 - effect.life) * 20;
+
+            if (effect.life <= 0) {
+                this.shieldBlockEffects.splice(i, 1);
+                continue;
+            }
+
+            const screenX = effect.x - this.camera.x;
+            const screenY = effect.y - this.camera.y;
+
+            // Draw shield block effect
+            ctx.save();
+            ctx.strokeStyle = `rgba(100, 150, 255, ${effect.alpha})`;
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.arc(screenX, screenY, effect.radius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Inner glow
+            ctx.fillStyle = `rgba(150, 200, 255, ${effect.alpha * 0.3})`;
+            ctx.beginPath();
+            ctx.arc(screenX, screenY, effect.radius * 0.7, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
     }
     
     renderWaveNotifications() {
